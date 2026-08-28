@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-28T17:00:00Z",
+  "course": {
+    "name": "Tópicos en Ciencias de la Computación",
+    "code": "1ACC0058",
+    "term": "2620",
+    "nrc": "13826",
+    "blackboard_course_id": "_546154_1",
+    "mode": "Presencial",
+    "campus": "Monterrico",
+    "room": "UH-40",
+    "coordinator": "Willy Gustavo Ugarte Rojas",
+    "outline_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/outline",
+    "syllabus_url": "https://upc-e2g-post.u-planner.com/assessment/public/syllabus/share-link?sectionCode=UG-202620_1ACC0058-13826",
+    "syllabus_status": "not_published"
+  },
+  "calendar": {
+    "timezone": "America/Lima",
+    "class_schedule_status": "already_present",
+    "class_schedule": "Friday 15:00-18:59",
+    "assessment_dates_status": "not_published",
+    "blackboard_due_dates": []
+  },
+  "downloads": [
+    {
+      "name": "Sesion1-1.pdf",
+      "local_path": "materials/week-01/Sesion1-1.pdf",
+      "status": "downloaded",
+      "size_bytes": 3445805
+    }
+  ],
+  "documents": [
+    {
+      "unit": 1,
+      "week": 1,
+      "title": "Research in Computer Science",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607213_1?view=content&state=view",
+      "attachments": [
+        {"name": "UPC-beamer(7).rar", "status": "blocked_by_browser_policy"},
+        {"name": "Sesion1-1.pdf", "status": "downloaded", "local_path": "materials/week-01/Sesion1-1.pdf"},
+        {"name": "Sesion2.pdf", "status": "blocked_by_browser_policy"}
+      ],
+      "external_links": [
+        {"title": "Core ranking", "url": "http://portal.core.edu.au/conf-ranks/"},
+        {"title": "ICML", "url": "https://icml.cc/"},
+        {"title": "ICDM", "url": "http://icdm2020.bigke.org/"},
+        {"title": "CP conference series", "url": "https://www.a4cp.org/events/cp-conference-series"}
+      ]
+    },
+    {
+      "unit": 2,
+      "week": 3,
+      "title": "Introduction to Constraint Programming",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607215_1?view=content&state=view",
+      "attachments": [
+        {"name": "CS-Topics-Week3-1.pdf", "status": "blocked_by_browser_policy"},
+        {"name": "TP3.pdf", "status": "blocked_by_browser_policy"}
+      ],
+      "external_links": [
+        {"title": "Notebook 3", "url": "https://colab.research.google.com/drive/17Kwod8YrV0RGmaBnaPolu3Iq-WIeYEaJ?usp=sharing"},
+        {"title": "OR-Tools", "url": "https://developers.google.com/optimization/introduction/overview"},
+        {"title": "Gecode", "url": "https://www.gecode.org/"},
+        {"title": "Choco", "url": "https://github.com/chocoteam/choco-solver"},
+        {"title": "MiniZinc Challenge 2019", "url": "https://www.minizinc.org/challenge2019/results2019.html"}
+      ]
+    },
+    {
+      "unit": 2,
+      "week": 4,
+      "title": "Local Consistency",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607216_1?view=content&state=view",
+      "attachments": [
+        {"name": "CS-Topics-Week4-1.pdf", "status": "blocked_by_browser_policy"},
+        {"name": "TP4.pdf", "status": "blocked_by_browser_policy"}
+      ],
+      "external_links": [
+        {"title": "Notebook 4", "url": "https://colab.research.google.com/drive/1o7sJ1q-lTE2nA1SzNyDsDazTqQh34Qw4?usp=sharing"},
+        {"title": "Peru GeoJSON", "url": "https://raw.githubusercontent.com/juaneladio/peru-geojson/master/peru_departamental_simple.geojson"}
+      ]
+    },
+    {
+      "unit": 2,
+      "week": 5,
+      "title": "Overconstrained Problems",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607217_1?view=content&state=view",
+      "attachments": [{"name": "CS-Topics-Week5-1.pdf", "status": "blocked_by_browser_policy"}],
+      "external_links": [
+        {"title": "AllSolutions Class", "url": "https://developers.google.com/optimization/cp/cp_solver"},
+        {"title": "N-Queens", "url": "https://developers.google.com/optimization/cp/queens"},
+        {"title": "Notebook 5", "url": "https://colab.research.google.com/drive/1A3y4LZHrwbYIrqIjI38BaS9ATPboyQta?usp=sharing"}
+      ]
+    },
+    {
+      "unit": 3,
+      "week": 6,
+      "title": "Fixtures",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607218_1?view=content&state=view",
+      "attachments": [],
+      "external_links": [
+        {"title": "Notebook 6", "url": "https://colab.research.google.com/drive/1qdqUNxvnsHiL1YheM2KcZpU88uUiD2Hv?usp=sharing"}
+      ]
+    },
+    {
+      "unit": 3,
+      "week": 7,
+      "title": "Generación de texto con Constraint Programming",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607219_1?view=content&state=view",
+      "attachments": [{"name": "vallejo.txt", "status": "blocked_by_browser_policy"}],
+      "external_links": [
+        {"title": "Notebook 7", "url": "https://colab.research.google.com/drive/1uRMk9Vf30IWGHIi53C70cwXjql2gwNph?usp=sharing"}
+      ]
+    },
+    {
+      "unit": 4,
+      "week": 9,
+      "title": "Solving real-life problems",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607220_1?view=content&state=view",
+      "attachments": [{"name": "S9-1.pdf", "status": "blocked_by_browser_policy"}],
+      "external_links": [
+        {"title": "Notebook 9-1", "url": "https://colab.research.google.com/drive/1-YrGa2mPpsdDv--ZeTTUwyw6FVinOuWi?usp=sharing"},
+        {"title": "Notebook 9-2", "url": "https://colab.research.google.com/drive/1Fiq4f8sOmOAiWlzFq_HBtNWNasm_iXcE?usp=sharing"},
+        {"title": "Paper 1", "url": "https://link.springer.com/chapter/10.1007%2F978-3-030-71503-8_23"}
+      ]
+    },
+    {
+      "unit": 4,
+      "week": 10,
+      "title": "Constraint Programming and Data Mining",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607221_1?view=content&state=view",
+      "attachments": [{"name": "CS-Topics-Week10-1.pdf", "status": "blocked_by_browser_policy"}],
+      "external_links": [
+        {"title": "CP4IM", "url": "https://dtai.cs.kuleuven.be/CP4IM/"},
+        {"title": "CP4Clustering", "url": "https://cp4clustering.github.io/"},
+        {"title": "Notebook 10", "url": "https://colab.research.google.com/drive/1P4qIxKZC4Seppe88Wefsl0nJZ4ZAHrUb?usp=sharing"}
+      ]
+    },
+    {
+      "unit": 5,
+      "week": 11,
+      "title": "Agents and MDP",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607222_1?view=content&state=view",
+      "attachments": [
+        {"name": "commons-codec-1.3.jar", "status": "blocked_by_browser_policy"},
+        {"name": "CS-Topics-Week11-1.pdf", "status": "blocked_by_browser_policy"},
+        {"name": "jade.jar", "status": "blocked_by_browser_policy"}
+      ],
+      "external_links": [
+        {"title": "Notebook 11", "url": "https://colab.research.google.com/drive/1zXFtLK1Vd60CbS9T7oFPs18oBzg3LYx7?usp=sharing"},
+        {"title": "JADE", "url": "https://jade.tilab.com/download/jade/license/jade-download/?x=39&y=10"}
+      ]
+    },
+    {
+      "unit": 5,
+      "week": 12,
+      "title": "Multiagent Systems",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607223_1?view=content&state=view",
+      "attachments": [
+        {"name": "AmbientePanel.java", "status": "blocked_by_browser_policy"},
+        {"name": "CS-Topics-Week12-1.pdf", "status": "blocked_by_browser_policy"},
+        {"name": "FishAgent.java", "status": "blocked_by_browser_policy"},
+        {"name": "HostAgent.java", "status": "blocked_by_browser_policy"},
+        {"name": "MainFrame.java", "status": "blocked_by_browser_policy"}
+      ],
+      "external_links": [
+        {"title": "Example: FirstAgent", "url": "https://www.iro.umontreal.ca/~vaucher/Agents/Jade/primer2.html"},
+        {"title": "MultiAgent Systems", "url": "https://www.youtube.com/watch?v=kopoLzvh5jY"}
+      ]
+    },
+    {
+      "unit": 5,
+      "week": 13,
+      "title": "Foundation for Intelligent Physical Agents (FIPA)",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607224_1?view=content&state=view",
+      "attachments": [
+        {"name": "AvionAgent.java", "status": "blocked_by_browser_policy"},
+        {"name": "CS-Topics-Week13-1.pdf", "status": "blocked_by_browser_policy"},
+        {"name": "HostAgent.java", "status": "blocked_by_browser_policy"},
+        {"name": "TorreAgent.java", "status": "blocked_by_browser_policy"}
+      ],
+      "external_links": [
+        {"title": "Send and receive messages", "url": "https://www.youtube.com/watch?v=0IXxuQ2zots"}
+      ]
+    }
+  ],
+  "additional_items": [
+    {
+      "title": "Outcome ABET 1 - Análisis de Problemas",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607226_1?view=content&state=view",
+      "attachments": [{"name": "CAC_Student Outcome 1.pptx", "status": "blocked_by_browser_policy"}]
+    },
+    {
+      "title": "Comunicado rúbricas assessment",
+      "source_url": "https://aulavirtual.upc.edu.pe/ultra/courses/_546154_1/document/_72607211_1?view=content&state=view",
+      "attachments": [
+        {"name": "Comunicado Calidad Educativa - rúbricas.png", "status": "blocked_by_browser_policy"},
+        {"name": "Rúbrica Pensamiento Crítico - UPC.pdf", "status": "blocked_by_browser_policy"}
+      ]
+    }
+  ],
+  "recordings": [
+    {"title": "2024/11/04 UPC ISW-CC Charlas Internacionales - recording_3", "url": "https://visor.upc.edu.pe/Visor/Index/20241104_CC58-RE_d062970e5fdc4375ae93539bfd8e0612"},
+    {"title": "2024/10/30 UPC ISW-CC Charlas Internacionales - recording_1", "url": "https://visor.upc.edu.pe/Visor/Index/20241030_CC58-RE_bbed586e5ad844c7b7c39b3e4acec74c"},
+    {"title": "2024/10/30 UPC ISW-CC Charlas Internacionales - recording_2", "url": "https://visor.upc.edu.pe/Visor/Index/20241030_CC58-RE_23a0e2bd6045439d914f1f7d7e5d96f6"}
+  ]
+}

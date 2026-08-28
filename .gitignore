@@ -1,10 +1,4 @@
-# Data layers (medallion) — never commit raw/intermediate data
-data/bronze/
-data/silver/
-data/gold/
-data/_metadata/
-
-# Python
+# Python (labs/cp)
 __pycache__/
 *.pyc
 .venv/
@@ -12,10 +6,19 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 
+# Java / JADE (labs/agents)
+labs/agents/build/
+labs/agents/lib/*.jar
+*.class
+# artefactos que jade.Boot escribe al arrancar la plataforma
+labs/agents/APDescription.txt
+labs/agents/MTPs-*.txt
+
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db
 .beads-credential-key
-
-# Beads / Dolt files (added by bd init)
 .beads/proxieddb/
+
+# OS
+.DS_Store
