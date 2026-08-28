@@ -1,44 +1,58 @@
 # cs-topics — AI Agent Instructions
 
-## Domain / Scientific Context
+Repo del curso **Tópicos en Ciencias de la Computación (1ACC0058)**, UPC, ciclo 2026-20.
+No es un proyecto de software con usuarios: es el cuaderno de trabajo de un ciclo.
 
-<!-- The real-world problem this project addresses. State the claim/objective, the outcome,
-     and — critically — the data provenance (own data? regional/Peruvian domain? public source?).
-     This is the differentiator; be concrete. -->
+## Contexto
 
-- **Problem**: <!-- fill -->
-- **Outcome / target**: <!-- fill -->
-- **Data provenance**: <!-- fill: source, ownership, how acquired -->
+- **Qué es**: apuntes por sesión + material oficial del Aula Virtual + código de los TPs.
+- **Temario**: research en CS (U1), Constraint Programming (U2-U4), agentes/MDP/FIPA con JADE (U5), outcome ABET (U6).
+- **Procedencia del material**: Aula Virtual UPC (curso `_546154_1`). `manifest.json` es la
+  fuente canónica: qué documentos existen, qué adjuntos se esperan y cuáles quedaron en
+  `blocked_by_browser_policy` porque el navegador no permitió bajarlos. Es material del
+  profesor — si algún día este repo tiene remoto, **debe ser privado**.
+- **Sílabo**: aún NO publicado al 2026-08-28. La numeración de unidades puede cambiar;
+  no la trates como estable.
 
-## Architecture
+## Arquitectura
 
-<!-- How the project runs. If it's a pipeline, describe the stages and the data flow between them. -->
+Estructura por tipo, no por semana — las unidades pueden reordenarse, los labs no.
 
 ```bash
-# e.g. uv run ingest && uv run features && uv run model
+notes/         # apuntes .md por sesión (_template.md es la plantilla)
+materials/     # PDFs y slides del profe, carpeta por semana (week-NN/)
+labs/cp/       # Constraint Programming — Python + OR-Tools, gestionado con uv
+labs/agents/   # JADE / FIPA — Java 21 + javac + Makefile, sin Maven ni Gradle
 ```
 
-## Key Files
+Cada lab es una raíz de proyecto independiente con su propio toolchain:
 
-| File | Purpose |
+```bash
+cd labs/cp     && uv sync && uv run pytest
+cd labs/agents && make deps && make run AGENT=upc.topicos.week11.HolaAgent
+```
+
+## Archivos clave
+
+| Archivo | Propósito |
 |------|---------|
-| `src/cs_topics/...` | <!-- fill --> |
-| `configs/...` | <!-- fill --> |
+| `manifest.json` | Inventario canónico del Aula Virtual. Fuente de verdad para saber qué material falta. |
+| `materials/AULA-VIRTUAL-ESTADO.md` | Estado del curso al momento del volcado (sílabo, notas, fechas). |
+| `notes/_template.md` | Plantilla de apunte de sesión. |
+| `labs/cp/models/nqueens.py` | Ejemplo de referencia CP-SAT: modelo → restricciones → solver. |
+| `labs/agents/fetch-deps.sh` | Baja `jade.jar` de Maven Central (`net.sf.ingenias:jade:4.3`). |
+| `labs/agents/Makefile` | Compila y arranca la plataforma JADE. |
 
-## Data Conventions
+## Convenciones
 
-<!-- Adjust/remove if this is not a data project. Defaults reflect the medallion + polars/duckdb stack. -->
-
-- **Layers**: raw → `data/bronze/`, cleaned → `data/silver/`, analytic → `data/gold/`. All gitignored.
-- **Polars over pandas** everywhere; only drop to numpy when a library requires it.
-- **DuckDB for SQL joins** across parquet; Polars for local transforms.
-- **Remote silver**: reference the remote root via `$SILVER` in SQL when pulling shared data.
-- Keep dates as typed `Date`, never strings, in intermediate tables.
-
-## Conventions
-
-<!-- Project-specific rules: ID normalization, seeds, temporal discipline, naming, etc. -->
-
+- **Apuntes en español**, nombrados `week-NN-<tema-en-kebab>.md`. Copia `_template.md`.
+- **Material versionado**: `materials/` SÍ se commitea (decisión del dueño del repo).
+  Los jars de `labs/agents/lib/` NO — son dependencias reproducibles vía `make deps`.
+- **Los labs se escriben con TDD**: test primero, luego el modelo o el agente.
+- La plataforma JADE no termina sola; `make run` se corta con Ctrl-C. No la lances
+  en foreground esperando que retorne.
+- Python 3.14 del sistema NO sirve para OR-Tools; `labs/cp` fija `<3.14` y `uv`
+  se encarga de bajar un intérprete compatible.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:6cd5cc61 -->
 ## Beads Issue Tracker
