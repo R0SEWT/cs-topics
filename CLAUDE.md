@@ -8,9 +8,11 @@ No es un proyecto de software con usuarios: es el cuaderno de trabajo de un cicl
 - **Qué es**: apuntes por sesión + material oficial del Aula Virtual + código de los TPs.
 - **Temario**: research en CS (U1), Constraint Programming (U2-U4), agentes/MDP/FIPA con JADE (U5), outcome ABET (U6).
 - **Procedencia del material**: Aula Virtual UPC (curso `_546154_1`). `manifest.json` es la
-  fuente canónica: qué documentos existen, qué adjuntos se esperan y cuáles quedaron en
-  `blocked_by_browser_policy` porque el navegador no permitió bajarlos. Es material del
-  profesor — si algún día este repo tiene remoto, **debe ser privado**.
+  fuente canónica: qué documentos existen, qué adjuntos se esperan y de qué URL salen.
+  Es material del profesor y **este repo es público**, así que `materials/` NO se versiona:
+  vive solo en local y se reconstruye entero con `aula sync` a partir del manifiesto
+  (ver `~/Code/personal/chrome-helper`). La única excepción es
+  `materials/AULA-VIRTUAL-ESTADO.md`, que es resumen propio, no material ajeno.
 - **Sílabo**: aún NO publicado al 2026-08-28. La numeración de unidades puede cambiar;
   no la trates como estable.
 
@@ -46,8 +48,11 @@ cd labs/agents && make deps && make run AGENT=upc.topicos.week11.HolaAgent
 ## Convenciones
 
 - **Apuntes en español**, nombrados `week-NN-<tema-en-kebab>.md`. Copia `_template.md`.
-- **Material versionado**: `materials/` SÍ se commitea (decisión del dueño del repo).
-  Los jars de `labs/agents/lib/` NO — son dependencias reproducibles vía `make deps`.
+- **Material NO versionado**: `materials/` está en `.gitignore` (repo público, material
+  del profesor). Se reconstruye con `aula sync`; `manifest.json` es la receta y sí se
+  commitea. Los jars de `labs/agents/lib/` tampoco — se bajan con `make deps`.
+- **Ramas**: `main` estable, `dev` de integración, `feat/<algo>` para cada trabajo.
+  Nada va directo a `main`.
 - **Los labs se escriben con TDD**: test primero, luego el modelo o el agente.
 - La plataforma JADE no termina sola; `make run` se corta con Ctrl-C. No la lances
   en foreground esperando que retorne.
