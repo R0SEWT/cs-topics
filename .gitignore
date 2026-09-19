@@ -20,5 +20,12 @@ labs/agents/MTPs-*.txt
 .beads-credential-key
 .beads/proxieddb/
 
+# Material del Aula Virtual: NO se versiona.
+# El repo es público y son slides, enunciados y rúbricas del profesor. La
+# receta para reconstruirlo entero vive en manifest.json; se baja con
+# `aula sync` (ver ~/Code/personal/chrome-helper).
+materials/*
+!materials/AULA-VIRTUAL-ESTADO.md
+
 # OS
 .DS_Store
