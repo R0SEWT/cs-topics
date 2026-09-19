@@ -23,18 +23,22 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
+from kenken_cv.fuentes import resolver_todas
 from kenken_cv.grid import Rejilla
 from kenken_cv.schema import Cell, Op
 
-BANCO: tuple[str, ...] = (
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
-    "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
-    "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
-    "/usr/share/fonts/truetype/freefont/FreeSerif.ttf",
-    "/usr/share/fonts/truetype/liberation/LiberationSansNarrow-Regular.ttf",
+# Nombres de archivo, no rutas: cada distro los coloca en un sitio distinto y
+# `fuentes.resolver_todas` se encarga de encontrarlos (o de protestar).
+NOMBRES_BANCO: tuple[str, ...] = (
+    "DejaVuSans.ttf",
+    "DejaVuSans-Bold.ttf",
+    "DejaVuSerif.ttf",
+    "FreeSans.ttf",
+    "FreeSansBold.ttf",
+    "FreeSerif.ttf",
+    "LiberationSansNarrow-Regular.ttf",
 )
+BANCO: tuple[str, ...] = resolver_todas(NOMBRES_BANCO)
 
 CARACTERES = "0123456789+-−×x÷/"
 # El glifo impreso -> la operación del contrato. Cada editor imprime los
