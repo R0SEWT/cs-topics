@@ -238,9 +238,9 @@ instancia = Instance.from_json(open("dataset/00_limpio_n4.png".replace(".png", "
 ## Sobre dónde vive esto
 
 `labs/tb1-kenken` es raíz de proyecto independiente, como el resto de labs. El
-enunciado pide un **repositorio GitHub propio** para el grupo, y `cs-topics` debe
-seguir privado porque guarda material del profesor: cuando haya grupo, esta
-carpeta se extrae a su propio repo (`git subtree split`) sin tocar nada más.
+enunciado pide un **repositorio GitHub propio** para el grupo, y `cs-topics` es el
+cuaderno personal del curso: cuando haya grupo, esta carpeta se extrae a su propio
+repo (`git subtree split`) sin tocar nada más.
 
 ## Procedencia de los datos
 
