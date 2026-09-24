@@ -36,6 +36,12 @@ jobs:
         with:
           python-version: "3.12"
 
+      # El banco de plantillas del OCR del TB1 son tipografías del sistema; el
+      # runner no trae FreeFont ni Liberation.
+      - name: Install fonts
+        if: matrix.lab == 'labs/tb1-kenken'
+        run: sudo apt-get update -q && sudo apt-get install -yq fonts-dejavu-core fonts-freefont-ttf fonts-liberation
+
       - name: Sync dependencies
         run: uv sync
 
