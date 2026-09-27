@@ -7,6 +7,8 @@ dependencies = ["ortools>=9.11"]
 
 [dependency-groups]
 dev = ["pytest>=8"]
+# Solo para notebooks/; `uv sync` y la CI no lo instalan.
+notebook = ["jupyterlab>=4"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
