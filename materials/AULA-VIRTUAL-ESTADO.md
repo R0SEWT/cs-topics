@@ -24,6 +24,7 @@
 | 2 | 3 | Introduction to Constraint Programming | `CS-Topics-Week3-1.pdf`, `TP3.pdf` |
 | 2 | 4 | Local Consistency | `CS-Topics-Week4-1.pdf`, `TP4.pdf` |
 | 2 | 5 | Overconstrained Problems | `CS-Topics-Week5-1.pdf` |
+| 3 | 5 | TSP | `Topicos_CC-5.pdf`, `TP5.pdf` |
 | 3 | 6 | Fixtures | — |
 | 3 | 7 | Generación de texto con Constraint Programming | `vallejo.txt` |
 | 4 | 9 | Solving real-life problems | `S9-1.pdf` |
