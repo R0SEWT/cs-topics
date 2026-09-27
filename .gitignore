@@ -27,5 +27,8 @@ labs/agents/MTPs-*.txt
 materials/*
 !materials/AULA-VIRTUAL-ESTADO.md
 
+# Evaluaciones calificadas (PC): enunciados del profesor + respuestas propias.
+labs/cp/notebooks/pc2.ipynb
+
 # OS
 .DS_Store
