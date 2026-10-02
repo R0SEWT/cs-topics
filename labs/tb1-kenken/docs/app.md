@@ -19,49 +19,53 @@ personas, los principios y la forma de validar de esta sección son **provisiona
   un 9×9, y sospecha que tiene un error. No quiere que le regalen la solución, solo saber
   si va bien y, si no, dónde se equivocó. Necesita letra grande y mensajes sin tecnicismos.
 
-### Principios de diseño (provisionales)
+### Principios de diseño (fundamentados en la literatura)
 
 1. **Honestidad de lectura.** La app nunca muestra una solución que no pueda respaldar. Si
    lo que leyó no deja el tablero con solución única, dice qué no pudo leer y dónde, en vez
    de adivinar. Hoy el sistema ya cumple esto: de 16 tableros reales, 8 se resuelven bien y
    ninguno de los otros 8 devuelve una solución errónea (`scripts/medir_solver.py`).
+   *Fundamento:* Directrices G1, G2 y G10 de interacción Humano-IA (Amershi et al., CHI 2019)
+   y preservación de utilidad bajo incertidumbre (Horvitz, CHI 1999).
 2. **Cero fricción.** La cámara aparece al abrir. La cuenta es solo tu nombre. Nada de
-   formularios, contraseñas ni tutoriales obligatorios.
-3. **Cada fallo dice qué hacer.** En lenguaje llano ("hay poca luz, acércate a la
-   ventana"), nunca "error" ni códigos.
-4. **Tú decides cuánto quieres saber.** La ayuda va de menos a más y nunca revela más de
-   lo que se pidió. Marta no quiere spoilers.
-5. **Legible para todos.** Texto grande, alto contraste, todo al alcance del pulgar y
-   usable con una mano.
+   formularios, contraseñas ni tutoriales obligatorios. Conexión al servidor vía código QR
+   mostrado en la terminal/pantalla del nodo.
+   *Fundamento:* Minimización de carga en memoria de trabajo y barreras cognitivas para adultos
+   mayores (Gomez-Hernandez et al., JMIR 2023; Norman, 2013).
+3. **Cada fallo dice qué hacer.** En lenguaje llano ("hay sombras sobre el papel, acércate a la
+   luz"; "el borde inferior quedó cortado, aléjate un poco"), nunca "error" genérico ni códigos.
+   *Fundamento:* Heurística 9 de Nielsen (recuperación de errores), directriz G11 de Amershi
+   (explicar por qué falló la IA) y mitigación de fallos en captura móvil por contraste y
+   contornos (Skoryukina et al., 2020).
+4. **Tú decides cuánto quieres saber.** La ayuda va de menos a más (andamiaje) y nunca revela
+   más de lo que se pidió. Marta no quiere spoilers. Cuatro niveles: 1) Estado global (¿voy bien?)
+   → 2) Marcado de conflictos visibles → 3) Señalar la casilla errónea vía núcleo insatisfacible
+   de CP-SAT → 4) Revelar el valor numérico.
+   *Fundamento:* Teoría del andamiaje (*scaffolding*) pedagógico y desvanecimiento de asistencia
+   (Wood, Bruner & Ross, 1976) y tutoría cognitiva sin respuestas prematuras (Gupta & MacLellan, AAAI 2021).
+5. **Legible para todos.** Tipografía grande ($\ge 18\text{ sp}$), contraste cromático alto
+   ($\ge 4.5:1$, objetivo $7:1$), touch targets de al menos $48 \times 48\text{ dp}$ con separación
+   $\ge 8\text{ dp}$, y controles interactivos en la zona inferior del pulgar accesible con una mano.
+   *Fundamento:* Revisión sistemática de pautas móviles para adultos mayores (Gomez-Hernandez et al.,
+   JMIR 2023), listas de verificación empíricas para teléfonos móviles (Petrovčič et al., IJHCI 2018)
+   y pautas WCAG 2.2 / ISO 9241-210.
 
-### Fundamento en la literatura (pendiente, otra sesión: cst-byw.8)
+### Fundamento en la literatura (resuelto en cst-byw.8)
 
-El método de diseño centrado en las personas, los principios y la forma de validar saldrán
-de una revisión de papers, no de la intuición del equipo. Esa revisión tiene que responder:
+El marco metodológico completo, el resumen crítico de cada paper, sus hallazgos empíricos y
+su traducción a decisiones de arquitectura e interfaz se encuentran detallados en:
+- Informe de revisión de literatura: [`docs/literatura_hcd.md`](file:///home/rody/Code/personal/cs-topics/labs/tb1-kenken/docs/literatura_hcd.md)
+- Archivo de citas BibTeX completo: [`docs/references.bib`](file:///home/rody/Code/personal/cs-topics/labs/tb1-kenken/docs/references.bib)
+- Repositorio de PDFs descargados: [`docs/papers/`](file:///home/rody/Code/personal/cs-topics/labs/tb1-kenken/docs/papers/) (y en `gdrive:cs-topics-hcd-papers/`)
 
-- **Qué método seguir** y con qué evidencia (personas, recorridos, prototipos, pruebas).
-- **Qué dice la evidencia** sobre los temas de esta app: guiar al usuario para que la foto
-  salga bien, mensajes de error, ayuda graduada sin revelar la respuesta, y accesibilidad
-  para personas mayores.
-- **Cómo validar** con un equipo pequeño y en pocas semanas: cuántas personas, qué tareas
-  y qué métricas.
+### Validación con 5 usuarios reales (cst-byw.7)
 
-Cada principio de arriba que sobreviva debería quedar citado. El que no tenga respaldo se
-reformula o se quita.
-
-### Validación (propuesta, a contrastar con la literatura)
-
-Una persona sintética sirve para diseñar, pero no para medir: es la misma lección que dejó
-el conjunto sintético de la Fase 1. La propuesta inicial es probar con **5 personas
-reales** (compañeros, familia; idealmente alguien del perfil de Marta), pidiéndoles que
-piensen en voz alta mientras hacen dos tareas:
-
-- "resuelve este KenKen con la app";
-- "averigua si este tablero a medio llenar está bien".
-
-Se anota si completan la tarea, cuánto tardan, dónde dudan y qué mensajes no entienden.
-Las dudas de diseño que no sabemos resolver de antemano, como la forma de mostrar la
-solución, se deciden ahí y no en una discusión.
+La propuesta de probar con **5 personas reales** (pensando en voz alta) se fundamenta en el
+modelo de optimización de descubrimiento de problemas de Nielsen & Landauer (1993) y Nielsen (2000),
+donde 5 participantes identifican $\approx 85\%$ de los problemas de usabilidad. Para mitigar
+la variabilidad observada empíricamente por Faulkner (2003) (donde muestras no representativas
+pueden bajar al 55%), la muestra se estratificará intencionalmente entre perfiles jóvenes (tipo Diego)
+y adultos mayores (tipo Marta). Detalles en [`docs/literatura_hcd.md`](file:///home/rody/Code/personal/cs-topics/labs/tb1-kenken/docs/literatura_hcd.md).
 
 ## v1 — Core loop: foto → solución
 
