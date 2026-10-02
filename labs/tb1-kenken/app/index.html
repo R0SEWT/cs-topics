@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>KenKen Solver — Prototipo HCD (Diego & Marta)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="device-container">
+    <!-- Barra de selección de Modo de la App (Diseño Centrado en las Personas) -->
+    <header class="mode-header" role="toolbar" aria-label="Modo de juego">
+      <div class="mode-switch-container">
+        <button id="btn-mode-assist" class="btn-mode active" aria-pressed="true">
+          <span class="mode-icon">💡</span> Asistencia <span class="mode-sub">(Por defecto)</span>
+        </button>
+        <button id="btn-mode-fast" class="btn-mode" aria-pressed="false">
+          <span class="mode-icon">⚡</span> Modo Rápido
+        </button>
+      </div>
+    </header>
+
+    <!-- Barra de estado del sistema (Heurística #1 de Nielsen) -->
+    <div class="system-status-bar" id="system-status-bar">
+      <span class="status-indicator online" id="status-indicator"></span>
+      <span class="status-text" id="status-text">Nodo Wi-Fi conectado: 192.168.1.45</span>
+      <span class="status-battery">🔋 84%</span>
+    </div>
+
+    <!-- PANTALLA 1: VISOR DE CÁMARA (ACTIVE VIEWFINDER) -->
+    <main class="screen active" id="screen-camera" aria-label="Visor de captura de tablero">
+      <div class="camera-viewport" id="camera-viewport">
+        <!-- Fondo simulado de cámara o video real si hay permiso -->
+        <video id="camera-stream" autoplay playsinline muted class="camera-stream hidden"></video>
+        <div class="simulated-camera" id="simulated-camera">
+          <div class="simulated-board-paper">
+            <div class="simulated-grid">
+              <div class="sim-cell bold-right bold-bottom"><span class="sim-label">11+</span><span class="sim-user-val"></span></div>
+              <div class="sim-cell bold-bottom"><span class="sim-user-val"></span></div>
+              <div class="sim-cell bold-right"><span class="sim-label">2/</span><span class="sim-user-val"></span></div>
+              <div class="sim-cell"><span class="sim-user-val"></span></div>
+              <div class="sim-cell bold-right"><span class="sim-label">20*</span><span class="sim-user-val"></span></div>
+              <div class="sim-cell bold-right bold-bottom"><span class="sim-user-val"></span></div>
+              <div class="sim-cell bold-bottom"><span class="sim-user-val"></span></div>
+              <div class="sim-cell bold-right"><span class="sim-label">6*</span><span class="sim-user-val"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marco guía interactivo (Active Viewfinder Overlay) -->
+        <div class="viewfinder-overlay" id="viewfinder-overlay">
+          <div class="reticle reticle-ready" id="reticle-box">
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner br"></div>
+            <div class="corner bl"></div>
+          </div>
+        </div>
+
+        <!-- Mensaje de orientación en tiempo real (Feedforward) -->
+        <div class="camera-guidance-pill" id="camera-guidance">
+          <span class="guidance-icon" id="guidance-icon">✓</span>
+          <span class="guidance-msg" id="guidance-msg">Tablero centrado · Listo para capturar</span>
+        </div>
+
+        <!-- Simulador de condiciones de captura para testing de avisos -->
+        <div class="sim-controls-pill">
+          <button class="btn-chip active" data-condition="ideal">Ideal</button>
+          <button class="btn-chip" data-condition="tilted">Inclinado</button>
+          <button class="btn-chip" data-condition="dark">Poca luz</button>
+          <button class="btn-chip" data-condition="cutoff">Cortado</button>
+        </div>
+      </div>
+
+      <!-- Controles inferiores en zona del pulgar (Thumb Zone) -->
+      <footer class="camera-controls">
+        <div class="shutter-label-row">
+          <span class="shutter-action-label" id="shutter-action-label">🔍 Verificar mi avance a lápiz (¿Voy bien?)</span>
+        </div>
+        <div class="shutter-buttons-row">
+          <button class="btn-secondary-tool" id="btn-toggle-camera" title="Cambiar cámara" aria-label="Cambiar cámara">
+            📷
+          </button>
+          <button class="btn-shutter" id="btn-shutter" aria-label="Tomar foto del KenKen">
+            <span class="shutter-inner"></span>
+          </button>
+          <button class="btn-secondary-tool" id="btn-flash" title="Luz de apoyo" aria-label="Encender luz de apoyo">
+            ⚡
+          </button>
+        </div>
+      </footer>
+    </main>
+
+    <!-- PANTALLA 2: RESULTADO — MODO RÁPIDO (SOLUCIÓN COMPLETA EXPRÉS) -->
+    <section class="screen" id="screen-diego" aria-label="Solución inmediata del KenKen (Modo Rápido)">
+      <header class="app-header">
+        <button class="btn-back" id="btn-back-diego" aria-label="Volver a la cámara">‹ Cámara</button>
+        <div class="view-toggle" role="radiogroup" aria-label="Modo de visualización">
+          <button class="toggle-btn active" id="toggle-photo-diego" role="radio" aria-checked="true">Sobre tu foto</button>
+          <button class="toggle-btn" id="toggle-clean-diego" role="radio" aria-checked="false">Tablero limpio</button>
+        </div>
+      </header>
+
+      <div class="result-content">
+        <div class="board-display" id="board-display-diego">
+          <!-- Vista de foto con números proyectados con homografía -->
+          <div class="photo-projection-container" id="photo-projection-diego">
+            <div class="projected-board size-4">
+              <!-- Fila 0 -->
+              <div class="proj-cell bold-r bold-b"><span class="proj-label">11+</span><span class="proj-sol">3</span></div>
+              <div class="proj-cell bold-b"><span class="proj-sol">4</span></div>
+              <div class="proj-cell bold-r"><span class="proj-label">2/</span><span class="proj-sol">2</span></div>
+              <div class="proj-cell"><span class="proj-sol">1</span></div>
+              <!-- Fila 1 -->
+              <div class="proj-cell bold-r"><span class="proj-label">20*</span><span class="proj-sol">4</span></div>
+              <div class="proj-cell bold-r bold-b"><span class="proj-sol">1</span></div>
+              <div class="proj-cell bold-b"><span class="proj-sol">3</span></div>
+              <div class="proj-cell bold-r"><span class="proj-label">6*</span><span class="proj-sol">2</span></div>
+              <!-- Fila 2 -->
+              <div class="proj-cell bold-r bold-b"><span class="proj-sol">1</span></div>
+              <div class="proj-cell bold-r bold-b"><span class="proj-sol">2</span></div>
+              <div class="proj-cell bold-r bold-b"><span class="proj-sol">4</span></div>
+              <div class="proj-cell bold-b"><span class="proj-sol">3</span></div>
+              <!-- Fila 3 -->
+              <div class="proj-cell bold-r"><span class="proj-label">1-</span><span class="proj-sol">2</span></div>
+              <div class="proj-cell bold-r"><span class="proj-sol">3</span></div>
+              <div class="proj-cell bold-r"><span class="proj-label">1</span><span class="proj-sol">1</span></div>
+              <div class="proj-cell"><span class="proj-sol">4</span></div>
+            </div>
+          </div>
+
+          <!-- Vista de tablero limpio vectorial (alternativa) -->
+          <div class="clean-board-container hidden" id="clean-board-diego">
+            <svg class="clean-board-svg" viewBox="0 0 400 400" aria-label="Tablero KenKen limpio">
+              <!-- Rejilla y líneas dibujadas limpiamente -->
+              <rect x="0" y="0" width="400" height="400" fill="#ffffff" stroke="#111" stroke-width="4"/>
+              <!-- Líneas finas internas -->
+              <line x1="100" y1="0" x2="100" y2="400" stroke="#ccc" stroke-width="1"/>
+              <line x1="200" y1="0" x2="200" y2="400" stroke="#ccc" stroke-width="1"/>
+              <line x1="300" y1="0" x2="300" y2="400" stroke="#ccc" stroke-width="1"/>
+              <line x1="0" y1="100" x2="400" y2="100" stroke="#ccc" stroke-width="1"/>
+              <line x1="0" y1="200" x2="400" y2="200" stroke="#ccc" stroke-width="1"/>
+              <line x1="0" y1="300" x2="400" y2="300" stroke="#ccc" stroke-width="1"/>
+              <!-- Bordes de jaulas gruesos -->
+              <path d="M 0,100 L 200,100 M 100,0 L 100,200 M 200,0 L 200,100 M 0,200 L 100,200 M 200,200 L 400,200 M 300,100 L 300,300 M 0,300 L 400,300" fill="none" stroke="#111" stroke-width="3"/>
+              <!-- Soluciones vectoriales -->
+              <text x="50" y="65" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">3</text>
+              <text x="150" y="65" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">4</text>
+              <text x="250" y="65" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">2</text>
+              <text x="350" y="65" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">1</text>
+              <text x="50" y="165" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">4</text>
+              <text x="150" y="165" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">1</text>
+              <text x="250" y="165" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">3</text>
+              <text x="350" y="165" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">2</text>
+              <text x="50" y="265" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">1</text>
+              <text x="150" y="265" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">2</text>
+              <text x="250" y="265" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">4</text>
+              <text x="350" y="265" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">3</text>
+              <text x="50" y="365" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">2</text>
+              <text x="150" y="365" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">3</text>
+              <text x="250" y="365" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">1</text>
+              <text x="350" y="365" text-anchor="middle" font-size="34" font-weight="bold" fill="#0056b3">4</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="result-badge-row">
+          <span class="pill-badge success">✓ Resuelto en 280 ms</span>
+          <span class="pill-badge neutral">Tablero 4×4 · Confianza 98%</span>
+        </div>
+      </div>
+
+      <footer class="action-footer">
+        <button class="btn-primary-action" id="btn-again-diego">
+          📸 Capturar otro tablero
+        </button>
+      </footer>
+    </section>
+
+    <!-- PANTALLA 3: RESULTADO — MODO MARTA (VERIFICACIÓN Y ANDAMIAJE) -->
+    <section class="screen" id="screen-marta" aria-label="Verificación y pistas asistidas para Marta">
+      <header class="app-header accessible">
+        <button class="btn-back large-tap" id="btn-back-marta" aria-label="Volver a la cámara">‹ Cámara</button>
+        <span class="header-user-tag">Marta</span>
+        <button class="btn-text-action large-tap" id="toggle-clean-marta">Tablero limpio</button>
+      </header>
+
+      <div class="result-content marta-flow">
+        <!-- Tablero con los números de Marta escritos a lápiz -->
+        <div class="board-display" id="board-display-marta">
+          <div class="marta-board size-4" id="marta-grid">
+            <!-- Celdas con números a lápiz de Marta -->
+            <div class="proj-cell bold-r bold-b"><span class="proj-label">11+</span><span class="pencil-val">3</span></div>
+            <div class="proj-cell bold-b"><span class="pencil-val">4</span></div>
+            <div class="proj-cell bold-r"><span class="proj-label">2/</span><span class="pencil-val">2</span></div>
+            <div class="proj-cell"><span class="pencil-val">1</span></div>
+
+            <!-- Fila 1: Aquí Marta cometió un error en la jaula 20* (puso 3 en vez de 4) -->
+            <div class="proj-cell bold-r conflict-target" id="cell-conflict-1"><span class="proj-label">20*</span><span class="pencil-val error-candidate">3</span></div>
+            <div class="proj-cell bold-r bold-b conflict-target" id="cell-conflict-2"><span class="pencil-val error-candidate">1</span></div>
+            <div class="proj-cell bold-b conflict-target" id="cell-conflict-3"><span class="pencil-val error-candidate">3</span></div>
+            <div class="proj-cell bold-r"><span class="proj-label">6*</span><span class="pencil-val">2</span></div>
+
+            <!-- Fila 2 -->
+            <div class="proj-cell bold-r bold-b"><span class="pencil-val">1</span></div>
+            <div class="proj-cell bold-r bold-b"><span class="pencil-val">2</span></div>
+            <div class="proj-cell bold-r bold-b"><span class="pencil-val empty"></span></div>
+            <div class="proj-cell bold-b"><span class="pencil-val empty"></span></div>
+
+            <!-- Fila 3 -->
+            <div class="proj-cell bold-r"><span class="proj-label">1-</span><span class="pencil-val empty"></span></div>
+            <div class="proj-cell bold-r"><span class="pencil-val empty"></span></div>
+            <div class="proj-cell bold-r"><span class="proj-label">1</span><span class="pencil-val">1</span></div>
+            <div class="proj-cell"><span class="pencil-val">4</span></div>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Andamiaje Progresivo (Scaffolding Card) -->
+        <div class="scaffolding-card" id="scaffolding-card">
+          <!-- Nivel 1: Validación inicial honesta y no invasiva -->
+          <div class="scaffold-level level-1" id="scaffold-l1">
+            <div class="scaffold-header-alert">
+              <span class="alert-icon">⚠️</span>
+              <div class="alert-texts">
+                <h3 class="alert-title">Hay 1 número que no cuadra</h3>
+                <p class="alert-desc">El resto de tus casillas llenas va por excelente camino.</p>
+              </div>
+            </div>
+            <button class="btn-scaffold primary large-tap" id="btn-show-conflict-cage">
+              🔍 Señalar la jaula con el error
+            </button>
+          </div>
+
+          <!-- Nivel 2: Localización espacial activada -->
+          <div class="scaffold-level level-2 hidden" id="scaffold-l2">
+            <div class="scaffold-header-alert highlighted">
+              <span class="alert-icon">📍</span>
+              <div class="alert-texts">
+                <h3 class="alert-title">Conflicto en la jaula destacada en amarillo</h3>
+                <p class="alert-desc">Mira la jaula con la etiqueta <strong>20*</strong> en la segunda fila.</p>
+              </div>
+            </div>
+            <button class="btn-scaffold secondary large-tap" id="btn-explain-rule">
+              💡 Explicar por qué no cuadra
+            </button>
+          </div>
+
+          <!-- Nivel 3: Pista lógica explicativa -->
+          <div class="scaffold-level level-3 hidden" id="scaffold-l3">
+            <div class="scaffold-header-alert explained">
+              <span class="alert-icon">🧠</span>
+              <div class="alert-texts">
+                <h3 class="alert-title">Pista de la regla</h3>
+                <p class="alert-desc">
+                  La jaula pide que el producto sea <strong>20</strong>. Tus números actuales (3, 1 y 3) multiplican <strong>9</strong> y además repites el 3 en la fila.
+                </p>
+              </div>
+            </div>
+            <div class="marta-final-actions">
+              <button class="btn-scaffold tertiary large-tap" id="btn-reveal-cage-sol">
+                👁️ Ver la solución de esta jaula sola
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="action-footer marta-footer">
+        <button class="btn-link-subtle large-tap" id="btn-marta-reveal-all">
+          Revelar solución completa del tablero...
+        </button>
+      </footer>
+    </section>
+
+    <!-- PANTALLA 4: MODAL DE AVISO ACCIONABLE (CUANDO LA FOTO NO DA) -->
+    <div class="modal-backdrop hidden" id="modal-actionable-error" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-card">
+        <div class="modal-icon-badge" id="modal-icon">📐</div>
+        <h2 class="modal-title" id="modal-title">La foto está muy inclinada</h2>
+        <p class="modal-desc" id="modal-desc">
+          Toma la foto más de frente al papel para que podamos leer las líneas y los números correctamente.
+        </p>
+        <div class="modal-tip-box" id="modal-tip">
+          💡 <strong>Consejo:</strong> Mantén el teléfono paralelo a la mesa.
+        </div>
+        <button class="btn-modal-action large-tap" id="btn-modal-dismiss">
+          Entendido, volver a intentar
+        </button>
+      </div>
+    </div>
+
+    <!-- DIÁLOGO DE CONFIRMACIÓN PARA MARTA (PREVENCIÓN DE SPOILERS) -->
+    <div class="modal-backdrop hidden" id="modal-confirm-spoiler" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-icon-badge warning">🙈</div>
+        <h2 class="modal-title">¿Revelar toda la respuesta?</h2>
+        <p class="modal-desc">
+          Se mostrarán los números de todas las casillas del tablero. Perderás la oportunidad de resolverlo tú misma.
+        </p>
+        <div class="modal-btn-row">
+          <button class="btn-secondary large-tap" id="btn-cancel-spoiler">Seguir pensando</button>
+          <button class="btn-danger large-tap" id="btn-confirm-spoiler">Sí, mostrar todo</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
