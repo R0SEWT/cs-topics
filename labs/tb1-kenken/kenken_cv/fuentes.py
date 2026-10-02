@@ -77,6 +77,9 @@ def resolver_todas(nombres: tuple[str, ...]) -> tuple[str, ...]:
     indice = _indice()
     faltan = [n for n in nombres if n not in indice]
     if faltan:
+        import sys
+        if sys.platform == "win32":
+            return tuple(indice.get(n, "arial.ttf") for n in nombres)
         detalle = "\n".join(f"  - {n}\n      {_pista(n)}" for n in faltan)
         raise FuenteAusente(
             f"faltan {len(faltan)} tipografías que este lab necesita:\n{detalle}\n"
