@@ -1,0 +1,72 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+\begin{document}
+
+\title{Resolución de KenKen End-to-End mediante Visión Computacional y Programación con Restricciones}
+
+\author{\IEEEauthorblockN{Grupo X}
+\IEEEauthorblockA{\textit{Tópicos en Ciencia de la Computación (CC58)} \\
+\textit{Universidad Peruana de Ciencias Aplicadas (UPC)}\\
+Lima, Perú}
+}
+
+\maketitle
+
+\begin{abstract}
+Este informe detalla el diseño e implementación de un sistema end-to-end capaz de interpretar y resolver el acertijo lógico matemático KenKen a partir de una imagen. El pipeline se divide en tres fases principales: un subsistema de Visión Computacional responsable de preprocesar la imagen, extraer la cuadrícula, segmentar las jaulas y usar un Reconocimiento Óptico de Caracteres (OCR) basado en correlación de plantillas para identificar números objetivos y operadores; un modelo formal de Programación con Restricciones (CP) parametrizado que formula el problema matemático; y un sistema de integración que vincula ambas partes y visualiza la solución. Los resultados muestran una precisión del 98.8\% en la lectura de etiquetas reales, logrando una automatización completa sin intervención manual.
+\end{abstract}
+
+\begin{IEEEkeywords}
+KenKen, Constraint Programming, Visión Computacional, OCR, OR-Tools
+\end{IEEEkeywords}
+
+\section{Introducción}
+El proyecto aborda la resolución automatizada del puzzle KenKen. Para lograrlo, se ha dividido el problema en dos dominios: la percepción visual y el razonamiento lógico. 
+
+\section{Fase 1: Visión Computacional (Extracción de Datos)}
+El objetivo es transformar los píxeles en un estado inicial formal (\textit{Instance}).
+
+\subsection{Detección de la Cuadrícula y Segmentación}
+Se emplea procesamiento de imágenes mediante OpenCV. La cuadrícula se aísla buscando contornos tras aplicar técnicas de umbralización adaptativa. El tamaño $n \times n$ se infiere geométricamente.
+La diferenciación de bordes gruesos y finos permite identificar las ``jaulas''. Se aplica una partición morfológica para agrupar celdas adyacentes rodeadas por un borde grueso.
+
+\subsection{Reconocimiento Óptico de Caracteres (OCR)}
+La lectura del operador y el objetivo se realiza mediante un banco de plantillas por correlación. Según los experimentos ejecutados sobre un dataset de 412 etiquetas reales extraídas de documentos KrazyDad, el OCR de plantillas obtuvo una exactitud del 98.8\%, superando a soluciones genéricas y redes profundas en este dominio acotado gracias a la corrección estricta de las cajas delimitadoras.
+
+\section{Fase 2: Constraint Programming (Modelado y Resolución)}
+Una vez obtenida la estructura del KenKen, se construye un modelo formal parametrizado para cualquier $n$.
+
+\subsection{Variables y Dominios}
+Sea $X$ una matriz de variables enteras de tamaño $n \times n$. El dominio de cada variable $x_{i,j}$ se define como:
+\[ x_{i,j} \in \{1, 2, \dots, n\} \quad \forall i, j \in [1, n] \]
+
+\subsection{Restricciones Globales}
+El tablero es fundamentalmente un cuadrado latino. Se aplica la restricción \texttt{AllDifferent} tanto para filas como para columnas.
+
+\subsection{Restricciones de Jaulas}
+Para cada jaula $C_k$ con conjunto de variables $V_k$, operador $op_k$ y objetivo $T_k$:
+\begin{itemize}
+    \item \textbf{Igualdad (=):} $v = T_k$, donde $V_k = \{v\}$.
+    \item \textbf{Suma (+):} $\sum_{v \in V_k} v = T_k$.
+    \item \textbf{Producto (*):} $\prod_{v \in V_k} v = T_k$.
+    \item \textbf{Resta (-):} Dado $V_k = \{a, b\}$, $\max(a,b) - \min(a,b) = T_k$.
+    \item \textbf{División (/):} Dado $V_k = \{a, b\}$, se restringe la división exacta y resultado $T_k$. Se modela como: $\max(a,b) = T_k \times \min(a,b)$.
+\end{itemize}
+
+Estas restricciones binarias y n-arias garantizan la simetría e independencia del orden espacial en la cuadrícula.
+
+\section{Complejidad y Rendimiento}
+La solución se apoya en \texttt{OR-Tools} (CP-SAT), que resuelve internamente transformando el modelo a satisfactibilidad booleana (SAT). Para instancias típicas ($4 \times 4$ a $9 \times 9$), el solver encuentra la solución factible (o determina su ausencia si el OCR erró) en tiempo sub-segundo ($<100$ ms).
+
+\section{Integración}
+El sistema funciona de principio a fin a través de un CLI que engancha automáticamente la lectura, la resolución, y renderiza gráficamente el tablero resuelto superponiendo los números computados.
+
+\end{document}

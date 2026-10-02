@@ -20,19 +20,21 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
+from kenken_cv.fuentes import resolver_todas
 from kenken_cv.schema import Cage, Cell, Instance
 
 # Fuentes con las que se *dibujan* tableros de prueba. Deliberadamente incluye
 # tipografías que NO están en el banco de plantillas de `glyphs.BANCO`, para que
 # la evaluación pueda medir qué pasa con una fuente nunca vista.
-FUENTES = (
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
-    "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
-    "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
-    "/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf",
+NOMBRES_FUENTES: tuple[str, ...] = (
+    "DejaVuSans.ttf",
+    "DejaVuSans-Bold.ttf",
+    "DejaVuSerif.ttf",
+    "LiberationSans-Regular.ttf",
+    "LiberationSerif-Regular.ttf",
+    "FreeSerifBold.ttf",
 )
+FUENTES: tuple[str, ...] = resolver_todas(NOMBRES_FUENTES)
 
 # Glifos tal y como los imprime un KenKen real (no ASCII).
 GLIFO = {"+": "+", "-": "−", "*": "×", "/": "÷"}
