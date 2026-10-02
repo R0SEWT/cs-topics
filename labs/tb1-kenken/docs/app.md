@@ -2,12 +2,15 @@
 
 Estado: **borrador**, nada construido todavía. Patrón de referencia: el visor de
 `R0SEWT/concurrente` (`tp/app/`), diseñado alrededor de una persona y con un principio de
-diseño con nombre propio. Aquí vamos un paso más allá: **se valida con personas reales, no
-solo con personas sintéticas.**
+diseño con nombre propio.
+
+**El diseño centrado en las personas se fundamentará en papers** (ver "Fundamento en la
+literatura", más abajo). Esa revisión se hace en otra sesión; hasta entonces, las
+personas, los principios y la forma de validar de esta sección son **provisionales**.
 
 ## Para quién
 
-### Personas (sintéticas, a validar)
+### Personas (sintéticas, provisionales)
 
 - **Diego, 22, estudiante.** Va en el bus con un cuadernillo de KenKen, se atasca en uno y
   quiere la respuesta *ya*, con una mano, para compararla con la suya. Le sobra cualquier
@@ -16,7 +19,7 @@ solo con personas sintéticas.**
   un 9×9, y sospecha que tiene un error. No quiere que le regalen la solución, solo saber
   si va bien y, si no, dónde se equivocó. Necesita letra grande y mensajes sin tecnicismos.
 
-### Principios de diseño
+### Principios de diseño (provisionales)
 
 1. **Honestidad de lectura.** La app nunca muestra una solución que no pueda respaldar. Si
    lo que leyó no deja el tablero con solución única, dice qué no pudo leer y dónde, en vez
@@ -31,19 +34,34 @@ solo con personas sintéticas.**
 5. **Legible para todos.** Texto grande, alto contraste, todo al alcance del pulgar y
    usable con una mano.
 
-### Cómo lo validamos
+### Fundamento en la literatura (pendiente, otra sesión: cst-byw.8)
+
+El método de diseño centrado en las personas, los principios y la forma de validar saldrán
+de una revisión de papers, no de la intuición del equipo. Esa revisión tiene que responder:
+
+- **Qué método seguir** y con qué evidencia (personas, recorridos, prototipos, pruebas).
+- **Qué dice la evidencia** sobre los temas de esta app: guiar al usuario para que la foto
+  salga bien, mensajes de error, ayuda graduada sin revelar la respuesta, y accesibilidad
+  para personas mayores.
+- **Cómo validar** con un equipo pequeño y en pocas semanas: cuántas personas, qué tareas
+  y qué métricas.
+
+Cada principio de arriba que sobreviva debería quedar citado. El que no tenga respaldo se
+reformula o se quita.
+
+### Validación (propuesta, a contrastar con la literatura)
 
 Una persona sintética sirve para diseñar, pero no para medir: es la misma lección que dejó
-el conjunto sintético de la Fase 1. Antes de dar la app por buena se prueba con
-**5 personas reales** (compañeros, familia; idealmente alguien del perfil de Marta).
+el conjunto sintético de la Fase 1. La propuesta inicial es probar con **5 personas
+reales** (compañeros, familia; idealmente alguien del perfil de Marta), pidiéndoles que
+piensen en voz alta mientras hacen dos tareas:
 
-- **Tareas:** "resuelve este KenKen con la app" y "averigua si este tablero a medio
-  llenar está bien".
-- **Método:** piensan en voz alta mientras lo hacen, sin ayuda del equipo.
-- **Qué se anota:** si completan la tarea, cuánto tardan, dónde dudan y qué mensajes no
-  entienden.
-- Las dudas de diseño que no sabemos resolver de antemano, como la forma de mostrar la
-  solución, se deciden ahí y no en una discusión.
+- "resuelve este KenKen con la app";
+- "averigua si este tablero a medio llenar está bien".
+
+Se anota si completan la tarea, cuánto tardan, dónde dudan y qué mensajes no entienden.
+Las dudas de diseño que no sabemos resolver de antemano, como la forma de mostrar la
+solución, se deciden ahí y no en una discusión.
 
 ## v1 — Core loop: foto → solución
 
@@ -54,7 +72,7 @@ el conjunto sintético de la Fase 1. Antes de dar la app por buena se prueba con
 3. El usuario toma la foto.
 4. La app lee el tablero y lo resuelve. **Objetivo: menos de 3 s** de foto a solución. El
    solver tarda menos de 50 ms; el tiempo se va en la red y en la Fase 1.
-5. **Muestra la solución.** Hay dos maneras, y se decide en la prueba con usuarios:
+5. **Muestra la solución.** Hay dos maneras, y se decide en la validación con usuarios:
    - **Sobre tu propia foto:** ves tu hoja de papel tal como la fotografiaste, con los
      números de la solución escritos encima de cada casilla. Copiarlos al papel es directo
      porque todo está donde lo ves. Es la opción por defecto del prototipo, y el código ya
@@ -140,30 +158,31 @@ puede ayudar con la interfaz, la lectura de dígitos y los tests.
 ## Plataforma y arquitectura
 
 ```
- teléfono Android (APK)                 nodo de cómputo (PC con GPU de un integrante)
+ teléfono Android (APK)                 nodo de cómputo (PC con GPU)
  ┌───────────────────────┐   Wi-Fi     ┌──────────────────────────────────────────┐
- │ HTML/CSS/JS en        │   local     │ API en Python                             │
- │ Capacitor             │ ──────────► │  kenken_cv (Fase 1) → kenken_cp (CP-SAT)  │
+ │ cliente Android       │   local     │ API en Python                             │
+ │ (tecnología abierta)  │ ──────────► │  kenken_cv (Fase 1) → kenken_cp (CP-SAT)  │
  │ cámara nativa         │ ◄────────── │ SQLite: cuentas e historial               │
  └───────────────────────┘             └──────────────────────────────────────────┘
 ```
 
-- **APK para Android.** Se escribe como la app de `concurrente` (HTML, CSS y JS sin
-  framework) y se empaqueta como APK con Capacitor. Usa el plugin nativo de cámara, se
-  instala directamente sin pasar por Play Store y deja abierta la puerta a un visor en vivo
-  que guíe la foto en tiempo real.
-- **El servidor es la PC de uno de los integrantes**, usada como nodo de cómputo. El
-  pipeline es Python (OpenCV y OR-Tools), y meterlo dentro de una APK supondría reescribirlo;
-  en el nodo se reutiliza tal cual. La v1 corre bien en CPU; la GPU entra con la v2 (dígitos
-  a mano) y con el jurado de motores OCR.
+- **APK para Android, con la tecnología abierta.** Capacitor (el HTML/CSS/JS de
+  `concurrente` empaquetado como APK), Android nativo en Kotlin, u otra opción: se decide
+  sobre la marcha según lo que resulte más relevante. Cualquiera de las tres usa la cámara
+  nativa y se instala directamente, sin pasar por Play Store. Lo que sí está fijado es el
+  contrato con el nodo (la API), así que el cliente se puede cambiar sin tocar el servidor.
+- **El servidor es un nodo de cómputo con GPU.** Se desarrolla en la máquina de Rody y se
+  prueba en la PC de otro integrante, que tiene una **RTX 4060**. El pipeline es Python
+  (OpenCV y OR-Tools), y meterlo dentro de una APK supondría reescribirlo; en el nodo se
+  reutiliza tal cual. La v1 corre bien en CPU; la GPU entra con la v2 (dígitos a mano) y con
+  el jurado de motores OCR.
 - **Conexión: la misma Wi-Fi.**
   - Para no tener que escribir direcciones IP, el nodo muestra un **código QR** con su
     dirección y la app lo escanea una vez (principio 2).
   - Riesgo: las redes Wi-Fi de campus suelen aislar a los dispositivos entre sí. Plan B: el
     nodo se conecta al punto de acceso del teléfono.
-  - Android bloquea por defecto el HTTP sin cifrar. La app tiene que permitirlo para la
-    red local (configuración de seguridad de red, o hacer las peticiones con el cliente
-    HTTP nativo de Capacitor).
+  - Android bloquea por defecto el HTTP sin cifrar, sea cual sea el cliente. La app tiene
+    que permitirlo para la red local con una configuración de seguridad de red.
 - **Privacidad:** las fotos y el historial quedan en la PC del nodo. La app lo dice al crear
   la cuenta y deja borrar cualquier tablero.
 - **Sin conexión no funciona** mientras el solver viva en el nodo.
@@ -174,8 +193,8 @@ puede ayudar con la interfaz, la lectura de dígitos y los tests.
   rasterizados, es 8/16.
 - Porcentaje de fallos que terminan en un aviso específico, no genérico.
 - Tiempo de foto a solución en un teléfono real (p50 y p95).
-- En la prueba con usuarios: tareas completadas sin ayuda, tiempo, y mensajes que no se
-  entendieron.
+- En la validación con usuarios: tareas completadas sin ayuda, tiempo, y mensajes que no
+  se entendieron. Las métricas definitivas salen de la revisión de literatura.
 - Todo sobre fotos reales (cst-zol), no sobre sintéticos.
 
 ## Fuera de alcance
@@ -187,16 +206,17 @@ generar KenKens nuevos y otros acertijos.
 
 **Tomadas (2026-10-02):**
 
-- APK para Android, con el servidor en la PC con GPU de un integrante.
+- APK para Android con un servidor en un nodo con GPU: se desarrolla en la máquina de Rody
+  y se prueba en la PC con RTX 4060 de otro integrante.
 - Teléfono y nodo en la misma Wi-Fi.
 - Cuenta solo con el nombre e historial en el servidor.
 - La corrección rápida queda para después, registrada como fallo conocido.
-- Diseño centrado en las personas, validado con usuarios reales.
+- El diseño centrado en las personas se fundamenta en papers; la revisión, en otra sesión.
 
 **Abiertas:**
 
-1. ¿Qué PC hace de nodo, y qué GPU tiene?
-2. ¿Capacitor, o Android nativo (Kotlin)? Recomendado: Capacitor, para reutilizar el estilo
-   y el código web de `concurrente`.
-3. La vista de la solución (sobre la foto o tablero limpio) se decide en la prueba con
-   usuarios.
+1. La tecnología del cliente (Capacitor, Kotlin nativo u otra) se decide sobre la marcha.
+2. La revisión de literatura para el diseño centrado en las personas, que define el
+   método, los principios y la validación.
+3. La vista de la solución (sobre la foto o tablero limpio), que se decide en la
+   validación con usuarios.
