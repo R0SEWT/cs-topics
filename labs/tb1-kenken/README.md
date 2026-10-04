@@ -65,28 +65,48 @@ tableros reales.
 
 ### Qué OCR conviene
 
-La primera medición sobre las 412 etiquetas reales, **con el recorte todavía
-defectuoso**, daba esto:
+Las 412 etiquetas reales, con el recorte ya arreglado (`scripts/comparar_ocr.py`,
+2026-09-25, todo en CPU):
 
 | método | etiqueta completa | operación | número |
 |---|---:|---:|---:|
-| Tesseract 5.3.4 (PSM 7) | 86.7% | 98.8% | 87.1% |
-| Plantillas por correlación | 83.5% | 97.3% | 83.5% |
-| CNN entrenada con sintéticos | 80.6% | 93.9% | 81.1% |
+| Plantillas por correlación (el pipeline) | **98.8%** | 99.3% | 98.8% |
+| Tesseract 5.3.4 (PSM 7) | 97.1% | 97.8% | 97.8% |
+| RapidOCR (PP-OCR sobre onnxruntime) | 64.8% | 68.4% | 94.2% |
+| TrOCR base printed | 60.9% | 63.6% | 95.1% |
 
-Y la ventaja de Tesseract **no resistía la prueba**: de 412 etiquetas los dos
-primeros discrepaban en 57, ganando Tesseract 35 y las plantillas 22 — como
-sacar 35 caras en 57 tiradas, que pasa por azar el 11% de las veces (McNemar
-exacta, p = 0.111).
+**Plantillas y Tesseract no se distinguen.** Discrepan en 11 etiquetas: 9 a favor
+de las plantillas y 2 de Tesseract, p = 0.065 (McNemar exacta). Las plantillas
+van primero, pero con 412 etiquetas no alcanza para decir que sean mejores. Los
+otros dos quedan muy por debajo de ambos (p < 0.001) y no se distinguen entre sí
+(p = 0.289).
 
-**La conclusión de verdad llegó después**: arreglar el recorte subió las
-plantillas de 83.5% a **98.8%**, doce puntos, cuando entre motores había tres.
-El cuello de botella nunca fue el OCR sino lo que se le daba de comer. Antes de
-cambiar de motor, hay que arreglar la entrada.
+**Los dos buenos se equivocan en cosas distintas**, y eso vale más que el ranking:
 
-Con el recorte arreglado la comparación está **sin rehacer** — es la primera
-tarea pendiente, y `scripts/comparar_ocr.py` la automatiza. Aun así, la idea del
-jurado sigue en pie para el resto de error: donde varios motores coinciden la
+- Las plantillas fallan 5: dan por ilegibles las tres etiquetas de cuatro cifras
+  que desbordan su celda (`2400×`, `4800×`, `2160×`) y leen dos `5-` como `6-`.
+- Tesseract falla 12: no devuelve nada en seis etiquetas cortas (`8×`, `3-`,
+  `1-`…), lee `14+` como `144+` dos veces y `7+` como `1+`. En las tres de cuatro
+  cifras **acierta el número** y solo pierde el operador.
+
+Al menos un motor acierta el 99.8% de las etiquetas (411 de 412); los cuatro a la
+vez, el 38.1%. Ese es el techo de un jurado, y la etiqueta que no lee nadie es
+una de las tres que desbordan.
+
+RapidOCR y TrOCR leen bien los números pero no los operadores, y no es un
+problema de la medición: de los 130 operadores que falla RapidOCR, 107 son el
+signo menos, que devuelve vacío o como `■`. Son motores genéricos de texto; el
+`-` fino de un KenKen no es algo que hayan visto.
+
+La primera medición, **con el recorte todavía defectuoso**, daba Tesseract
+86.7%, plantillas 83.5% y una CNN entrenada con sintéticos 80.6%, y la ventaja de
+Tesseract ya entonces era azar (p = 0.111). Arreglar el recorte subió las
+plantillas quince puntos y Tesseract diez, cuando entre motores había tres: el
+cuello de botella nunca fue el OCR, sino lo que se le daba de comer. Antes de
+cambiar de motor, hay que arreglar la entrada. La CNN no se volvió a medir: su
+código no quedó en el repo.
+
+La idea del jurado sale reforzada: donde plantillas y Tesseract coinciden, la
 lectura es fiable, y donde discrepan hay una lista corta de candidatos que el
 modelo CP puede desempatar, porque una lectura mala deja el puzzle sin solución.
 Eso es un argumento de Constraint Programming, que en la rúbrica pesa más que
@@ -112,23 +132,24 @@ tienen (perspectiva, luz desigual, ruido). 80 tableros, n de 4 a 7:
 
 ## Lo que falta (en orden de rentabilidad)
 
-1. **Rehacer la comparación de motores con el recorte arreglado.** Las cifras de
-   Tesseract y la CNN son de antes del arreglo y ya no valen.
-   `scripts/comparar_ocr.py` lo hace en un comando.
-2. **Las etiquetas que desbordan su celda** (`2400×`): detectar que falta el
+1. **Las etiquetas que desbordan su celda** (`2400×`): detectar que falta el
    operador y extender el recorte solo en ese caso, en vez de ensanchar siempre.
-   Son 3 de 412, pero en un tablero 9x9 con 23 jaulas cuestan puntos.
-3. **Jurado de motores + reparación guiada por el solver.** Donde los motores
-   coincidan, aceptar; donde discrepen, pasarle los candidatos al modelo CP y
-   quedarse con el que deja el puzzle con solución única.
-4. **Dataset fotografiado.** Los PDF de KrazyDad son tinta real pero rasterizada
+   Son 3 de 412, pero en un tablero 9x9 con 23 jaulas cuestan puntos. Hay un
+   atajo: Tesseract ya lee bien el número de las tres, y un objetivo mayor que
+   `n × (celdas de la jaula)` solo puede ser una multiplicación, así que el
+   operador se deduce sin tocar el recorte.
+2. **Jurado de motores + reparación guiada por el solver.** Donde plantillas y
+   Tesseract coincidan, aceptar; donde discrepen, pasarle los candidatos al
+   modelo CP y quedarse con el que deja el puzzle con solución única.
+3. **Dataset fotografiado.** Los PDF de KrazyDad son tinta real pero rasterizada
    de vectores: no tienen sombra, ni curvatura de papel, ni desenfoque de
    cámara. Eso hay que fotografiarlo.
 
-## Para seguir en la máquina con GPU
+## Para correr todos los motores
 
-Nada de lo que hay aquí necesita GPU — el pipeline es OpenCV y corre en CPU en
-segundos. La GPU sirve para lo que viene:
+Nada de lo que hay aquí necesita GPU: el pipeline es OpenCV y corre en CPU en
+segundos, y la comparación completa, TrOCR incluido, también se midió en CPU. La
+GPU solo acelera los motores basados en redes.
 
 ```bash
 cd labs/tb1-kenken
@@ -137,16 +158,26 @@ PYTHONPATH=. uv run python scripts/dataset_real.py      # baja los PDF (no van a
 PYTHONPATH=. uv run python scripts/comparar_ocr.py      # los motores disponibles
 ```
 
-`comparar_ocr.py` detecta CUDA solo para TrOCR. Para tener todos los motores:
+Cada motor que falte se salta con un aviso. Para tenerlos todos sin tocar
+`pyproject.toml` ni `uv.lock`, se suman al vuelo con `--with`:
 
 ```bash
-uv pip install transformers torch rapidocr-onnxruntime   # trocr, rapidocr
-sudo apt install tesseract-ocr                           # tesseract
+PYTHONPATH=. TESSERACT_BIN=... uv run --frozen \
+  --with rapidocr-onnxruntime --with torch --with 'transformers<5' \
+  --index https://download.pytorch.org/whl/cpu \
+  python scripts/comparar_ocr.py
 ```
 
-Aquí Tesseract hubo que extraerlo de su `.deb` a un prefijo local por no haber
-`sudo`; con permisos de administrador es una línea. El script admite
-`TESSERACT_BIN` si el binario no está en el `PATH`.
+- `transformers<5`: la 5.x no logra construir el tokenizador de
+  `trocr-base-printed`, y TrOCR queda "no disponible".
+- `--index .../whl/cpu` trae el torch de CPU (unos 700 MB instalado), sin las
+  librerías de CUDA que trae el de PyPI y que sin GPU no sirven. En la máquina
+  con GPU se quita, y `comparar_ocr.py` usa CUDA para TrOCR.
+- Tesseract: `sudo apt install tesseract-ocr`. Sin `sudo`, se bajan los `.deb`
+  (`apt-get download tesseract-ocr libtesseract5 liblept5 tesseract-ocr-eng
+  tesseract-ocr-osd`), se extraen con `dpkg -x` a un prefijo propio y
+  `TESSERACT_BIN` apunta a un envoltorio que fija `LD_LIBRARY_PATH` y
+  `TESSDATA_PREFIX` hacia ese prefijo.
 
 Registrar un motor nuevo es añadir una función a `MOTORES` en ese script: recibe
 la lista de recortes y devuelve `(operación, objetivo)` por cada uno. Candidatos
