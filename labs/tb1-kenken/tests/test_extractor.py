@@ -116,3 +116,13 @@ def test_asociar_etiquetas_celdas_asocia_correctamente():
 
     assert verdad[(0, 0)] == ("+", 12)
     assert verdad[(1, 1)] == ("-", 3)
+
+
+def test_ruta_por_tamano_organiza_por_dimension():
+    from pathlib import Path
+    from kenken_cv.extractor import ruta_por_tamano
+
+    raiz = Path("dataset_test")
+    assert ruta_por_tamano(raiz, 4) == raiz / "4x4"
+    assert ruta_por_tamano(raiz, 6) == raiz / "6x6"
+    assert ruta_por_tamano(raiz, 9) == raiz / "9x9"

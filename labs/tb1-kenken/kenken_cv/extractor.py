@@ -1,7 +1,8 @@
 """Extractor de etiquetas y partición de páginas para tableros KenKen reales.
 
 Soporta cuadernillos de 1 por página (_1pp) y de 4 por página (_4pp),
-permitiendo segmentar cuadrantes y asociar el texto vectorial a cada celda.
+permitiendo segmentar cuadrantes, rectificar tableros individuales,
+asociar el texto vectorial a cada celda y organizarlos por tamaño (4x4, 6x6, 9x9).
 """
 
 from __future__ import annotations
@@ -38,6 +39,11 @@ NOMBRE_OP: dict[str, str] = {
 PALABRA_XML = re.compile(
     r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]+)</word>'
 )
+
+
+def ruta_por_tamano(destino_raiz: Path, n: int) -> Path:
+    """Devuelve la ruta organizada por tamaño: destino_raiz / '{n}x{n}'."""
+    return destino_raiz / f"{n}x{n}"
 
 
 def formatear_nombre_etiqueta(
@@ -127,3 +133,188 @@ def asociar_etiquetas_celdas(
             verdad[celda] = (simbolos[-1] if simbolos else "=", int(digitos))
 
     return verdad
+
+
+def rasterizar_pagina(pdf: Path, pagina: int, dpi: int = 150) -> np.ndarray:
+    """Rasteriza la página (1-indexada) a imagen en escala de grises."""
+    try:
+        import pypdfium2 as pdfium
+
+        doc = pdfium.PdfDocument(str(pdf))
+        page = doc[pagina - 1]
+        img = page.render(scale=dpi / 72.0).to_pil()
+        return np.array(img.convert("L"))
+    except ImportError:
+        pass
+
+    import subprocess
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        out_base = Path(tmp) / f"pg_{pdf.stem}"
+        subprocess.run(
+            ["pdftoppm", "-r", str(dpi), "-png", "-f", str(pagina), "-l", str(pagina), str(pdf), str(out_base)],
+            check=True,
+        )
+        pngs = list(Path(tmp).glob("*.png"))
+        if pngs:
+            return cv2.imread(str(pngs[0]), cv2.IMREAD_GRAYSCALE)
+    raise RuntimeError(f"No se pudo rasterizar la página {pagina} de {pdf}")
+
+
+def extraer_palabras_pagina(pdf: Path, pagina: int) -> list[tuple[float, float, float, float, str]]:
+    """Extrae palabras del texto vectorial de la página (xMin, yMin, xMax, yMax, texto)."""
+    try:
+        import pypdfium2 as pdfium
+
+        doc = pdfium.PdfDocument(str(pdf))
+        page = doc[pagina - 1]
+        _, h_pt = page.get_size()
+        textpage = page.get_textpage()
+        words = []
+        curr_chars, curr_boxes = [], []
+        for i in range(textpage.count_chars()):
+            ch = textpage.get_text_range()[i]
+            if ch.isspace():
+                if curr_chars:
+                    words.append((
+                        min(b[0] for b in curr_boxes),
+                        h_pt - max(b[3] for b in curr_boxes),
+                        max(b[2] for b in curr_boxes),
+                        h_pt - min(b[1] for b in curr_boxes),
+                        "".join(curr_chars),
+                    ))
+                    curr_chars, curr_boxes = [], []
+            else:
+                curr_chars.append(ch)
+                curr_boxes.append(textpage.get_charbox(i))
+        if curr_chars:
+            words.append((
+                min(b[0] for b in curr_boxes),
+                h_pt - max(b[3] for b in curr_boxes),
+                max(b[2] for b in curr_boxes),
+                h_pt - min(b[1] for b in curr_boxes),
+                "".join(curr_chars),
+            ))
+        return [
+            (a, b, c, d, t.strip())
+            for a, b, c, d, t in words
+            if t.strip() and (t.strip().isdigit() or t.strip() in OPERADORES)
+        ]
+    except ImportError:
+        pass
+
+    import subprocess
+
+    xml = subprocess.run(
+        ["pdftotext", "-f", str(pagina), "-l", str(pagina), "-bbox", str(pdf), "-"],
+        capture_output=True,
+        text=True,
+    ).stdout
+    return [
+        (float(a), float(b), float(c), float(d), t.strip())
+        for a, b, c, d, t in PALABRA_XML.findall(xml)
+        if t.strip() and (t.strip().isdigit() or t.strip() in OPERADORES)
+    ]
+
+
+def procesar_cuadernillo(
+    pdf_path: Path,
+    destino_raiz: Path,
+    paginas: range | None = None,
+    dpi: int = 150,
+) -> dict[str, int]:
+    """Procesa un cuadernillo PDF y guarda los tableros individuales y etiquetas organizados por tamaño."""
+    from kenken_cv.cages import particionar
+    from kenken_cv.glyphs import recortar_etiqueta
+    from kenken_cv.grid import encontrar_rejilla
+    from kenken_cv.schema import Cage, Instance
+
+    if paginas is None:
+        try:
+            import pypdfium2 as pdfium
+
+            doc = pdfium.PdfDocument(str(pdf_path))
+            # La última página siempre es el solucionario en KrazyDad
+            paginas = range(1, len(doc))
+        except Exception:
+            paginas = range(1, 9)
+
+    match = re.search(r"INKY_(\d+)", pdf_path.name)
+    n = int(match.group(1)) if match else 6
+    es_4pp = "_4pp" in pdf_path.name
+
+    dir_tamano = ruta_por_tamano(destino_raiz, n)
+    dir_tableros = dir_tamano / "tableros"
+    dir_etiquetas = dir_tamano / "etiquetas"
+    dir_tableros.mkdir(parents=True, exist_ok=True)
+    dir_etiquetas.mkdir(parents=True, exist_ok=True)
+
+    punto_a_pixel = dpi / 72.0
+    tot_tableros = 0
+    tot_etiquetas = 0
+
+    for pagina in paginas:
+        try:
+            imagen_gris = rasterizar_pagina(pdf_path, pagina, dpi=dpi)
+            palabras = extraer_palabras_pagina(pdf_path, pagina)
+        except Exception as e:
+            print(f"  {pdf_path.name} p{pagina}: error al leer ({e})")
+            continue
+
+        if es_4pp:
+            cuadrantes = dividir_cuadrantes(imagen_gris)
+        else:
+            cuadrantes = [("p", imagen_gris, (0, imagen_gris.shape[0], 0, imagen_gris.shape[1]))]
+
+        for sub_id, sub_img, bbox in cuadrantes:
+            if es_4pp:
+                palabras_sub = filtrar_palabras_cuadrante(palabras, bbox, punto_a_pixel=punto_a_pixel)
+                nombre_base = f"{pdf_path.stem}_p{pagina}_{sub_id}"
+            else:
+                palabras_sub = palabras
+                nombre_base = f"{pdf_path.stem}_p{pagina}"
+
+            try:
+                rejilla = encontrar_rejilla(sub_img)
+            except Exception:
+                continue
+
+            verdad = asociar_etiquetas_celdas(palabras_sub, rejilla, n, punto_a_pixel=punto_a_pixel)
+            particion = particionar(rejilla)
+            anclas = {min(g) for g in particion.grupos}
+
+            # Guardar imagen individual rectificada del tablero (1000x1000)
+            cv2.imwrite(str(dir_tableros / f"{nombre_base}.png"), rejilla.warp)
+
+            # Si todas las jaulas tienen ancla identificada en verdad, guardar JSON de Instance
+            jaulas = []
+            completo = True
+            for grupo in particion.grupos:
+                ancla = min(grupo)
+                if ancla in verdad:
+                    op, target = verdad[ancla]
+                    jaulas.append(Cage(cells=tuple(sorted(grupo)), op=op, target=target))
+                else:
+                    completo = False
+                    break
+
+            if completo:
+                try:
+                    instancia = Instance(size=n, cages=tuple(jaulas))
+                    instancia.validate()
+                    (dir_tableros / f"{nombre_base}.json").write_text(instancia.to_json(), encoding="utf-8")
+                except Exception:
+                    pass
+
+            # Guardar recortes de etiquetas
+            for ancla in anclas & set(verdad):
+                op, target = verdad[ancla]
+                recorte = recortar_etiqueta(rejilla, ancla)
+                nombre_etiqueta = formatear_nombre_etiqueta(nombre_base, ancla, target, op)
+                cv2.imwrite(str(dir_etiquetas / nombre_etiqueta), recorte)
+                tot_etiquetas += 1
+
+            tot_tableros += 1
+
+    return {"n": n, "tableros": tot_tableros, "etiquetas": tot_etiquetas}
