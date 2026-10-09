@@ -1,428 +1,651 @@
-/**
- * Lógica interactiva del Prototipo HCD KenKen (Diego & Marta).
- * Implementa las heurísticas de Nielsen, la guía de visor en tiempo real
- * y el andamiaje cognitivo progresivo (Scaffolding).
- */
+// Lógica del cliente móvil KenKen (TB1)
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Estado de la app (HCD: Asistencia por defecto para respetar el juego, Modo Rápido como acelerador)
-  let currentMode = localStorage.getItem("kenken_mode") || "assist";
-  let currentCondition = "ideal"; // "ideal" | "tilted" | "dark" | "cutoff" | "fused" | "offline"
-  let lastReadyHaptic = 0;
+  // Constantes de almacenamiento local
+  const CLAVE_MODO = "kenken_modo";
+  const CLAVE_URL_NODO = "kenken_url_nodo";
+  const URL_POR_DEFECTO = "http://localhost:8723";
 
-  // Feedback háptico accesible (vibración física en Android)
-  function triggerHaptic(pattern = 30) {
-    if (navigator.vibrate) {
-      try {
-        navigator.vibrate(pattern);
-      } catch (e) {
-        // Ignorar si el navegador bloquea vibración sin interacción previa
-      }
+  // Estado en memoria
+  let modoActual = localStorage.getItem(CLAVE_MODO) || "asistencia";
+  let ultimaFoto = null;
+  let ultimoResultado = null;
+  let controladorActual = null;
+  const celdasReveladas = new Set();
+
+  // Elementos de la interfaz
+  const puntoEstado = document.getElementById("punto-estado");
+  const textoEstado = document.getElementById("texto-estado");
+  const btnAjustes = document.getElementById("btn-ajustes");
+
+  // Vistas
+  const vistaCaptura = document.getElementById("vista-captura");
+  const vistaLeyendo = document.getElementById("vista-leyendo");
+  const vistaResultado = document.getElementById("vista-resultado");
+  const vistaError = document.getElementById("vista-error");
+
+  // Captura
+  const btnModoAsistencia = document.getElementById("btn-modo-asistencia");
+  const btnModoRapido = document.getElementById("btn-modo-rapido");
+  const modoExplicacion = document.getElementById("modo-explicacion");
+  const btnTomarFoto = document.getElementById("btn-tomar-foto");
+  const btnGaleria = document.getElementById("btn-galeria");
+  const inputCamara = document.getElementById("input-camara");
+  const inputGaleria = document.getElementById("input-galeria");
+
+  // Leyendo
+  const miniaturaFoto = document.getElementById("miniatura-foto");
+  const btnCancelarLectura = document.getElementById("btn-cancelar-lectura");
+
+  // Resultado
+  const resultadoTitulo = document.getElementById("resultado-titulo");
+  const resultadoMeta = document.getElementById("resultado-meta");
+  const tableroEnvoltura = document.getElementById("tablero-envoltura");
+  const mensajeEnvoltura = document.getElementById("mensaje-envoltura");
+  const mensajeTexto = document.getElementById("mensaje-texto");
+  const avisosEnvoltura = document.getElementById("avisos-envoltura");
+  const avisosLista = document.getElementById("avisos-lista");
+  const btnRevelarTodo = document.getElementById("btn-revelar-todo");
+  const btnOtraFoto = document.getElementById("btn-otra-foto");
+
+  // Error de red
+  const errorDetalle = document.getElementById("error-detalle");
+  const btnReintentar = document.getElementById("btn-reintentar");
+  const btnAjustesDesdeError = document.getElementById("btn-ajustes-desde-error");
+  const btnOtraFotoError = document.getElementById("btn-otra-foto-error");
+
+  // Diálogos modales
+  const dialogoAjustes = document.getElementById("dialogo-ajustes");
+  const btnCerrarAjustes = document.getElementById("btn-cerrar-ajustes");
+  const btnCancelarAjustes = document.getElementById("btn-cancelar-ajustes");
+  const formAjustes = document.getElementById("form-ajustes");
+  const inputUrlNodo = document.getElementById("input-url-nodo");
+  const resultadoPrueba = document.getElementById("resultado-prueba");
+
+  const dialogoConfirmar = document.getElementById("dialogo-confirmar-revelar");
+  const btnCancelarRevelar = document.getElementById("btn-cancelar-revelar");
+  const btnConfirmarRevelar = document.getElementById("btn-confirmar-revelar");
+
+  // Utilidades para diálogos nativos
+  function abrirDialogo(d) {
+    if (typeof d.showModal === "function") {
+      d.showModal();
+    } else {
+      d.setAttribute("open", "");
     }
   }
 
-  // Elementos principales
-  const screenCamera = document.getElementById("screen-camera");
-  const screenDiego = document.getElementById("screen-diego");
-  const screenMarta = document.getElementById("screen-marta");
+  function cerrarDialogo(d) {
+    if (typeof d.close === "function") {
+      d.close();
+    } else {
+      d.removeAttribute("open");
+    }
+  }
 
-  // Barra de selección de Modo y estado
-  const btnModeAssist = document.getElementById("btn-mode-assist");
-  const btnModeFast = document.getElementById("btn-mode-fast");
-  const shutterActionLabel = document.getElementById("shutter-action-label");
-  const statusIndicator = document.getElementById("status-indicator");
-  const statusText = document.getElementById("status-text");
+  // Cambio de pantalla activa
+  function mostrarVista(nombre) {
+    vistaCaptura.classList.toggle("vista-oculta", nombre !== "captura");
+    vistaLeyendo.classList.toggle("vista-oculta", nombre !== "leyendo");
+    vistaResultado.classList.toggle("vista-oculta", nombre !== "resultado");
+    vistaError.classList.toggle("vista-oculta", nombre !== "error");
+  }
 
-  // Capa de escaneo láser
-  const scanningOverlay = document.getElementById("scanning-overlay");
-  const scanningText = document.getElementById("scanning-text");
+  // Normalización y lectura de la URL del nodo
+  function limpiarUrl(url) {
+    let u = (url || "").trim();
+    if (!u) return URL_POR_DEFECTO;
+    if (!/^https?:\/\//i.test(u)) {
+      u = "http://" + u;
+    }
+    return u.replace(/\/+$/, "");
+  }
 
-  // Visor y guía
-  const cameraStream = document.getElementById("camera-stream");
-  const simulatedCamera = document.getElementById("simulated-camera");
-  const btnToggleCamera = document.getElementById("btn-toggle-camera");
-  const reticleBox = document.getElementById("reticle-box");
-  const cameraGuidance = document.getElementById("camera-guidance");
-  const guidanceIcon = document.getElementById("guidance-icon");
-  const guidanceMsg = document.getElementById("guidance-msg");
-  const conditionChips = document.querySelectorAll(".btn-chip");
-  const btnShutter = document.getElementById("btn-shutter");
+  function obtenerUrlNodo() {
+    return limpiarUrl(localStorage.getItem(CLAVE_URL_NODO));
+  }
 
-  let currentFacingMode = "environment";
+  function guardarUrlNodo(url) {
+    localStorage.setItem(CLAVE_URL_NODO, limpiarUrl(url));
+  }
 
-  async function initCamera() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+  // Comprobación de salud del nodo (GET /salud)
+  async function comprobarSalud() {
+    const url = obtenerUrlNodo();
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: currentFacingMode } },
-        audio: false
-      });
-      cameraStream.srcObject = stream;
-      cameraStream.classList.remove("hidden");
-      simulatedCamera.classList.add("hidden");
-    } catch (err) {
-      console.log("Cámara no iniciada o rechazada, usando tablero simulado:", err);
-      cameraStream.classList.add("hidden");
-      simulatedCamera.classList.remove("hidden");
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 4000);
+      const res = await fetch(`${url}/salud`, { signal: controller.signal });
+      clearTimeout(timer);
+
+      if (res.ok) {
+        const datos = await res.json();
+        if (datos.ok && datos.nodo) {
+          puntoEstado.className = "punto-estado conectado";
+          textoEstado.textContent = `Conectado a ${datos.nodo}`;
+          return { ok: true, nodo: datos.nodo };
+        }
+      }
+    } catch (_) {
+      // Error de red o tiempo de espera
     }
+
+    puntoEstado.className = "punto-estado desconectado";
+    textoEstado.textContent = "Sin conexión con el nodo";
+    return { ok: false };
   }
 
-  btnToggleCamera.addEventListener("click", async () => {
-    currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
-    if (cameraStream.srcObject) {
-      cameraStream.srcObject.getTracks().forEach(t => t.stop());
-    }
-    await initCamera();
+  // Gestión del conmutador de modo (Asistencia vs Rápido)
+  function actualizarModoUI(modo) {
+    modoActual = modo;
+    localStorage.setItem(CLAVE_MODO, modo);
+
+    const esAsistencia = modo === "asistencia";
+    btnModoAsistencia.classList.toggle("activo", esAsistencia);
+    btnModoAsistencia.setAttribute("aria-checked", esAsistencia ? "true" : "false");
+
+    btnModoRapido.classList.toggle("activo", !esAsistencia);
+    btnModoRapido.setAttribute("aria-checked", !esAsistencia ? "true" : "false");
+
+    modoExplicacion.textContent = esAsistencia
+      ? "Toca cada casilla para ver su número. No revela la solución de golpe."
+      : "Muestra la solución completa de inmediato.";
+  }
+
+  btnModoAsistencia.addEventListener("click", () => actualizarModoUI("asistencia"));
+  btnModoRapido.addEventListener("click", () => actualizarModoUI("rapido"));
+  actualizarModoUI(modoActual);
+
+  // Apertura y guardado de ajustes de conexión
+  btnAjustes.addEventListener("click", () => {
+    inputUrlNodo.value = obtenerUrlNodo();
+    resultadoPrueba.textContent = "";
+    resultadoPrueba.className = "resultado-prueba";
+    abrirDialogo(dialogoAjustes);
   });
 
-  initCamera();
-
-  // Diego controls
-  const btnBackDiego = document.getElementById("btn-back-diego");
-  const togglePhotoDiego = document.getElementById("toggle-photo-diego");
-  const toggleCleanDiego = document.getElementById("toggle-clean-diego");
-  const photoProjDiego = document.getElementById("photo-projection-diego");
-  const cleanBoardDiego = document.getElementById("clean-board-diego");
-  const btnAgainDiego = document.getElementById("btn-again-diego");
-
-  // Marta controls
-  const btnBackMarta = document.getElementById("btn-back-marta");
-  const toggleCleanMarta = document.getElementById("toggle-clean-marta");
-  const btnShowConflict = document.getElementById("btn-show-conflict-cage");
-  const btnExplainRule = document.getElementById("btn-explain-rule");
-  const btnRevealCageSol = document.getElementById("btn-reveal-cage-sol");
-  const btnMartaRevealAll = document.getElementById("btn-marta-reveal-all");
-
-  const scaffoldL1 = document.getElementById("scaffold-l1");
-  const scaffoldL2 = document.getElementById("scaffold-l2");
-  const scaffoldL3 = document.getElementById("scaffold-l3");
-  const conflictCells = [
-    document.getElementById("cell-conflict-1"),
-    document.getElementById("cell-conflict-2"),
-    document.getElementById("cell-conflict-3"),
-  ];
-
-  // Modales
-  const modalActionable = document.getElementById("modal-actionable-error");
-  const modalTitle = document.getElementById("modal-title");
-  const modalDesc = document.getElementById("modal-desc");
-  const modalIcon = document.getElementById("modal-icon");
-  const modalTip = document.getElementById("modal-tip");
-  const btnModalDismiss = document.getElementById("btn-modal-dismiss");
-
-  const modalConfirmSpoiler = document.getElementById("modal-confirm-spoiler");
-  const btnCancelSpoiler = document.getElementById("btn-cancel-spoiler");
-  const btnConfirmSpoiler = document.getElementById("btn-confirm-spoiler");
-
-  // -------------------------------------------------------------
-  // 1. Selector de Modo (Asistencia por defecto vs Modo Rápido)
-  // -------------------------------------------------------------
-  function setMode(mode, save = true) {
-    currentMode = mode;
-    if (save) {
-      try {
-        localStorage.setItem("kenken_mode", mode);
-      } catch (e) {
-        // En caso de restricciones de almacenamiento local
-      }
-    }
-    triggerHaptic(15);
-    if (mode === "assist") {
-      btnModeAssist.classList.add("active");
-      btnModeAssist.setAttribute("aria-pressed", "true");
-      btnModeFast.classList.remove("active");
-      btnModeFast.setAttribute("aria-pressed", "false");
-      shutterActionLabel.textContent = "🔍 Verificar mi avance a lápiz (¿Voy bien?)";
-    } else {
-      btnModeFast.classList.add("active");
-      btnModeFast.setAttribute("aria-pressed", "true");
-      btnModeAssist.classList.remove("active");
-      btnModeAssist.setAttribute("aria-pressed", "false");
-      shutterActionLabel.textContent = "⚡ Resolver todo el tablero (Modo Rápido)";
-    }
-  }
-
-  btnModeAssist.addEventListener("click", () => setMode("assist"));
-  btnModeFast.addEventListener("click", () => setMode("fast"));
-  setMode(currentMode, false); // Inicializar con preferencia recordada
-
-  // -------------------------------------------------------------
-  // 2. Simulador de condiciones del visor (Active Viewfinder)
-  // -------------------------------------------------------------
-  const CONDITION_CONFIG = {
-    ideal: {
-      reticleClass: "reticle-ready",
-      guidanceClass: "ready",
-      icon: "✓",
-      msg: "Tablero centrado · Listo para capturar",
-      canCapture: true,
-    },
-    tilted: {
-      reticleClass: "reticle-warning",
-      guidanceClass: "warning",
-      icon: "⚠️",
-      msg: "Muy inclinada · Ponte más de frente al papel",
-      canCapture: false,
-      modal: {
-        icon: "📐",
-        title: "La foto está muy inclinada",
-        desc: "Las líneas de la rejilla se deforman y el detector de perspectiva no logra cuadrarlas.",
-        tip: "💡 <strong>Consejo:</strong> Mantén el teléfono paralelo a la mesa.",
-      },
-    },
-    dark: {
-      reticleClass: "reticle-warning",
-      guidanceClass: "warning",
-      icon: "💡",
-      msg: "Poca luz · Enciende la lámpara o evita tu sombra",
-      canCapture: false,
-      modal: {
-        icon: "💡",
-        title: "Hay poca luz o mucho reflejo",
-        desc: "El contraste entre la tinta del periódico y el papel es insuficiente para leer los números con seguridad.",
-        tip: "💡 <strong>Consejo:</strong> Acércate a una ventana o enciende la luz de apoyo ⚡.",
-      },
-    },
-    cutoff: {
-      reticleClass: "reticle-error",
-      guidanceClass: "error",
-      icon: "⛔",
-      msg: "Falta una parte · Aléjate para ver las 4 esquinas",
-      canCapture: false,
-      modal: {
-        icon: "✂️",
-        title: "Falta un borde del tablero",
-        desc: "Una de las esquinas del KenKen quedó cortada por el borde de la cámara.",
-        tip: "💡 <strong>Consejo:</strong> Aléjate unos 10 cm para que el recuadro negro exterior entre completo.",
-      },
-    },
-    fused: {
-      reticleClass: "reticle-warning",
-      guidanceClass: "warning",
-      icon: "🧩",
-      msg: "Jaula dudosa · Trazo fino discontinuo detectado",
-      canCapture: true,
-      modal: {
-        icon: "🧩",
-        title: "Aviso de jaula dudosa (cst-90g)",
-        desc: "El detector encontró dos jaulas que podrían estar unidas en una sola debido a un trazo fino discontinuo.",
-        tip: "💡 <strong>Honestidad de lectura:</strong> La app señalará la jaula dudosa para que la confirmes en vez de inventar números erróneos.",
-      },
-    },
-    offline: {
-      reticleClass: "reticle-error",
-      guidanceClass: "error",
-      icon: "📡",
-      msg: "Sin conexión con el nodo de cómputo",
-      canCapture: false,
-      modal: {
-        icon: "📡",
-        title: "No encuentro el nodo en la red Wi-Fi",
-        desc: "No pudimos comunicar con la API en tu PC (192.168.1.45).",
-        tip: "💡 <strong>Plan B:</strong> Verifica que ambos estén en la misma Wi-Fi o conecta tu PC al punto de acceso del teléfono.",
-      },
-    },
-  };
-
-  function updateCondition(cond) {
-    currentCondition = cond;
-    conditionChips.forEach((chip) => {
-      chip.classList.toggle("active", chip.dataset.condition === cond);
-    });
-
-    const cfg = CONDITION_CONFIG[cond];
-    reticleBox.className = `reticle ${cfg.reticleClass}`;
-    cameraGuidance.className = `camera-guidance-pill ${cfg.guidanceClass}`;
-    guidanceIcon.textContent = cfg.icon;
-    guidanceMsg.textContent = cfg.msg;
-
-    if (cond === "offline") {
-      statusIndicator.className = "status-indicator";
-      statusText.textContent = "Buscando nodo Wi-Fi... (Desconectado)";
-    } else {
-      statusIndicator.className = "status-indicator online";
-      statusText.textContent = "Nodo Wi-Fi conectado: 192.168.1.45";
-    }
-
-    if (cond === "ideal") {
-      const now = Date.now();
-      if (now - lastReadyHaptic > 1800) {
-        triggerHaptic(20);
-        lastReadyHaptic = now;
-      }
-    }
-  }
-
-  conditionChips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      updateCondition(chip.dataset.condition);
-    });
+  btnCerrarAjustes.addEventListener("click", () => {
+    cerrarDialogo(dialogoAjustes);
+    comprobarSalud();
   });
 
-  // -------------------------------------------------------------
-  // 3. Obturador (Shutter Button)
-  // -------------------------------------------------------------
-  btnShutter.addEventListener("click", () => {
-    const cfg = CONDITION_CONFIG[currentCondition];
-    if (!cfg.canCapture) {
-      triggerHaptic([40, 50, 40]);
-      modalIcon.textContent = cfg.modal.icon;
-      modalTitle.textContent = cfg.modal.title;
-      modalDesc.textContent = cfg.modal.desc;
-      modalTip.innerHTML = cfg.modal.tip;
-      modalActionable.classList.remove("hidden");
-      return;
+  btnCancelarAjustes.addEventListener("click", () => {
+    cerrarDialogo(dialogoAjustes);
+    comprobarSalud();
+  });
+
+  formAjustes.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nuevaUrl = inputUrlNodo.value;
+    guardarUrlNodo(nuevaUrl);
+
+    resultadoPrueba.textContent = "Probando conexión…";
+    resultadoPrueba.className = "resultado-prueba probando";
+
+    const salud = await comprobarSalud();
+    if (salud.ok) {
+      resultadoPrueba.textContent = `Conectado a ${salud.nodo}`;
+      resultadoPrueba.className = "resultado-prueba exito";
+      setTimeout(() => {
+        cerrarDialogo(dialogoAjustes);
+      }, 500);
+    } else {
+      resultadoPrueba.textContent = "Sin conexión con el nodo en esa dirección.";
+      resultadoPrueba.className = "resultado-prueba fallo";
     }
+  });
 
-    btnShutter.style.transform = "scale(0.85)";
-    triggerHaptic(30);
-
-    // Si la cámara real está transmitiendo, capturamos el cuadro
-    if (cameraStream.srcObject && cameraStream.videoWidth) {
+  // Captura de imagen (Capacitor nativo o navegador web)
+  async function iniciarCaptura(origen) {
+    if (window.Capacitor?.isNativePlatform?.()) {
       try {
-        const canvas = document.createElement("canvas");
-        canvas.width = cameraStream.videoWidth;
-        canvas.height = cameraStream.videoHeight;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
-        const snapshotUrl = canvas.toDataURL("image/jpeg", 0.85);
-        photoProjDiego.style.backgroundImage = `url(${snapshotUrl})`;
-        photoProjDiego.style.backgroundSize = "cover";
-        photoProjDiego.style.backgroundPosition = "center";
-      } catch (e) {
-        console.log("No se pudo capturar snapshot de canvas:", e);
+        const Camera = window.Capacitor.Plugins?.Camera;
+        if (!Camera) throw new Error("Plugin Camera no disponible");
+        const foto = await Camera.getPhoto({
+          quality: 85,
+          resultType: "base64",
+          source: origen === "camera" ? "CAMERA" : "PHOTOS",
+          width: 2000,
+          correctOrientation: true,
+        });
+        const dataUrl = `data:image/${foto.format || "jpeg"};base64,${foto.base64String}`;
+        procesarFoto(dataUrl);
+      } catch (err) {
+        console.warn("Captura cancelada o no completada:", err);
       }
-    }
-
-    // Activar capa de escaneo láser (percepción de latencia)
-    scanningOverlay.classList.remove("hidden");
-    scanningText.textContent = "Extrayendo rejilla y etiquetas...";
-
-    setTimeout(() => {
-      scanningText.textContent = "Resolviendo con OR-Tools CP-SAT...";
-    }, 180);
-
-    setTimeout(() => {
-      btnShutter.style.transform = "scale(1)";
-      scanningOverlay.classList.add("hidden");
-      screenCamera.classList.remove("active");
-      triggerHaptic([30, 40, 30]);
-
-      if (currentCondition === "fused") {
-        // Honestidad de lectura (cst-90g): avisar sobre jaula dudosa
-        modalIcon.textContent = cfg.modal.icon;
-        modalTitle.textContent = cfg.modal.title;
-        modalDesc.textContent = cfg.modal.desc;
-        modalTip.innerHTML = cfg.modal.tip;
-        modalActionable.classList.remove("hidden");
-      }
-
-      if (currentMode === "fast") {
-        screenDiego.classList.add("active");
+    } else {
+      if (origen === "camera") {
+        inputCamara.click();
       } else {
-        resetMartaScaffolding();
-        screenMarta.classList.add("active");
+        inputGaleria.click();
       }
-    }, 420);
-  });
-
-  btnModalDismiss.addEventListener("click", () => {
-    modalActionable.classList.add("hidden");
-  });
-
-  // -------------------------------------------------------------
-  // 4. Flujo de Diego (Solución Inmediata)
-  // -------------------------------------------------------------
-  btnBackDiego.addEventListener("click", () => {
-    screenDiego.classList.remove("active");
-    screenCamera.classList.add("active");
-  });
-
-  btnAgainDiego.addEventListener("click", () => {
-    screenDiego.classList.remove("active");
-    screenCamera.classList.add("active");
-  });
-
-  togglePhotoDiego.addEventListener("click", () => {
-    togglePhotoDiego.classList.add("active");
-    toggleCleanDiego.classList.remove("active");
-    photoProjDiego.classList.remove("hidden");
-    cleanBoardDiego.classList.add("hidden");
-  });
-
-  toggleCleanDiego.addEventListener("click", () => {
-    toggleCleanDiego.classList.add("active");
-    togglePhotoDiego.classList.remove("active");
-    cleanBoardDiego.classList.remove("hidden");
-    photoProjDiego.classList.add("hidden");
-  });
-
-  // -------------------------------------------------------------
-  // 5. Flujo de Marta (Andamiaje Cognitivo Graduado)
-  // -------------------------------------------------------------
-  function resetMartaScaffolding() {
-    scaffoldL1.classList.remove("hidden");
-    scaffoldL2.classList.add("hidden");
-    scaffoldL3.classList.add("hidden");
-    conflictCells.forEach((c) => c.classList.remove("conflict-cage-highlight"));
-    // Restaurar valores erróneos de Marta para la prueba
-    const errorCandidates = document.querySelectorAll(".error-candidate");
-    if (errorCandidates.length >= 3) {
-      errorCandidates[0].textContent = "3";
-      errorCandidates[1].textContent = "1";
-      errorCandidates[2].textContent = "3";
-      errorCandidates.forEach((el) => (el.style.color = "var(--pencil-lead)"));
     }
   }
 
-  btnBackMarta.addEventListener("click", () => {
-    screenMarta.classList.remove("active");
-    screenCamera.classList.add("active");
-  });
+  btnTomarFoto.addEventListener("click", () => iniciarCaptura("camera"));
+  btnGaleria.addEventListener("click", () => iniciarCaptura("photos"));
 
-  // Nivel 1 -> Nivel 2: Señalar espacialmente la jaula
-  btnShowConflict.addEventListener("click", () => {
-    scaffoldL1.classList.add("hidden");
-    scaffoldL2.classList.remove("hidden");
-    conflictCells.forEach((c) => c.classList.add("conflict-cage-highlight"));
-  });
+  function leerArchivoSeleccionado(e) {
+    const archivo = e.target.files?.[0];
+    if (!archivo) return;
+    const lector = new FileReader();
+    lector.onload = () => {
+      procesarFoto(lector.result);
+    };
+    lector.readAsDataURL(archivo);
+    e.target.value = "";
+  }
 
-  // Nivel 2 -> Nivel 3: Explicar la regla lógica rota
-  btnExplainRule.addEventListener("click", () => {
-    scaffoldL2.classList.add("hidden");
-    scaffoldL3.classList.remove("hidden");
-  });
+  inputCamara.addEventListener("change", leerArchivoSeleccionado);
+  inputGaleria.addEventListener("change", leerArchivoSeleccionado);
 
-  // Nivel 3 -> Revelar solo esta jaula (4, 1, 5 o similar según tablero)
-  btnRevealCageSol.addEventListener("click", () => {
-    const errorCandidates = document.querySelectorAll(".error-candidate");
-    if (errorCandidates.length >= 3) {
-      errorCandidates[0].textContent = "4";
-      errorCandidates[1].textContent = "1";
-      errorCandidates[2].textContent = "5";
-      errorCandidates.forEach((el) => {
-        el.style.color = "var(--ink-pen)";
-        el.style.fontWeight = "bold";
+  // Procesamiento de foto en el nodo (POST /resolver)
+  async function procesarFoto(dataUrl) {
+    ultimaFoto = dataUrl;
+    celdasReveladas.clear();
+
+    miniaturaFoto.src = dataUrl;
+    mostrarVista("leyendo");
+
+    controladorActual = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controladorActual.abort();
+    }, 30000);
+
+    try {
+      const respuesta = await fetch(`${obtenerUrlNodo()}/resolver`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imagen: dataUrl }),
+        signal: controladorActual.signal,
       });
+      clearTimeout(timeoutId);
+
+      if (!respuesta.ok) {
+        let detalle = "";
+        try {
+          const errJson = await respuesta.json();
+          detalle = errJson.detail || errJson.mensaje || JSON.stringify(errJson);
+        } catch (_) {
+          detalle = await respuesta.text();
+        }
+        mostrarPantallaError(detalle || `Error del servidor (${respuesta.status})`);
+        return;
+      }
+
+      const datos = await respuesta.json();
+      ultimoResultado = datos;
+      renderizarResultado(datos);
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (err.name === "AbortError") {
+        mostrarPantallaError("Tiempo de espera agotado (30 s). El nodo no respondió a tiempo.");
+      } else {
+        mostrarPantallaError();
+      }
     }
-    conflictCells.forEach((c) => c.classList.remove("conflict-cage-highlight"));
-    btnRevealCageSol.textContent = "✓ Jaula resuelta con éxito";
-    btnRevealCageSol.disabled = true;
+  }
+
+  btnCancelarLectura.addEventListener("click", () => {
+    if (controladorActual) {
+      controladorActual.abort();
+    }
+    mostrarVista("captura");
   });
 
-  // Prevención de spoilers: Revelar todo el tablero
-  btnMartaRevealAll.addEventListener("click", () => {
-    modalConfirmSpoiler.classList.remove("hidden");
+  // Pantalla de error de red
+  function mostrarPantallaError(detalle) {
+    mostrarVista("error");
+    if (detalle) {
+      errorDetalle.textContent = detalle;
+      errorDetalle.classList.remove("vista-oculta");
+    } else {
+      errorDetalle.textContent = "";
+      errorDetalle.classList.add("vista-oculta");
+    }
+  }
+
+  btnReintentar.addEventListener("click", () => {
+    if (ultimaFoto) {
+      procesarFoto(ultimaFoto);
+    } else {
+      comprobarSalud();
+      mostrarVista("captura");
+    }
   });
 
-  btnCancelSpoiler.addEventListener("click", () => {
-    modalConfirmSpoiler.classList.add("hidden");
+  btnAjustesDesdeError.addEventListener("click", () => {
+    inputUrlNodo.value = obtenerUrlNodo();
+    resultadoPrueba.textContent = "";
+    resultadoPrueba.className = "resultado-prueba";
+    abrirDialogo(dialogoAjustes);
   });
 
-  btnConfirmSpoiler.addEventListener("click", () => {
-    modalConfirmSpoiler.classList.add("hidden");
-    // Pasar a la vista limpia de solución completa
-    screenMarta.classList.remove("active");
-    screenDiego.classList.add("active");
+  btnOtraFotoError.addEventListener("click", () => {
+    mostrarVista("captura");
   });
+
+  // Formato matemático y metadatos
+  function formatearOperador(op) {
+    switch (op) {
+      case "+": return "+";
+      case "-": return "−";
+      case "*": return "×";
+      case "/": return "÷";
+      case "=": return "";
+      default: return op || "";
+    }
+  }
+
+  function formatearMetadatos(ms) {
+    if (!ms) return "Solución única";
+    const vision = typeof ms.vision === "number" ? ms.vision : "—";
+    const solver = typeof ms.solver === "number" ? ms.solver : "—";
+    return `Leído en ${vision} ms · resuelto en ${solver} ms · solución única`;
+  }
+
+  // Dibujado del tablero KenKen vectorial (SVG)
+  function dibujarTablero(n, jaulas, solucion, modo, corregidas = new Set()) {
+    tableroEnvoltura.innerHTML = "";
+
+    const S = 60;
+    const W = n * S;
+    const H = n * S;
+    const grosorBorde = 3.5;
+    const margenExterior = grosorBorde / 2;
+
+    // Mapa de pertenencia celda -> índice de jaula
+    const mapaJaula = Array.from({ length: n }, () => Array(n).fill(-1));
+    jaulas.forEach((jaula, idx) => {
+      if (Array.isArray(jaula.celdas)) {
+        jaula.celdas.forEach(([r, c]) => {
+          if (r >= 0 && r < n && c >= 0 && c < n) {
+            mapaJaula[r][c] = idx;
+          }
+        });
+      }
+    });
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("class", "tablero-svg");
+    svg.setAttribute("role", "grid");
+    svg.setAttribute("aria-label", `Tablero KenKen de ${n} por ${n}`);
+
+    // 1. Capa de celdas
+    const capaCeldas = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    capaCeldas.setAttribute("class", "capa-celdas");
+
+    const tamNumero = Math.round(S * 0.48);
+
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        const gCelda = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const valor = solucion ? solucion[r][c] : null;
+        const revelada = modo === "rapido" || !solucion || celdasReveladas.has(`${r},${c}`);
+
+        gCelda.setAttribute("class", `celda ${revelada ? "revelada" : "oculta"}`);
+        gCelda.setAttribute("data-r", r);
+        gCelda.setAttribute("data-c", c);
+        gCelda.setAttribute("role", "gridcell");
+        gCelda.setAttribute("tabindex", "0");
+        gCelda.setAttribute(
+          "aria-label",
+          valor !== null
+            ? (revelada ? `Fila ${r + 1}, columna ${c + 1}, número ${valor}` : `Fila ${r + 1}, columna ${c + 1}, toca para revelar`)
+            : `Fila ${r + 1}, columna ${c + 1}`
+        );
+
+        const fondo = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        fondo.setAttribute("x", c * S);
+        fondo.setAttribute("y", r * S);
+        fondo.setAttribute("width", S);
+        fondo.setAttribute("height", S);
+        fondo.setAttribute("class", "fondo-celda");
+        gCelda.appendChild(fondo);
+
+        if (valor !== null) {
+          const textoVal = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          textoVal.setAttribute("x", c * S + S / 2);
+          textoVal.setAttribute("y", r * S + S / 2 + 1);
+          textoVal.setAttribute("font-size", tamNumero);
+          textoVal.setAttribute("text-anchor", "middle");
+          textoVal.setAttribute("dominant-baseline", "central");
+          textoVal.setAttribute("class", `valor-celda ${revelada ? "" : "texto-oculto"}`);
+          textoVal.textContent = valor;
+          gCelda.appendChild(textoVal);
+
+          const punto = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          punto.setAttribute("cx", c * S + S / 2);
+          punto.setAttribute("cy", r * S + S / 2);
+          punto.setAttribute("r", "3");
+          punto.setAttribute("class", `punto-oculto ${revelada ? "vista-oculta" : ""}`);
+          gCelda.appendChild(punto);
+
+          if (modo === "asistencia" && solucion) {
+            const revelarCelda = () => {
+              if (!celdasReveladas.has(`${r},${c}`)) {
+                celdasReveladas.add(`${r},${c}`);
+                gCelda.classList.remove("oculta");
+                gCelda.classList.add("revelada");
+                textoVal.classList.remove("texto-oculto");
+                punto.classList.add("vista-oculta");
+                gCelda.setAttribute("aria-label", `Fila ${r + 1}, columna ${c + 1}, número ${valor}`);
+
+                if (navigator.vibrate) {
+                  try { navigator.vibrate(25); } catch (_) {}
+                }
+
+                if (celdasReveladas.size >= n * n) {
+                  btnRevelarTodo.classList.add("vista-oculta");
+                }
+              }
+            };
+
+            gCelda.addEventListener("click", revelarCelda);
+            gCelda.addEventListener("keydown", (evt) => {
+              if (evt.key === "Enter" || evt.key === " ") {
+                evt.preventDefault();
+                revelarCelda();
+              }
+            });
+          }
+        }
+
+        capaCeldas.appendChild(gCelda);
+      }
+    }
+    svg.appendChild(capaCeldas);
+
+    // 2. Capa de divisiones y bordes
+    const capaLineas = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    capaLineas.setAttribute("class", "capa-lineas");
+    capaLineas.style.pointerEvents = "none";
+
+    // Divisiones verticales
+    for (let c = 0; c < n - 1; c++) {
+      const x = (c + 1) * S;
+      for (let r = 0; r < n; r++) {
+        const y1 = r * S;
+        const y2 = (r + 1) * S;
+        const mismaJaula = mapaJaula[r][c] !== -1 && mapaJaula[r][c] === mapaJaula[r][c + 1];
+
+        const linea = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        linea.setAttribute("x1", x);
+        linea.setAttribute("y1", y1);
+        linea.setAttribute("x2", x);
+        linea.setAttribute("y2", y2);
+        linea.setAttribute("class", mismaJaula ? "linea-fina" : "linea-gruesa");
+        capaLineas.appendChild(linea);
+      }
+    }
+
+    // Divisiones horizontales
+    for (let r = 0; r < n - 1; r++) {
+      const y = (r + 1) * S;
+      for (let c = 0; c < n; c++) {
+        const x1 = c * S;
+        const x2 = (c + 1) * S;
+        const mismaJaula = mapaJaula[r][c] !== -1 && mapaJaula[r][c] === mapaJaula[r + 1][c];
+
+        const linea = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        linea.setAttribute("x1", x1);
+        linea.setAttribute("y1", y);
+        linea.setAttribute("x2", x2);
+        linea.setAttribute("y2", y);
+        linea.setAttribute("class", mismaJaula ? "linea-fina" : "linea-gruesa");
+        capaLineas.appendChild(linea);
+      }
+    }
+
+    // Contorno exterior continuo
+    const contorno = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    contorno.setAttribute("x", margenExterior);
+    contorno.setAttribute("y", margenExterior);
+    contorno.setAttribute("width", W - grosorBorde);
+    contorno.setAttribute("height", H - grosorBorde);
+    contorno.setAttribute("class", "borde-exterior");
+    capaLineas.appendChild(contorno);
+
+    svg.appendChild(capaLineas);
+
+    // 3. Capa de etiquetas de jaulas (esquina superior izquierda de celda ancla)
+    const capaEtiquetas = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    capaEtiquetas.setAttribute("class", "capa-etiquetas");
+    capaEtiquetas.style.pointerEvents = "none";
+
+    const tamEtiqueta = Math.max(10, Math.round(S * 0.20));
+
+    jaulas.forEach((jaula) => {
+      if (!Array.isArray(jaula.celdas) || jaula.celdas.length === 0) return;
+      // Celda ancla: mínima fila, y en empate, mínima columna
+      const ordenadas = [...jaula.celdas].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+      const [anclaR, anclaC] = ordenadas[0];
+
+      const texto = `${jaula.objetivo ?? ""}${formatearOperador(jaula.op)}`;
+      if (!texto) return;
+
+      const textoEt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      textoEt.setAttribute("x", anclaC * S + 4);
+      textoEt.setAttribute("y", anclaR * S + tamEtiqueta + 3);
+      textoEt.setAttribute("font-size", tamEtiqueta);
+      // Las etiquetas que el solver corrigió se marcan con el color de acento.
+      const corregida = corregidas.has(`${anclaR},${anclaC}`);
+      textoEt.setAttribute("class", corregida ? "etiqueta-jaula etiqueta-corregida" : "etiqueta-jaula");
+      textoEt.textContent = texto;
+      capaEtiquetas.appendChild(textoEt);
+    });
+
+    svg.appendChild(capaEtiquetas);
+    tableroEnvoltura.appendChild(svg);
+  }
+
+  // Revelado total con confirmación
+  function revelarTodo() {
+    if (!ultimoResultado || !ultimoResultado.solucion) return;
+    const n = ultimoResultado.n;
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        celdasReveladas.add(`${r},${c}`);
+      }
+    }
+    const celdas = tableroEnvoltura.querySelectorAll(".celda");
+    celdas.forEach((el) => {
+      el.classList.remove("oculta");
+      el.classList.add("revelada");
+      const val = el.querySelector(".valor-celda");
+      if (val) val.classList.remove("texto-oculto");
+      const p = el.querySelector(".punto-oculto");
+      if (p) p.classList.add("vista-oculta");
+    });
+    btnRevelarTodo.classList.add("vista-oculta");
+  }
+
+  btnRevelarTodo.addEventListener("click", () => {
+    abrirDialogo(dialogoConfirmar);
+  });
+
+  btnCancelarRevelar.addEventListener("click", () => {
+    cerrarDialogo(dialogoConfirmar);
+  });
+
+  btnConfirmarRevelar.addEventListener("click", () => {
+    revelarTodo();
+    cerrarDialogo(dialogoConfirmar);
+  });
+
+  // Renderizado del resultado según respuesta del nodo
+  function renderizarResultado(datos) {
+    mostrarVista("resultado");
+
+    const esReparado = datos.estado === "reparado";
+    const esResuelto = datos.estado === "resuelto" || esReparado;
+    const correcciones = Array.isArray(datos.correcciones) ? datos.correcciones : [];
+    const corregidas = new Set(correcciones.map((c) => `${c.celda[0]},${c.celda[1]}`));
+    const tieneJaulas = Array.isArray(datos.jaulas) && datos.jaulas.length > 0 && typeof datos.n === "number";
+
+    tableroEnvoltura.innerHTML = "";
+    avisosLista.innerHTML = "";
+    avisosEnvoltura.classList.add("vista-oculta");
+    mensajeEnvoltura.classList.add("vista-oculta");
+    btnRevelarTodo.classList.add("vista-oculta");
+    mensajeEnvoltura.querySelector(".lista-correcciones")?.remove();
+
+    if (esResuelto) {
+      resultadoTitulo.textContent = esReparado ? "Solución, con lectura corregida" : "Solución";
+      resultadoMeta.textContent = formatearMetadatos(datos.ms);
+      resultadoMeta.classList.remove("vista-oculta");
+
+      dibujarTablero(datos.n, datos.jaulas, datos.solucion, modoActual, corregidas);
+
+      if (esReparado) {
+        // Honestidad de lectura: decir qué se corrigió y dónde.
+        mensajeTexto.textContent = datos.mensaje || "";
+        const lista = document.createElement("ul");
+        lista.className = "lista-correcciones";
+        correcciones.forEach((c) => {
+          const li = document.createElement("li");
+          const leido = `${c.leido.objetivo}${formatearOperador(c.leido.op)}`;
+          const era = `${c.corregido.objetivo}${formatearOperador(c.corregido.op)}`;
+          li.textContent = `Fila ${c.celda[0] + 1}, columna ${c.celda[1] + 1}: leí ${leido}, es ${era}`;
+          lista.appendChild(li);
+        });
+        mensajeEnvoltura.appendChild(lista);
+        mensajeEnvoltura.classList.remove("vista-oculta");
+      }
+
+      if (modoActual === "asistencia") {
+        btnRevelarTodo.classList.remove("vista-oculta");
+      }
+    } else {
+      resultadoTitulo.textContent = "No se pudo resolver";
+      resultadoMeta.textContent = "";
+      resultadoMeta.classList.add("vista-oculta");
+
+      if (datos.mensaje) {
+        mensajeTexto.textContent = datos.mensaje;
+        mensajeEnvoltura.classList.remove("vista-oculta");
+      }
+
+      if (tieneJaulas) {
+        dibujarTablero(datos.n, datos.jaulas, null, "rapido");
+      }
+    }
+
+    if (Array.isArray(datos.avisos) && datos.avisos.length > 0) {
+      datos.avisos.forEach((aviso) => {
+        const li = document.createElement("li");
+        li.textContent = aviso;
+        avisosLista.appendChild(li);
+      });
+      avisosEnvoltura.classList.remove("vista-oculta");
+    }
+  }
+
+  btnOtraFoto.addEventListener("click", () => {
+    mostrarVista("captura");
+  });
+
+  // Verificación inicial de salud
+  comprobarSalud();
 });
