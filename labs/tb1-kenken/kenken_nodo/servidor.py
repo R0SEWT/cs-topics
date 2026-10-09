@@ -75,8 +75,31 @@ def _decodificar(imagen: str) -> np.ndarray:
     return gris
 
 
+def _en_foto(lectura, alto: int, ancho: int) -> dict | None:
+    """Centros de celda y esquinas del tablero en la foto original, normalizados a 0..1,
+    para que la app dibuje la solución sobre la foto (Modo Rápido, "Sobre tu foto")."""
+    if lectura is None:
+        return None
+    rej = lectura.rejilla
+    inversa = np.linalg.inv(rej.homografia)
+
+    def proyectar(puntos):
+        pts = np.array(puntos, dtype=np.float64).reshape(-1, 1, 2)
+        fuera = cv2.perspectiveTransform(pts, inversa).reshape(-1, 2)
+        return [[round(float(x) / ancho, 4), round(float(y) / alto, 4)] for x, y in fuera]
+
+    n = rej.size
+    centros = [((rej.xs[c] + rej.xs[c + 1]) / 2, (rej.ys[r] + rej.ys[r + 1]) / 2)
+               for r in range(n) for c in range(n)]
+    planos = proyectar(centros)
+    esquinas = proyectar([(rej.xs[0], rej.ys[0]), (rej.xs[-1], rej.ys[0]),
+                          (rej.xs[-1], rej.ys[-1]), (rej.xs[0], rej.ys[-1])])
+    return {"centros": [planos[r * n:(r + 1) * n] for r in range(n)], "esquinas": esquinas}
+
+
 def _respuesta(estado: str, t_vision: float, *, mensaje: str | None = None, lectura=None,
-               solucion=None, t_solver: float = 0.0, instancia=None, correcciones=()) -> dict:
+               solucion=None, t_solver: float = 0.0, instancia=None, correcciones=(),
+               forma: tuple[int, int] | None = None) -> dict:
     instancia = instancia or (lectura.instancia if lectura else None)
     return {
         "estado": estado,
@@ -95,6 +118,7 @@ def _respuesta(estado: str, t_vision: float, *, mensaje: str | None = None, lect
              "corregido": {"op": c.corregido[0], "objetivo": c.corregido[1]}}
             for c in correcciones
         ],
+        "en_foto": _en_foto(lectura, *forma) if (lectura and forma) else None,
         "ms": {"vision": round(t_vision, 1), "solver": round(t_solver, 1)},
     }
 
@@ -143,13 +167,14 @@ def _resolver(gris: np.ndarray) -> dict:
         r = reparar(lectura.instancia)
         t_solver = 1000 * (time.perf_counter() - t1)
         if r is None:
-            return _respuesta("sin_solucion", t_vision, lectura=lectura, t_solver=t_solver)
+            return _respuesta("sin_solucion", t_vision, lectura=lectura, t_solver=t_solver, forma=gris.shape[:2])
         k = len(r.correcciones)
         return _respuesta(
             "reparado", t_vision, lectura=lectura, instancia=r.instancia, solucion=r.solucion,
-            t_solver=t_solver, correcciones=r.correcciones,
+            t_solver=t_solver, correcciones=r.correcciones, forma=gris.shape[:2],
             mensaje=MENSAJES["reparado"].format(k="una etiqueta" if k == 1 else f"{k} etiquetas"),
         )
     if not unica:
-        return _respuesta("varias", t_vision, lectura=lectura, t_solver=t_solver)
-    return _respuesta("resuelto", t_vision, lectura=lectura, solucion=solucion, t_solver=t_solver)
+        return _respuesta("varias", t_vision, lectura=lectura, t_solver=t_solver, forma=gris.shape[:2])
+    return _respuesta("resuelto", t_vision, lectura=lectura, solucion=solucion, t_solver=t_solver,
+                      forma=gris.shape[:2])

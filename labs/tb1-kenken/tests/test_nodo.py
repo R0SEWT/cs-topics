@@ -47,6 +47,11 @@ def test_resuelve_un_tablero_limpio():
     assert len(cuerpo["jaulas"]) == len(instancia.cages)
     assert [tuple(f) for f in cuerpo["solucion"]] == list(resolver(instancia))
     assert cuerpo["ms"]["vision"] > 0 and cuerpo["ms"]["solver"] >= 0
+    # Dónde cae cada celda en la foto, para dibujar la solución encima.
+    centros = cuerpo["en_foto"]["centros"]
+    assert len(centros) == 5 and all(len(f) == 5 for f in centros)
+    assert all(0 < x < 1 and 0 < y < 1 for f in centros for x, y in f)
+    assert centros[0][0][0] < centros[0][4][0] and centros[0][0][1] < centros[4][0][1]
 
 
 def test_acepta_data_url():
