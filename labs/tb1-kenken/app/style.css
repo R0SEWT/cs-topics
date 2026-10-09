@@ -1,11 +1,16 @@
-/* Estilos sobrios y accesibles para el cliente KenKen (v1) */
+/* 
+  Estilos del cliente KenKen (TB1) — Diseño Centrado en las Personas (HCD)
+  Grounded en WCAG 2.2 AAA (>= 7:1), Petrovčič et al. (2023) y Amershi et al. (2019).
+  Sin emojis, sin gradientes, sin glow, sin glassmorphism.
+*/
 
 :root {
   --fuente: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Tema claro por defecto (contraste WCAG AAA >= 7:1) */
+  /* Paleta semántica limpia de alto contraste (WCAG AAA >= 7:1) */
   --fondo: #ffffff;
   --superficie: #f8f9fa;
+  --superficie-oscura: #121212;
   --borde: #d1d5db;
   --borde-fuerte: #111827;
 
@@ -17,15 +22,21 @@
   --acento-texto: #ffffff;
   --acento-suave: #e8f0fe;
 
+  --lapiz-grafito: #3c4043;
+  --peligro: #b91c1c;
+
   --estado-conectado: #15803d;
   --estado-desconectado: #b91c1c;
+  --estado-aviso: #b06000;
+  --aviso-fondo: #fef7e0;
+  --aviso-borde: #f59e0b;
 
   --linea-jaula-gruesa: #111827;
   --linea-jaula-fina: #9ca3af;
 
   --tam-texto-base: 18px;
   --altura-tactil-min: 48px;
-  --radio: 8px;
+  --radio: 10px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,12 +50,18 @@
     --texto-secundario: #d1d5db;
     --texto-atenuado: #9ca3af;
 
-    --acento: #60a5fa;
+    --acento: #3b82f6;
     --acento-texto: #111827;
     --acento-suave: #1e293b;
 
+    --lapiz-grafito: #9ca3af;
+    --peligro: #ef4444;
+
     --estado-conectado: #22c55e;
     --estado-desconectado: #ef4444;
+    --estado-aviso: #fbbf24;
+    --aviso-fondo: #292316;
+    --aviso-borde: #f59e0b;
 
     --linea-jaula-gruesa: #f9fafb;
     --linea-jaula-fina: #4b5563;
@@ -68,7 +85,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Contenedor principal con safe-area-inset */
+/* Contenedor adaptado a teléfonos móviles */
 .app-contenedor {
   width: 100%;
   max-width: 440px;
@@ -76,27 +93,77 @@ html, body {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  background-color: var(--fondo);
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
 }
 
-/* Barra superior */
+/* ========================================================
+   BARRA SUPERIOR (HEADER): MODO, ESTADO DE NODO Y AJUSTES
+   ======================================================== */
 .barra-superior {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--borde);
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1.5px solid var(--borde);
   background-color: var(--fondo);
+  z-index: 50;
+}
+
+/* Selector de modo arriba (Asistencia / Rápido) */
+.conmutador-modo-cabecera {
+  display: flex;
+  background-color: var(--superficie);
+  border: 1.5px solid var(--borde);
+  border-radius: 24px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.btn-modo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--texto-secundario);
+  cursor: pointer;
+  min-height: 40px;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-modo.activo {
+  background-color: var(--acento);
+  color: var(--acento-texto);
+}
+
+.btn-modo .icono-modo {
+  flex-shrink: 0;
+}
+
+/* Zona de estado de red */
+.zona-estado-nodo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .estado-nodo {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--texto-secundario);
   min-width: 0;
 }
@@ -121,11 +188,12 @@ html, body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 140px;
 }
 
 .btn-icono {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -144,11 +212,15 @@ html, body {
   outline: none;
 }
 
-/* Contenido y vistas */
+/* ========================================================
+   CONTENEDOR DE PANTALLAS (VISTAS)
+   ======================================================== */
 .contenido-principal {
   flex: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 .vista {
@@ -161,132 +233,270 @@ html, body {
   display: none !important;
 }
 
-/* Zona inferior del pulgar (acciones principales) */
-.zona-inferior {
-  margin-top: auto;
-  padding: 16px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background-color: var(--fondo);
+/* ========================================================
+   1. VISOR DE CÁMARA (PANTALLA OSCURA Y RETÍCULA ACTIVA)
+   ======================================================== */
+#vista-camara {
+  background-color: #000000;
+  color: #ffffff;
 }
 
-/* Botones principales y accesibles */
-.btn-accion {
+.visor-camara {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
+}
+
+.video-stream {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  min-height: 52px;
-  border-radius: var(--radio);
-  font-family: inherit;
-  font-size: 18px;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Retícula de encuadre en el centro */
+.reticula-envoltura {
+  position: relative;
+  width: min(78vw, 310px);
+  height: min(78vw, 310px);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.reticula {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.esquina {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: #15803d;
+  border-style: solid;
+}
+
+.esquina.tl {
+  top: 0;
+  left: 0;
+  border-width: 4px 0 0 4px;
+  border-top-left-radius: 8px;
+}
+
+.esquina.tr {
+  top: 0;
+  right: 0;
+  border-width: 4px 4px 0 0;
+  border-top-right-radius: 8px;
+}
+
+.esquina.br {
+  bottom: 0;
+  right: 0;
+  border-width: 0 4px 4px 0;
+  border-bottom-right-radius: 8px;
+}
+
+.esquina.bl {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 4px 4px;
+  border-bottom-left-radius: 8px;
+}
+
+/* Estados de la retícula */
+.reticula.reticulo-listo .esquina {
+  border-color: #15803d;
+}
+
+.reticula.reticulo-aviso .esquina {
+  border-color: #d97706;
+}
+
+.reticula.reticulo-error .esquina {
+  border-color: #b91c1c;
+}
+
+/* Píldora de guía superior (Feedforward) */
+.pildora-guia {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: #111827;
+  border: 1.5px solid #374151;
+  color: #ffffff;
+  font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
+  z-index: 15;
+  text-align: center;
+  max-width: 90%;
+}
+
+.pildora-guia.guia-listo {
+  border-color: #15803d;
+  color: #86efac;
+}
+
+.pildora-guia.guia-aviso {
+  border-color: #d97706;
+  color: #fde68a;
+}
+
+.pildora-guia.guia-error {
+  border-color: #b91c1c;
+  color: #fca5a5;
+}
+
+.icono-guia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Vista de respaldo cuando no hay cámara en vivo */
+.fallback-camara {
+  position: absolute;
+  inset: 0;
+  background-color: #121212;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  transition: opacity 0.15s, background-color 0.15s;
+  padding: 24px;
+  z-index: 20;
 }
 
-.btn-accion:active {
-  opacity: 0.85;
-}
-
-.btn-primario {
-  background-color: var(--acento);
-  color: var(--acento-texto);
-  border: none;
-}
-
-.btn-secundario {
-  background-color: transparent;
-  color: var(--texto-principal);
-  border: 1.5px solid var(--borde);
-}
-
-.btn-terciario {
-  background-color: transparent;
-  color: var(--texto-secundario);
-  border: none;
-  min-height: 48px;
-  font-size: 17px;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/* Pantalla de Captura */
-.cuerpo-captura {
-  padding: 24px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-.presentacion {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.titulo-app {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  color: var(--texto-principal);
-}
-
-.bajada-app {
-  font-size: 18px;
-  color: var(--texto-secundario);
-  line-height: 1.4;
-}
-
-/* Selector de Modo */
-.bloque-modo {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.etiqueta-modo {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--texto-secundario);
-}
-
-.conmutador-modo {
-  display: flex;
-  border: 1.5px solid var(--borde);
+.tarjeta-fallback {
+  background-color: #1e1e20;
+  border: 1.5px solid #374151;
   border-radius: var(--radio);
-  overflow: hidden;
-  background-color: var(--superficie);
+  padding: 24px 20px;
+  text-align: center;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
-.btn-segmento {
-  flex: 1;
-  min-height: 48px;
-  background: transparent;
-  border: none;
-  font-family: inherit;
-  font-size: 17px;
-  font-weight: 500;
-  color: var(--texto-secundario);
-  cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+.icono-fallback {
+  color: #9ca3af;
 }
 
-.btn-segmento.activo {
-  background-color: var(--borde-fuerte);
-  color: var(--fondo);
-  font-weight: 600;
+.titulo-fallback {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f9fafb;
 }
 
-.explicacion-modo {
-  font-size: 15px;
-  color: var(--texto-atenuado);
+.desc-fallback {
+  font-size: 16px;
+  color: #d1d5db;
   line-height: 1.4;
 }
 
-/* Pantalla Leyendo */
+.acciones-fallback {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Controles de cámara en la zona del pulgar (Thumb zone) */
+.controles-camara {
+  background-color: #121212;
+  border-top: 1px solid #262626;
+  padding: 14px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 30;
+}
+
+.etiqueta-accion-obturador {
+  font-size: 14px;
+  font-weight: 500;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.fila-botones-obturador {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.btn-herramienta-camara {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #222326;
+  border: 1px solid #374151;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-herramienta-camara:active {
+  background-color: #2e3034;
+}
+
+/* Disparador grande */
+.btn-disparador {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 4px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.1s;
+}
+
+.btn-disparador:active {
+  transform: scale(0.92);
+}
+
+.anillo-disparador {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: block;
+}
+
+.btn-disparador:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========================================================
+   2. PANTALLA: LEYENDO (PROCESAMIENTO EN EL NODO)
+   ======================================================== */
 .cuerpo-centrado {
   flex: 1;
   display: flex;
@@ -325,21 +535,21 @@ html, body {
 }
 
 .spinner {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border: 3px solid var(--borde);
   border-top-color: var(--acento);
   border-radius: 50%;
-  animation: rotar 0.8s linear infinite;
+  animation: girar 0.8s linear infinite;
 }
 
-@keyframes rotar {
+@keyframes girar {
   to { transform: rotate(360deg); }
 }
 
 .titulo-proceso {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--texto-principal);
 }
 
@@ -348,43 +558,161 @@ html, body {
   color: var(--texto-secundario);
 }
 
-/* Pantalla Resultado */
+/* ========================================================
+   3. RESULTADOS: CABECERA Y BOTONES COMUNES
+   ======================================================== */
+.barra-navegacion-resultado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1.5px solid var(--borde);
+  background-color: var(--fondo);
+}
+
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  color: var(--acento);
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  padding: 4px 8px;
+  border-radius: var(--radio);
+}
+
+.btn-volver:hover,
+.btn-volver:focus-visible {
+  background-color: var(--acento-suave);
+}
+
+.etiqueta-vista-asistencia {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--texto-secundario);
+}
+
+.conmutador-perspectiva {
+  display: flex;
+  background-color: var(--superficie);
+  border: 1.5px solid var(--borde);
+  border-radius: 20px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.btn-perspectiva {
+  background: transparent;
+  border: none;
+  border-radius: 18px;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--texto-secundario);
+  cursor: pointer;
+  min-height: 36px;
+}
+
+.btn-perspectiva.activo {
+  background-color: var(--borde-fuerte);
+  color: var(--fondo);
+}
+
 .cuerpo-resultado {
   flex: 1;
-  padding: 16px 18px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   overflow-y: auto;
 }
 
-.resultado-encabezado {
+/* ========================================================
+   MODO RÁPIDO: PROYECCIÓN SOBRE FOTO
+   ======================================================== */
+.envoltura-proyeccion-foto {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--superficie);
+  border: 1.5px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+  max-height: 420px;
 }
 
-.resultado-titulo {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--texto-principal);
+.marco-foto-relativo {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  display: inline-block;
+  line-height: 0;
 }
 
-.resultado-meta {
+.img-foto-capturada {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  display: block;
+}
+
+.svg-proyeccion-numeros {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.numero-proyectado {
+  font-family: var(--fuente);
+  font-weight: 800;
+  fill: var(--acento);
+  stroke: #ffffff;
+  paint-order: stroke fill;
+}
+
+/* Chips de telemetría real */
+.fila-chips-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip-dato {
+  padding: 6px 12px;
+  border-radius: 16px;
   font-size: 14px;
-  color: var(--texto-atenuado);
-  letter-spacing: -0.1px;
+  font-weight: 600;
+  border: 1px solid var(--borde);
+  background-color: var(--superficie);
+  color: var(--texto-secundario);
 }
 
+.chip-dato.chip-exito {
+  border-color: var(--estado-conectado);
+  color: var(--estado-conectado);
+}
+
+/* ========================================================
+   TABLERO VECTORIAL SVG (COMÚN Y LIMPIO)
+   ======================================================== */
 .tablero-envoltura {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 6px 0;
 }
 
-/* Tablero KenKen SVG */
 .tablero-svg {
   width: 100%;
   max-width: 380px;
@@ -438,25 +766,26 @@ html, body {
   fill: var(--texto-principal);
 }
 
-/* Etiqueta que el solver corrigió: mismo peso, color de acento. */
 .etiqueta-jaula.etiqueta-corregida {
   fill: var(--acento);
   text-decoration: underline;
-}
-
-.lista-correcciones {
-  margin: 8px 0 0;
-  padding-left: 20px;
-  font-size: 16px;
-  line-height: 1.45;
-  color: var(--texto-principal);
 }
 
 .valor-celda {
   font-family: var(--fuente);
   font-weight: 700;
   fill: var(--acento);
-  transition: opacity 0.2s;
+}
+
+/* Valores anotados a lápiz por Marta */
+.valor-celda.valor-anotado {
+  fill: var(--lapiz-grafito);
+  font-weight: 600;
+}
+
+.valor-celda.valor-solucion {
+  fill: var(--acento);
+  font-weight: 800;
 }
 
 .texto-oculto {
@@ -465,81 +794,244 @@ html, body {
 
 .punto-oculto {
   fill: var(--texto-atenuado);
-  opacity: 0.45;
-  transition: opacity 0.2s;
+  opacity: 0.35;
 }
 
-.celda.revelada .punto-oculto {
-  display: none;
+/* Pulsación suave en ámbar para jaula en conflicto (Nivel 2) */
+@keyframes pulso-jaula {
+  0% { fill: rgba(245, 158, 11, 0.12); }
+  100% { fill: rgba(245, 158, 11, 0.35); }
 }
 
-/* Mensaje y avisos en Resultado */
-.mensaje-envoltura {
-  padding: 14px 16px;
-  border-left: 3px solid var(--texto-secundario);
-  background-color: var(--superficie);
-  border-radius: 0 var(--radio) var(--radio) 0;
+.celda.jaula-conflicto .fondo-celda {
+  animation: pulso-jaula 1.4s ease-in-out infinite alternate;
+  stroke: #d97706;
+  stroke-width: 2px;
 }
 
-.mensaje-texto {
-  font-size: 16px;
-  color: var(--texto-principal);
-  line-height: 1.45;
-}
-
-.avisos-envoltura {
+/* ========================================================
+   MODO ASISTENCIA: ANOTACIÓN Y ANDAMIAJE COGNITIVO
+   ======================================================== */
+.barra-anotacion-lapiz {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 10px 14px;
-  background-color: var(--superficie);
+}
+
+.btn-modo-anotar {
+  width: 100%;
+  min-height: 48px;
   border-radius: var(--radio);
-}
-
-.avisos-titulo {
-  font-size: 14px;
+  border: 1.5px solid var(--borde);
+  background-color: var(--fondo);
+  color: var(--texto-principal);
+  font-family: inherit;
+  font-size: 16px;
   font-weight: 600;
-  color: var(--texto-secundario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
 }
 
-.avisos-lista {
-  padding-left: 20px;
+.btn-modo-anotar.activo {
+  background-color: var(--superficie);
+  border-color: var(--borde-fuerte);
+  color: var(--acento);
+}
+
+.guia-toque-casilla {
   font-size: 14px;
   color: var(--texto-atenuado);
-  line-height: 1.4;
+  text-align: center;
 }
 
-/* Pantalla de Error */
-.tarjeta-mensaje {
+/* Tarjeta de andamiaje graduado */
+.tarjeta-andamiaje {
+  border: 1.5px solid var(--borde);
+  border-radius: var(--radio);
+  background-color: var(--superficie);
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  text-align: center;
-  max-width: 340px;
 }
 
-.error-titulo {
-  font-size: 24px;
+.nivel-andamiaje {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.titulo-andamiaje {
+  font-size: 18px;
   font-weight: 700;
   color: var(--texto-principal);
 }
 
-.error-instrucciones {
-  font-size: 18px;
+.desc-andamiaje {
+  font-size: 15px;
   color: var(--texto-secundario);
+}
+
+.alerta-andamiaje {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radio);
+  border: 1.5px solid var(--borde);
+  background-color: var(--fondo);
+  align-items: flex-start;
+}
+
+.alerta-andamiaje.advertencia {
+  border-color: var(--aviso-borde);
+  background-color: var(--aviso-fondo);
+  color: #78350f;
+}
+
+.alerta-andamiaje.advertencia svg {
+  color: #b45309;
+  flex-shrink: 0;
+}
+
+.alerta-andamiaje.destacada {
+  border-color: var(--acento);
+  background-color: var(--acento-suave);
+  color: var(--texto-principal);
+}
+
+.alerta-andamiaje.destacada svg {
+  color: var(--acento);
+  flex-shrink: 0;
+}
+
+.alerta-titulo {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.alerta-desc {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.caja-explicacion-regla {
+  padding: 12px 14px;
+  border-radius: var(--radio);
+  background-color: var(--fondo);
+  border: 1.5px solid var(--borde);
+}
+
+.texto-regla-logica {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--texto-principal);
   line-height: 1.45;
 }
 
-.error-detalle {
-  font-size: 14px;
-  color: var(--texto-atenuado);
-  background-color: var(--superficie);
-  padding: 8px 12px;
-  border-radius: var(--radio);
-  word-break: break-word;
+.btn-ambar {
+  border-color: #d97706 !important;
+  color: #b45309 !important;
 }
 
-/* Diálogos modales nativos */
+/* ========================================================
+   BLOQUES DE AVISOS Y CORRECCIONES
+   ======================================================== */
+.bloque-avisos-lectura,
+.bloque-reparaciones {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  background-color: var(--superficie);
+  border-radius: var(--radio);
+  border: 1px solid var(--borde);
+}
+
+.titulo-avisos,
+.titulo-reparaciones {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--texto-secundario);
+}
+
+.lista-avisos,
+.lista-reparaciones {
+  padding-left: 20px;
+  font-size: 15px;
+  color: var(--texto-principal);
+  line-height: 1.45;
+}
+
+/* ========================================================
+   BOTONES DE ACCIÓN (ZONA INFERIOR / PULGAR)
+   ======================================================== */
+.zona-inferior {
+  margin-top: auto;
+  padding: 14px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: var(--fondo);
+  border-top: 1px solid var(--borde);
+}
+
+.btn-accion {
+  width: 100%;
+  min-height: 52px;
+  border-radius: var(--radio);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: opacity 0.15s, background-color 0.15s;
+}
+
+.btn-accion:active {
+  opacity: 0.85;
+}
+
+.btn-primario {
+  background-color: var(--acento);
+  color: var(--acento-texto);
+  border: none;
+}
+
+.btn-secundario {
+  background-color: transparent;
+  color: var(--texto-principal);
+  border: 1.5px solid var(--borde);
+}
+
+.btn-peligro {
+  background-color: var(--peligro) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.btn-enlace-sutil {
+  background: transparent;
+  border: none;
+  color: var(--texto-secundario);
+  font-family: inherit;
+  font-size: 16px;
+  text-decoration: underline;
+  cursor: pointer;
+  min-height: 44px;
+  padding: 8px;
+  text-align: center;
+}
+
+/* ========================================================
+   DIÁLOGOS MODALES ACCESIBLES (HEURÍSTICA 9 DE NIELSEN)
+   ======================================================== */
 .dialogo {
   margin: auto;
   border: none;
@@ -550,19 +1042,29 @@ html, body {
 }
 
 .dialogo::backdrop {
-  background-color: rgba(0, 0, 0, 0.45);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .dialogo-caja {
   background-color: var(--fondo);
   color: var(--texto-principal);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 22px;
-  border: 1px solid var(--borde);
+  border: 1.5px solid var(--borde);
   display: flex;
   flex-direction: column;
   gap: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.icono-modal-cabecera {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--acento);
+}
+
+.icono-modal-cabecera.advertencia {
+  color: var(--estado-aviso);
 }
 
 .dialogo-cabecera {
@@ -574,6 +1076,7 @@ html, body {
 .dialogo-titulo {
   font-size: 20px;
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .dialogo-descripcion {
@@ -582,6 +1085,34 @@ html, body {
   line-height: 1.45;
 }
 
+.caja-consejo-practico {
+  padding: 12px 14px;
+  border-radius: var(--radio);
+  background-color: var(--aviso-fondo);
+  border: 1px solid var(--aviso-borde);
+  font-size: 15px;
+  color: #78350f;
+  line-height: 1.4;
+}
+
+.dialogo-acciones-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.dialogo-acciones-doble {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.dialogo-acciones-doble button {
+  flex: 1;
+}
+
+/* Formulario de ajustes */
 .dialogo-formulario {
   display: flex;
   flex-direction: column;
@@ -636,19 +1167,41 @@ html, body {
   font-weight: 600;
 }
 
-.dialogo-acciones {
-  display: flex;
-  justify-content: flex-end;
+/* Rejilla de teclado numérico (Marta) */
+.rejilla-teclado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  margin-top: 8px;
+  margin: 8px 0;
 }
 
-.dialogo-acciones button {
-  min-height: 48px;
-  padding: 10px 18px;
+.btn-tecla-numero {
+  min-height: 54px;
   border-radius: var(--radio);
+  border: 1.5px solid var(--borde);
+  background-color: var(--superficie);
+  color: var(--texto-principal);
   font-family: inherit;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   cursor: pointer;
+}
+
+.btn-tecla-numero:active {
+  background-color: var(--acento-suave);
+  border-color: var(--acento);
+}
+
+/* Ajustes tras la prueba en el teléfono (375 px): */
+/* El estado del nodo se cortaba ("No…") junto al conmutador de modo: en pantallas
+   angostas pasa a una segunda fila, completo. */
+@media (max-width: 480px) {
+  .barra-superior { flex-wrap: wrap; row-gap: 6px; }
+  .zona-estado-nodo { order: 3; width: 100%; justify-content: space-between; }
+  .texto-estado { max-width: none; }
+}
+/* En la tarjeta sobre el visor oscuro el botón secundario quedaba negro sobre negro. */
+.tarjeta-fallback .btn-secundario {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.6);
 }
