@@ -1,0 +1,267 @@
+/*-- scss:defaults --*/
+// Misma familia visual que el deck de Jev (jev-ieee-upc/slides): papel, tinta, índigo y
+// naranja. Aquí el índigo es lo que el sistema decide bien y el naranja, la lectura
+// equivocada y su reparación. Los dos pasos de color de las marcas están validados con
+// validate_palette.js (CVD y contraste) sobre el papel y sobre la tinta.
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+$tinta: #15161D;
+$papel: #F5F3EE;
+$tarjeta: #FCFBF7;
+$borde: #DEDBD2;
+$suave: #4A4D5A;
+$nota: #6B6E7B;
+$indigo: #4B45C9;
+$indigo-claro: #9B96F5;
+$indigo-palido: #E4E1F7;
+$naranja: #D96A2B;        // marcas sobre papel (3:1 validado)
+$naranja-texto: #B4501A;  // texto sobre papel
+$naranja-palido: #F8E3D3;
+$critico: #D03B3B;
+
+$body-bg: $papel;
+$body-color: $tinta;
+$link-color: $indigo;
+$font-family-sans-serif: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+$font-family-monospace: "JetBrains Mono", "Courier New", monospace;
+$presentation-font-size-root: 30px;
+$presentation-heading-font: "Space Grotesk", Arial, sans-serif;
+$presentation-heading-color: $tinta;
+$presentation-heading-font-weight: 600;
+$presentation-heading-letter-spacing: -0.02em;
+$presentation-h1-font-size: 2.4em;
+$presentation-h2-font-size: 1.45em;
+$presentation-h3-font-size: 1.05em;
+$presentation-title-slide-text-align: left;
+$code-block-bg: #1F2029;
+$code-block-border-color: #2E3040;
+$code-block-font-size: 0.5em;
+$selection-bg: $indigo-palido;
+
+/*-- scss:rules --*/
+:root {
+  --papel: #{$papel}; --tinta: #{$tinta}; --tarjeta: #{$tarjeta}; --borde: #{$borde};
+  --suave: #{$suave}; --nota: #{$nota}; --rejilla: #E3E0D7;
+  --indigo: #{$indigo}; --indigo-palido: #{$indigo-palido};
+  --naranja: #{$naranja}; --naranja-texto: #{$naranja-texto}; --naranja-palido: #{$naranja-palido};
+  --neutro: #B9B6AC; --critico: #{$critico};
+}
+// Diapositivas oscuras: los mismos papeles, con los pasos validados para la tinta.
+.reveal .has-dark-background {
+  --papel: #{$tinta}; --tinta: #EDEBF5; --tarjeta: #1F2029; --borde: #2E3040;
+  --suave: #B9B8CC; --nota: #9A99AD; --rejilla: #2C2D38;
+  --indigo: #857FEE; --indigo-palido: #2A2950;
+  --naranja: #DD7436; --naranja-texto: #F2A65A; --naranja-palido: #3A2A22;
+  --neutro: #5A5C68;
+}
+
+.reveal .slides section { text-align: left; }
+.reveal h1, .reveal h2 { line-height: 1.08; text-wrap: balance; }
+.reveal h2 { margin-bottom: 0.35em; max-width: 30em; }
+.reveal p, .reveal li { line-height: 1.35; }
+.reveal .slides section > p:first-child { margin-top: 0; }
+
+.reveal .has-dark-background,
+.reveal .has-dark-background h1,
+.reveal .has-dark-background h2,
+.reveal .has-dark-background h3 { color: #EDEBF5; }
+.reveal .has-dark-background a { color: $indigo-claro; }
+
+// Rótulo de sección encima del titular, como en el deck de Jev.
+.eyebrow {
+  font-family: $font-family-monospace;
+  font-size: 0.5em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--indigo);
+  margin-bottom: 0.15em !important;
+  display: block;
+}
+.eyebrow.naranja { color: var(--naranja-texto); }
+.suave { color: var(--suave); }
+.nota { color: var(--nota); font-size: 0.6em; }
+.chica { font-size: 0.75em; }
+.mono { font-family: $font-family-monospace; }
+.indigo { color: var(--indigo); }
+.naranja-t { color: var(--naranja-texto); }
+.ancho { max-width: none !important; }
+
+.card {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  padding: 0.6em 0.85em;
+  height: 100%;
+}
+.card p { margin: 0.25em 0; }
+.card.indigo-borde { border-top: 7px solid var(--indigo); }
+.card.naranja-borde { border-top: 7px solid var(--naranja); }
+.card.neutro-borde { border-top: 7px solid var(--neutro); }
+
+.cita {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-left: 7px solid var(--indigo);
+  border-radius: 14px;
+  padding: 0.55em 0.85em;
+  font-size: 1.05em;
+  line-height: 1.35;
+}
+.cita.naranja { border-left-color: var(--naranja); }
+
+.pill {
+  display: inline-block;
+  font-family: $font-family-monospace;
+  font-size: 0.8em;
+  background: var(--indigo-palido);
+  color: var(--indigo);
+  padding: 0.18em 0.7em;
+  border-radius: 999px;
+  margin: 0.1em 0.2em 0.1em 0;
+}
+.pill.naranja { background: var(--naranja-palido); color: var(--naranja-texto); }
+
+.titulo {
+  display: block;
+  font-family: $presentation-heading-font;
+  font-size: 1.05em;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.25em;
+}
+
+// Números grandes: la cifra en la misma sans de los titulares, nunca en serif.
+.numeros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.55em; }
+.numero { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 14px; padding: 0.45em 0.7em; }
+.numero .n { font-family: $presentation-heading-font; font-size: 2.1em; font-weight: 700; line-height: 1.05; color: var(--indigo); }
+.numero .n.naranja { color: var(--naranja-texto); }
+.numero .t { font-size: 0.6em; color: var(--suave); line-height: 1.3; }
+
+.cierre { display: block; font-family: $presentation-heading-font; font-size: 1.9em; font-weight: 700; line-height: 1.1; }
+
+// Pasos narrados al lado de una visualización: cada fragmento es un paso de D3.
+.pasos { list-style: none; padding: 0; margin: 0; counter-reset: paso; font-size: 0.72em; }
+.reveal .pasos li {
+  counter-increment: paso;
+  position: relative;
+  padding: 0.35em 0 0.35em 2.1em;
+  margin: 0;
+  color: var(--suave);
+  border-top: 1px solid var(--borde);
+  transition: color 0.3s ease;
+}
+.reveal .pasos li:first-child { border-top: none; }
+.reveal .pasos li::before {
+  content: counter(paso);
+  position: absolute; left: 0; top: 0.42em;
+  width: 1.45em; height: 1.45em; border-radius: 50%;
+  font-family: $font-family-monospace; font-size: 0.8em; font-weight: 600;
+  display: grid; place-items: center;
+  background: var(--borde); color: var(--suave);
+}
+.reveal .pasos li.current-fragment { color: var(--tinta); }
+.reveal .pasos li.current-fragment::before { background: var(--indigo); color: #fff; }
+.reveal .pasos li strong { color: var(--tinta); font-weight: 600; }
+.reveal .pasos li .nota { display: block; font-size: 0.85em; }
+
+// Lienzos de D3: el SVG se superpone a una imagen o vive solo.
+.lienzo { position: relative; width: 100%; }
+.lienzo > p { margin: 0 !important; }
+.lienzo img, .lienzo .capa {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  margin: 0 !important; max-width: none !important; max-height: none !important;
+  object-fit: fill; border-radius: 6px;
+}
+.lienzo .capa { opacity: 0; transition: opacity 0.6s ease; }
+.lienzo .capa.visible { opacity: 1; }
+.lienzo > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.lienzo.solo > svg { position: relative; display: block; }
+.reveal .lienzo img { margin: 0; }
+
+.viz text { font-family: $font-family-sans-serif; fill: var(--tinta); }
+.viz .eje text, .viz .rotulo-eje { fill: var(--nota); font-size: 13px; font-family: $font-family-monospace; }
+.viz .eje line, .viz .eje path { stroke: #C3C2B7; }
+.viz .grid line { stroke: var(--rejilla); }
+.viz .anot { font-size: 15px; fill: var(--suave); }
+.viz .anot.fuerte { fill: var(--tinta); font-weight: 600; }
+.viz .mono { font-family: $font-family-monospace; }
+.viz .halo { paint-order: stroke; stroke: var(--papel); stroke-width: 5px; stroke-linejoin: round; }
+
+.tooltip-viz {
+  position: fixed; pointer-events: none; z-index: 50;
+  background: $tinta; color: #F5F3EE;
+  font: 500 14px/1.35 $font-family-monospace;
+  padding: 6px 10px; border-radius: 8px;
+  opacity: 0; transition: opacity 0.12s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+
+// Leyenda: siempre visible si hay dos series o más; el color nunca va solo.
+.leyenda { display: flex; flex-wrap: wrap; gap: 0.3em 1.1em; font-size: 0.55em; color: var(--suave); margin: 0.3em 0; }
+.leyenda span { display: inline-flex; align-items: center; gap: 0.4em; }
+.leyenda i { width: 0.9em; height: 0.9em; border-radius: 50%; display: inline-block; }
+.leyenda i.cuadro { border-radius: 3px; }
+
+// Controles del OJS: botones segmentados, sin depender de Inputs (que baja de un CDN).
+.segmentado { display: inline-flex; border: 1px solid var(--borde); border-radius: 999px; overflow: hidden; background: var(--tarjeta); margin: 0 0.6em 0.3em 0; }
+.segmentado button {
+  font: 600 0.5em $font-family-monospace; color: var(--suave);
+  background: none; border: none; padding: 0.45em 1em; cursor: pointer;
+}
+.segmentado button[aria-pressed="true"] { background: var(--indigo); color: #fff; }
+.control { font-size: 0.55em; color: var(--nota); font-family: $font-family-monospace; margin-right: 0.5em; }
+
+// Recortes de etiquetas reales.
+.recortes { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.45em; }
+.recorte { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 10px; padding: 0.3em; text-align: center; transition: border-color 0.4s, box-shadow 0.4s; }
+.recorte img { width: 100%; height: 2.6em; object-fit: contain; margin: 0 !important; image-rendering: auto; }
+.recorte .leido { font-family: $font-family-monospace; font-size: 0.55em; color: var(--suave); }
+.recortes.marcar .recorte.mal { border: 2px solid var(--naranja); box-shadow: 0 0 0 4px var(--naranja-palido); }
+.recortes.marcar .recorte.mal .leido { color: var(--naranja-texto); font-weight: 700; }
+
+// Título: el tablero de D3 vive a la derecha.
+.reveal .slides section.quarto-title-block .title { font-size: 1.85em; max-width: 13em; line-height: 1.05; margin-bottom: 0.25em; }
+.reveal .slides section.quarto-title-block .subtitle { font-family: $font-family-sans-serif; font-size: 0.85em; font-weight: 400; color: #B9B8CC; max-width: 21em; margin-bottom: 1.2em; }
+.reveal .slides section.quarto-title-block .quarto-title-authors { display: block; font-size: 0.62em; color: #B9B8CC; }
+.reveal .slides section.quarto-title-block .quarto-title-author { padding: 0 !important; margin: 0 0 0.15em 0 !important; }
+.reveal .slides section.quarto-title-block .quarto-title-author-name { color: #EDEBF5; font-size: 1.15em; }
+.reveal .slides section.quarto-title-block .quarto-title-affiliation { color: #9A99AD; font-size: 0.9em; margin: 0.2em 0 0 0; }
+.reveal .slides section.quarto-title-block .date { font-family: $font-family-monospace; font-size: 0.5em; color: #9A99AD; margin-top: 1.2em; }
+.reveal .slides section.quarto-title-block > *:not(.tablero-titulo) { position: relative; z-index: 1; max-width: 58%; }
+.tablero-titulo { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); width: 40%; aspect-ratio: 1; }
+
+.reveal .slide-number { font-family: $font-family-monospace; background: transparent; color: $nota; }
+.reveal .footer { font-size: 0.42em; color: $nota; }
+.reveal .has-dark-background .footer, .reveal .has-dark-background ~ .footer { color: #9A99AD; }
+.reveal table { font-size: 0.72em; }
+.reveal table th { border-bottom: 2px solid var(--tinta); }
+.reveal .callout { font-size: 0.75em; }
+.reveal pre code { max-height: 560px; }
+.reveal div.sourceCode { margin: 0; }
+.qr { background: #FCFBF7; border-radius: 18px; padding: 0.7em; display: inline-block; }
+.qr img { width: 7.5em; height: 7.5em; margin: 0 !important; display: block; }
+.reveal .slides section img.telefono { max-height: 600px; border-radius: 6px; margin: 0; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.35)); }
+
+// Candidatas de la reparación, junto a la foto.
+.candidatas { margin-top: 0.7em; font-size: 0.6em; opacity: 0; transform: translateY(8px); transition: opacity 0.5s, transform 0.5s; }
+.candidatas.visible { opacity: 1; transform: none; }
+.candidatas .fila { display: flex; align-items: center; flex-wrap: wrap; gap: 0.35em; margin: 0.35em 0; }
+.candidatas .fila > .donde { font-family: $font-family-monospace; color: var(--nota); width: 7.2em; font-size: 0.9em; }
+.candidatas .cand {
+  font-family: $font-family-monospace; padding: 0.12em 0.65em; border-radius: 999px;
+  border: 1px solid var(--borde); background: var(--tarjeta); color: var(--suave);
+  transition: background 0.35s, color 0.35s, border-color 0.35s;
+}
+.candidatas .cand small { opacity: 0.7; margin-left: 0.35em; }
+.candidatas .cand.leido { border-color: var(--naranja); color: var(--naranja-texto); }
+.candidatas .cand.elegida { background: var(--indigo); border-color: var(--indigo); color: #fff; }
+.candidatas .pie { color: var(--nota); font-size: 0.9em; margin-top: 0.4em; }
+.centro { text-align: center !important; }
+
+.reveal ol.pasos { list-style: none; margin: 0; display: block; }
+.chica, .nota { display: inline-block; line-height: 1.4; }
+.reveal .card { font-size: 0.85em; }
+.app-fila { display: grid; grid-template-columns: 1fr 11em; gap: 1em; align-items: center; }
+.app-fila > img, .app-fila > p > img { width: 100%; margin: 0 !important; border-radius: 8px; }
+.reveal .app-pasos li { counter-increment: none; padding-left: 0; }
+.reveal .app-pasos li::before { display: none; }

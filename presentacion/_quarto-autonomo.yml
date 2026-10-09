@@ -1,0 +1,7 @@
+# Un solo HTML que abre sin servidor ni red de proyecto: para adjuntarlo al release.
+# quarto render index.qmd --profile autonomo
+format:
+  revealjs:
+    embed-resources: true
+    chalkboard: false
+    output-file: TB1-KenKen-diapositivas.html
