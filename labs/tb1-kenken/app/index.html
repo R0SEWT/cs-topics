@@ -2,76 +2,136 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>KenKen</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-contenedor">
-    <!-- Barra superior con estado del nodo y acceso a ajustes -->
-    <header class="barra-superior">
-      <div class="estado-nodo" id="estado-nodo" role="status">
-        <span class="punto-estado desconectado" id="punto-estado" aria-hidden="true"></span>
-        <span class="texto-estado" id="texto-estado">Comprobando conexión...</span>
+    <!-- BARRA SUPERIOR: SELECTOR DE MODO, ESTADO DE NODO Y AJUSTES -->
+    <header class="barra-superior" role="banner">
+      <!-- Selector de Modo (HCD: Asistencia por defecto / Rápido) -->
+      <div class="conmutador-modo-cabecera" role="radiogroup" aria-label="Modo de juego">
+        <button type="button" class="btn-modo activo" id="btn-modo-asistencia" role="radio" aria-checked="true">
+          <svg class="icono-modo" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 18h6"/>
+            <path d="M10 22h4"/>
+            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/>
+          </svg>
+          <span>Asistencia</span>
+        </button>
+        <button type="button" class="btn-modo" id="btn-modo-rapido" role="radio" aria-checked="false">
+          <svg class="icono-modo" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          <span>Rápido</span>
+        </button>
       </div>
-      <button type="button" class="btn-icono" id="btn-ajustes" aria-label="Ajustes de conexión">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
-      </button>
+
+      <!-- Estado de conexión del nodo y botón de ajustes -->
+      <div class="zona-estado-nodo">
+        <div class="estado-nodo" id="estado-nodo" role="status" aria-live="polite">
+          <span class="punto-estado desconectado" id="punto-estado" aria-hidden="true"></span>
+          <span class="texto-estado" id="texto-estado">Buscando nodo…</span>
+        </div>
+        <button type="button" class="btn-icono" id="btn-ajustes" aria-label="Ajustes de conexión">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
     </header>
 
     <main class="contenido-principal">
-      <!-- 1. PANTALLA INICIAL: CAPTURA -->
-      <section class="vista" id="vista-captura" aria-label="Captura de KenKen">
-        <div class="cuerpo-captura">
-          <div class="presentacion">
-            <h1 class="titulo-app">KenKen</h1>
-            <p class="bajada-app">Fotografía un tablero en papel para obtener la solución calculada por el nodo.</p>
+      <!-- 1. VISTA: VISOR DE CÁMARA (ACTIVE VIEWFINDER) -->
+      <section class="vista" id="vista-camara" aria-label="Visor de cámara para captura">
+        <div class="visor-camara" id="visor-camara">
+          <!-- Transmisión de cámara en vivo -->
+          <video id="video-stream" class="video-stream" autoplay playsinline muted></video>
+
+          <!-- Retícula de encuadre activa con esquinas -->
+          <div class="reticula-envoltura" id="reticula-envoltura">
+            <div class="reticula reticulo-listo" id="reticula-caja">
+              <span class="esquina tl"></span>
+              <span class="esquina tr"></span>
+              <span class="esquina br"></span>
+              <span class="esquina bl"></span>
+            </div>
           </div>
 
-          <!-- Conmutador discreto de modo -->
-          <div class="bloque-modo">
-            <span class="etiqueta-modo" id="rotulo-modo">Modo de solución</span>
-            <div class="conmutador-modo" role="radiogroup" aria-labelledby="rotulo-modo">
-              <button type="button" class="btn-segmento activo" id="btn-modo-asistencia" role="radio" aria-checked="true">
-                Asistencia
-              </button>
-              <button type="button" class="btn-segmento" id="btn-modo-rapido" role="radio" aria-checked="false">
-                Rápido
-              </button>
+          <!-- Píldora de guía superior (Feedforward con señales reales) -->
+          <div class="pildora-guia guia-listo" id="pildora-guia" role="status">
+            <span class="icono-guia" id="icono-guia" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </span>
+            <span class="texto-guia" id="texto-guia">Listo para capturar</span>
+          </div>
+
+          <!-- Vista de respaldo si no hay cámara web o se denegó el permiso -->
+          <div class="fallback-camara vista-oculta" id="fallback-camara">
+            <div class="tarjeta-fallback">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="icono-fallback" aria-hidden="true">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+              <h2 class="titulo-fallback">Cámara en vivo no disponible</h2>
+              <p class="desc-fallback">Puedes tomar una fotografía con el dispositivo o elegir una imagen guardada.</p>
+              <div class="acciones-fallback">
+                <button type="button" class="btn-primario btn-accion" id="btn-fallback-foto">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                  <span>Tomar foto</span>
+                </button>
+                <button type="button" class="btn-secundario btn-accion" id="btn-fallback-galeria">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                  <span>Elegir de la galería</span>
+                </button>
+              </div>
             </div>
-            <p class="explicacion-modo" id="modo-explicacion">
-              Toca cada casilla para ver su número. No revela la solución de golpe.
-            </p>
           </div>
         </div>
 
-        <footer class="zona-inferior">
-          <button type="button" class="btn-primario btn-accion" id="btn-tomar-foto">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-              <circle cx="12" cy="13" r="4"/>
-            </svg>
-            <span>Tomar foto</span>
-          </button>
-          <button type="button" class="btn-secundario btn-accion" id="btn-galeria">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <polyline points="21 15 16 10 5 21"/>
-            </svg>
-            <span>Elegir de la galería</span>
-          </button>
+        <!-- Zona de controles del pulgar (Thumb Zone) -->
+        <footer class="controles-camara">
+          <div class="etiqueta-accion-obturador">
+            <span id="rotulo-accion-obturador">Verificar mi avance a lápiz (¿Voy bien?)</span>
+          </div>
+          <div class="fila-botones-obturador">
+            <button type="button" class="btn-herramienta-camara" id="btn-galeria-camara" title="Elegir foto de la galería" aria-label="Elegir foto de la galería">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </button>
+            <button type="button" class="btn-disparador" id="btn-disparador" aria-label="Tomar foto del KenKen">
+              <span class="anillo-disparador"></span>
+            </button>
+            <button type="button" class="btn-herramienta-camara" id="btn-cambiar-camara" title="Cambiar cámara" aria-label="Cambiar cámara">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21.5 2v6h-6"/>
+                <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l.73-1.19"/>
+              </svg>
+            </button>
+          </div>
         </footer>
       </section>
 
-      <!-- 2. PANTALLA: LEYENDO -->
+      <!-- 2. VISTA: LEYENDO (PROCESAMIENTO EN EL NODO) -->
       <section class="vista vista-oculta" id="vista-leyendo" aria-live="polite">
         <div class="cuerpo-centrado">
           <div class="miniatura-marco">
-            <img id="miniatura-foto" class="miniatura-foto" alt="Vista previa de la foto capturada" src="" />
+            <img id="miniatura-foto" class="miniatura-foto" alt="Vista previa de la captura" src="" />
           </div>
           <div class="indicador-proceso">
             <div class="spinner" aria-hidden="true"></div>
@@ -86,69 +146,264 @@
         </footer>
       </section>
 
-      <!-- 3. PANTALLA: RESULTADO -->
-      <section class="vista vista-oculta" id="vista-resultado">
+      <!-- 3. VISTA: MODO RÁPIDO (DIEGO - SOLUCIÓN INMEDIATA) -->
+      <section class="vista vista-oculta" id="vista-rapido" aria-label="Solución en Modo Rápido">
+        <header class="barra-navegacion-resultado">
+          <button type="button" class="btn-volver" id="btn-volver-rapido" aria-label="Volver a la cámara">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            <span>Cámara</span>
+          </button>
+          <div class="conmutador-perspectiva" role="radiogroup" aria-label="Tipo de visualización">
+            <button type="button" class="btn-perspectiva activo" id="btn-persp-foto" role="radio" aria-checked="true">Sobre tu foto</button>
+            <button type="button" class="btn-perspectiva" id="btn-persp-limpio" role="radio" aria-checked="false">Tablero limpio</button>
+          </div>
+        </header>
+
         <div class="cuerpo-resultado">
-          <header class="resultado-encabezado">
-            <h2 class="resultado-titulo" id="resultado-titulo">Solución</h2>
-            <p class="resultado-meta" id="resultado-meta"></p>
-          </header>
-
-          <div class="tablero-envoltura" id="tablero-envoltura">
-            <!-- El tablero SVG se inserta aquí -->
+          <!-- Visualización 1: Sobre tu foto proyectada -->
+          <div class="envoltura-proyeccion-foto" id="envoltura-proyeccion-foto">
+            <div class="marco-foto-relativo" id="marco-foto-relativo">
+              <img id="img-foto-capturada" class="img-foto-capturada" alt="Foto original del KenKen" />
+              <svg id="svg-proyeccion-numeros" class="svg-proyeccion-numeros" aria-hidden="true"></svg>
+            </div>
           </div>
 
-          <div class="mensaje-envoltura vista-oculta" id="mensaje-envoltura">
-            <p class="mensaje-texto" id="mensaje-texto"></p>
+          <!-- Visualización 2: Tablero limpio vectorial SVG -->
+          <div class="tablero-envoltura vista-oculta" id="tablero-envoltura-rapido"></div>
+
+          <!-- Fila de chips con datos reales calculados -->
+          <div class="fila-chips-datos" id="chips-datos-rapido">
+            <span class="chip-dato chip-exito" id="chip-latencia-rapido">Resuelto en — ms</span>
+            <span class="chip-dato chip-neutro" id="chip-confianza-rapido">Tablero — · confianza —%</span>
           </div>
 
-          <div class="avisos-envoltura vista-oculta" id="avisos-envoltura">
-            <p class="avisos-titulo">Avisos de lectura</p>
-            <ul class="avisos-lista" id="avisos-lista"></ul>
+          <!-- Avisos del nodo si existen -->
+          <div class="bloque-avisos-lectura vista-oculta" id="avisos-rapido">
+            <p class="titulo-avisos">Avisos</p>
+            <ul class="lista-avisos" id="lista-avisos-rapido"></ul>
+          </div>
+
+          <!-- Lista de correcciones si estado es reparado -->
+          <div class="bloque-reparaciones vista-oculta" id="reparaciones-rapido">
+            <p class="titulo-reparaciones">Lectura corregida por el solver</p>
+            <ul class="lista-reparaciones" id="lista-reparaciones-rapido"></ul>
           </div>
         </div>
 
         <footer class="zona-inferior">
-          <button type="button" class="btn-secundario btn-accion vista-oculta" id="btn-revelar-todo">
-            Revelar todo
-          </button>
-          <button type="button" class="btn-primario btn-accion" id="btn-otra-foto">
-            Tomar otra foto
+          <button type="button" class="btn-primario btn-accion" id="btn-otra-foto-rapido">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <span>Capturar otro tablero</span>
           </button>
         </footer>
       </section>
 
-      <!-- 4. PANTALLA: ERROR DE RED -->
-      <section class="vista vista-oculta" id="vista-error">
-        <div class="cuerpo-centrado">
-          <div class="tarjeta-mensaje">
-            <h2 class="error-titulo">No encuentro el nodo</h2>
-            <p class="error-instrucciones">
-              Revisa que la PC esté encendida y en la misma red, o reconecta la depuración.
-            </p>
-            <p class="error-detalle vista-oculta" id="error-detalle"></p>
+      <!-- 4. VISTA: MODO ASISTENCIA (MARTA - ANDAMIAJE COGNITIVO) -->
+      <section class="vista vista-oculta" id="vista-asistencia" aria-label="Verificación y asistencia para Marta">
+        <header class="barra-navegacion-resultado">
+          <button type="button" class="btn-volver" id="btn-volver-asistencia" aria-label="Volver a la cámara">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            <span>Cámara</span>
+          </button>
+          <span class="etiqueta-vista-asistencia">Modo Asistencia</span>
+        </header>
+
+        <div class="cuerpo-resultado">
+          <!-- Tablero limpio vectorial interactivo para Marta -->
+          <div class="tablero-envoltura" id="tablero-envoltura-asistencia"></div>
+
+          <!-- Barra de acción para modo de anotación a lápiz -->
+          <div class="barra-anotacion-lapiz">
+            <button type="button" class="btn-modo-anotar" id="btn-toggle-anotar" aria-pressed="false">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+              <span id="texto-btn-anotar">Anotar lo que llevo</span>
+            </button>
+            <span class="guia-toque-casilla" id="guia-toque-casilla">Toca una casilla vacía para revelar su número</span>
+          </div>
+
+          <!-- Tarjeta de Andamiaje Graduado (Scaffolding Card) -->
+          <div class="tarjeta-andamiaje" id="tarjeta-andamiaje">
+            <!-- Nivel 1: ¿Voy bien? -->
+            <div class="nivel-andamiaje" id="scaffold-nivel-1">
+              <div class="estado-andamiaje">
+                <h3 class="titulo-andamiaje" id="titulo-andamiaje-1">Verificación de tus números</h3>
+                <p class="desc-andamiaje" id="desc-andamiaje-1">Compara lo que anotaste con la solución sin revelar casillas.</p>
+              </div>
+              <button type="button" class="btn-primario btn-accion" id="btn-voy-bien">
+                ¿Voy bien?
+              </button>
+            </div>
+
+            <!-- Nivel 2: Señalar jaula con error -->
+            <div class="nivel-andamiaje vista-oculta" id="scaffold-nivel-2">
+              <div class="alerta-andamiaje advertencia">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <div class="textos-alerta">
+                  <h4 class="alerta-titulo" id="alerta-titulo-l2">Hay números que no cuadran</h4>
+                  <p class="alerta-desc" id="alerta-desc-l2">Puedes señalar en el tablero cuál jaula tiene el error.</p>
+                </div>
+              </div>
+              <button type="button" class="btn-secundario btn-accion btn-ambar" id="btn-senalar-jaula">
+                Señalar la jaula con el error
+              </button>
+            </div>
+
+            <!-- Nivel 3: Explicar la regla lógica -->
+            <div class="nivel-andamiaje vista-oculta" id="scaffold-nivel-3">
+              <div class="alerta-andamiaje destacada">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="16" x2="12" y2="12"/>
+                  <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                <div class="textos-alerta">
+                  <h4 class="alerta-titulo" id="alerta-titulo-l3">Jaula en conflicto</h4>
+                  <p class="alerta-desc" id="alerta-desc-l3">Mira la jaula señalada con borde ámbar en el tablero.</p>
+                </div>
+              </div>
+              <button type="button" class="btn-secundario btn-accion" id="btn-explicar-regla">
+                Explicar la regla
+              </button>
+            </div>
+
+            <!-- Nivel 4: Frase de la regla y opción de revelar esta jaula -->
+            <div class="nivel-andamiaje vista-oculta" id="scaffold-nivel-4">
+              <div class="caja-explicacion-regla">
+                <p class="texto-regla-logica" id="texto-regla-logica"></p>
+              </div>
+              <button type="button" class="btn-secundario btn-accion" id="btn-revelar-jaula">
+                Revelar esta jaula
+              </button>
+            </div>
+          </div>
+
+          <!-- Avisos del nodo si existen -->
+          <div class="bloque-avisos-lectura vista-oculta" id="avisos-asistencia">
+            <p class="titulo-avisos">Avisos</p>
+            <ul class="lista-avisos" id="lista-avisos-asistencia"></ul>
+          </div>
+
+          <!-- Lista de correcciones si estado es reparado -->
+          <div class="bloque-reparaciones vista-oculta" id="reparaciones-asistencia">
+            <p class="titulo-reparaciones">Lectura corregida por el solver</p>
+            <ul class="lista-reparaciones" id="lista-reparaciones-asistencia"></ul>
           </div>
         </div>
+
         <footer class="zona-inferior">
-          <button type="button" class="btn-primario btn-accion" id="btn-reintentar">
-            Reintentar
+          <button type="button" class="btn-enlace-sutil" id="btn-marta-revelar-todo">
+            Revelar solución completa…
           </button>
-          <button type="button" class="btn-secundario btn-accion" id="btn-ajustes-desde-error">
-            Revisar dirección del nodo
+          <button type="button" class="btn-primario btn-accion" id="btn-otra-foto-asistencia">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <span>Capturar otro tablero</span>
           </button>
-          <button type="button" class="btn-terciario btn-accion" id="btn-otra-foto-error">
+        </footer>
+      </section>
+
+      <!-- 5. VISTA: TABLERO LEÍDO SIN VALORES (PARA sin_solucion O varias) -->
+      <section class="vista vista-oculta" id="vista-invalido" aria-label="Tablero leído sin solución">
+        <header class="barra-navegacion-resultado">
+          <button type="button" class="btn-volver" id="btn-volver-invalido" aria-label="Volver a la cámara">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            <span>Cámara</span>
+          </button>
+          <span class="etiqueta-vista-asistencia">Lectura sin solución</span>
+        </header>
+
+        <div class="cuerpo-resultado">
+          <div class="alerta-andamiaje advertencia">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div class="textos-alerta">
+              <h4 class="alerta-titulo" id="invalido-titulo">Sin solución única</h4>
+              <p class="alerta-desc" id="invalido-mensaje"></p>
+            </div>
+          </div>
+
+          <!-- Tablero leído dibujado sin números -->
+          <div class="tablero-envoltura" id="tablero-envoltura-invalido"></div>
+        </div>
+
+        <footer class="zona-inferior">
+          <button type="button" class="btn-primario btn-accion" id="btn-otra-foto-invalido">
             Tomar otra foto
           </button>
         </footer>
       </section>
     </main>
 
-    <!-- DIÁLOGO MODAL: AJUSTES DE CONEXIÓN -->
+    <!-- DIÁLOGOS MODALES ACCESIBLES (HEURÍSTICA 9 DE NIELSEN) -->
+
+    <!-- 1. MODAL DE ERROR ACCIONABLE (sin_tablero, ilegible, red) -->
+    <dialog id="dialogo-error-accionable" class="dialogo">
+      <div class="dialogo-caja">
+        <div class="icono-modal-cabecera" id="modal-error-icono">
+          <!-- SVG dinámico insertado por JavaScript -->
+        </div>
+        <h2 class="dialogo-titulo" id="modal-error-titulo">No encuentro el tablero</h2>
+        <p class="dialogo-descripcion" id="modal-error-desc">
+          Aléjate un poco para que entre el borde exterior completo.
+        </p>
+        <div class="caja-consejo-practico" id="modal-error-consejo">
+          <strong>Consejo:</strong> Mantén el teléfono paralelo al papel.
+        </div>
+        <div class="dialogo-acciones-vertical" id="modal-error-acciones">
+          <button type="button" class="btn-primario btn-accion" id="btn-modal-error-entendido">
+            Entendido, volver a intentar
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 2. MODAL CONFIRMACIÓN SPOILER (MARTA) -->
+    <dialog id="dialogo-confirmar-spoiler" class="dialogo">
+      <div class="dialogo-caja">
+        <div class="icono-modal-cabecera advertencia">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <h2 class="dialogo-titulo">¿Revelar toda la respuesta?</h2>
+        <p class="dialogo-descripcion">
+          ¿Seguro? Se mostrarán todos los números de las casillas del tablero. Perderás la oportunidad de resolverlo a lápiz tú misma.
+        </p>
+        <div class="dialogo-acciones-doble">
+          <button type="button" class="btn-secundario btn-accion" id="btn-cancelar-spoiler">Seguir pensando</button>
+          <button type="button" class="btn-primario btn-accion btn-peligro" id="btn-confirmar-spoiler">Sí, mostrar todo</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 3. MODAL AJUSTES DE CONEXIÓN -->
     <dialog id="dialogo-ajustes" class="dialogo">
       <div class="dialogo-caja">
         <div class="dialogo-cabecera">
-          <h2 class="dialogo-titulo">Ajustes de conexión</h2>
-          <button type="button" class="btn-icono" id="btn-cerrar-ajustes" aria-label="Cerrar">
+          <h2 class="dialogo-titulo">Ajustes del nodo</h2>
+          <button type="button" class="btn-icono" id="btn-cerrar-ajustes" aria-label="Cerrar ajustes">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <line x1="18" y1="6" x2="6" y2="18"/>
               <line x1="6" y1="6" x2="18" y2="18"/>
@@ -156,37 +411,44 @@
           </button>
         </div>
         <form id="form-ajustes" class="dialogo-formulario">
-          <label for="input-url-nodo" class="campo-etiqueta">Dirección del nodo</label>
+          <label for="input-url-nodo" class="campo-etiqueta">Dirección del nodo de cómputo</label>
           <input type="url" id="input-url-nodo" class="campo-texto" placeholder="http://localhost:8723" spellcheck="false" required>
           <p class="campo-ayuda">
-            Por defecto http://localhost:8723. Si depuras por cable USB, ejecuta <code>adb reverse tcp:8723 tcp:8723</code> en la PC.
+            Por defecto http://localhost:8723. Si conectas el teléfono por cable USB a la PC, ejecuta <code>adb reverse tcp:8723 tcp:8723</code> en la terminal de la computadora.
           </p>
           <div id="resultado-prueba" class="resultado-prueba" aria-live="polite"></div>
-          <div class="dialogo-acciones">
-            <button type="button" class="btn-secundario" id="btn-cancelar-ajustes">Cancelar</button>
-            <button type="submit" class="btn-primario">Guardar</button>
+          <div class="dialogo-acciones-doble">
+            <button type="button" class="btn-secundario btn-accion" id="btn-cancelar-ajustes">Cancelar</button>
+            <button type="submit" class="btn-primario btn-accion">Guardar</button>
           </div>
         </form>
       </div>
     </dialog>
 
-    <!-- DIÁLOGO MODAL: CONFIRMACIÓN REVELAR TODO -->
-    <dialog id="dialogo-confirmar-revelar" class="dialogo">
+    <!-- 4. MODAL TECLADO PARA ANOTAR A LÁPIZ (MARTA) -->
+    <dialog id="dialogo-teclado-anotar" class="dialogo dialogo-teclado">
       <div class="dialogo-caja">
-        <h2 class="dialogo-titulo">¿Revelar toda la solución?</h2>
-        <p class="dialogo-descripcion">
-          Se mostrarán los números de todas las casillas del tablero de inmediato.
-        </p>
-        <div class="dialogo-acciones">
-          <button type="button" class="btn-secundario" id="btn-cancelar-revelar">Seguir pensando</button>
-          <button type="button" class="btn-primario" id="btn-confirmar-revelar">Mostrar todo</button>
+        <div class="dialogo-cabecera">
+          <h2 class="dialogo-titulo" id="titulo-teclado-anotar">Anotar número a lápiz</h2>
+          <button type="button" class="btn-icono" id="btn-cerrar-teclado" aria-label="Cerrar teclado">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <p class="dialogo-descripcion" id="subtitulo-teclado-anotar">Elige el número que tienes escrito:</p>
+        <div class="rejilla-teclado" id="rejilla-teclado"></div>
+        <div class="dialogo-acciones-doble">
+          <button type="button" class="btn-secundario btn-accion" id="btn-borrar-anotacion">Borrar número</button>
+          <button type="button" class="btn-secundario btn-accion" id="btn-cancelar-teclado">Listo</button>
         </div>
       </div>
     </dialog>
 
-    <!-- Entradas de archivo ocultas para pruebas en navegador web -->
-    <input type="file" id="input-camara" accept="image/*" capture="environment" hidden>
-    <input type="file" id="input-galeria" accept="image/*" hidden>
+    <!-- Entradas de archivo ocultas para pruebas o soporte de fallback -->
+    <input type="file" id="input-camara-archivo" accept="image/*" capture="environment" hidden>
+    <input type="file" id="input-galeria-archivo" accept="image/*" hidden>
   </div>
 
   <script src="app.js"></script>
