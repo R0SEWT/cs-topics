@@ -1,0 +1,37 @@
+project:
+  type: default
+  output-dir: _site
+  resources:
+    - datos/
+    - js/
+    - img/
+
+lang: es
+execute:
+  echo: false
+
+format:
+  revealjs:
+    theme: [default, tema.scss]
+    width: 1280
+    height: 720
+    margin: 0.07
+    slide-level: 2
+    slide-number: c/t
+    show-slide-number: all
+    footer: "KenKen desde imagen · Grupo 3"
+    transition: fade
+    background-transition: fade
+    hash-type: number
+    preview-links: auto
+    menu: true
+    chalkboard: true
+    code-copy: false
+    highlight-style: a11y-dark
+    title-slide-attributes:
+      data-background-color: "#15161D"
+    include-after-body:
+      - text: |
+          <script src="js/d3.v7.min.js"></script>
+          <script src="datos/datos.js"></script>
+          <script src="js/viz.js"></script>
