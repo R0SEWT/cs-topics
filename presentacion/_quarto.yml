@@ -5,6 +5,7 @@ project:
     - datos/
     - js/
     - img/
+    - video/
 
 lang: es
 execute:
