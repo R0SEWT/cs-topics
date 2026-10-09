@@ -1,0 +1,9 @@
+{
+  "appId": "pe.upc.topicos.kenken",
+  "appName": "KenKen",
+  "webDir": "../app",
+  "android": { "allowMixedContent": true },
+  "plugins": {
+    "CapacitorHttp": { "enabled": true }
+  }
+}
