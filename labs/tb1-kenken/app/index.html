@@ -47,6 +47,15 @@
           </div>
         </div>
 
+        <!-- Capa de animación de escaneo y procesamiento (Percepción de latencia) -->
+        <div class="scanning-overlay hidden" id="scanning-overlay">
+          <div class="scanning-laser"></div>
+          <div class="scanning-badge">
+            <span class="scanning-pulse"></span>
+            <span class="scanning-text" id="scanning-text">Analizando con CP-SAT... 180 ms</span>
+          </div>
+        </div>
+
         <!-- Marco guía interactivo (Active Viewfinder Overlay) -->
         <div class="viewfinder-overlay" id="viewfinder-overlay">
           <div class="reticle reticle-ready" id="reticle-box">
@@ -63,12 +72,14 @@
           <span class="guidance-msg" id="guidance-msg">Tablero centrado · Listo para capturar</span>
         </div>
 
-        <!-- Simulador de condiciones de captura para testing de avisos -->
+        <!-- Simulador de condiciones de captura para testing de avisos y casos límite -->
         <div class="sim-controls-pill">
           <button class="btn-chip active" data-condition="ideal">Ideal</button>
           <button class="btn-chip" data-condition="tilted">Inclinado</button>
           <button class="btn-chip" data-condition="dark">Poca luz</button>
           <button class="btn-chip" data-condition="cutoff">Cortado</button>
+          <button class="btn-chip" data-condition="fused">Jaula dudosa</button>
+          <button class="btn-chip" data-condition="offline">Sin nodo</button>
         </div>
       </div>
 

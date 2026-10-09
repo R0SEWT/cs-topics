@@ -6,18 +6,36 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // Estado de la app (HCD: Asistencia por defecto para respetar el juego, Modo Rápido como acelerador)
-  let currentMode = "assist"; // "assist" (Marta, por defecto) | "fast" (Diego)
-  let currentCondition = "ideal"; // "ideal" | "tilted" | "dark" | "cutoff"
+  let currentMode = localStorage.getItem("kenken_mode") || "assist";
+  let currentCondition = "ideal"; // "ideal" | "tilted" | "dark" | "cutoff" | "fused" | "offline"
+  let lastReadyHaptic = 0;
+
+  // Feedback háptico accesible (vibración física en Android)
+  function triggerHaptic(pattern = 30) {
+    if (navigator.vibrate) {
+      try {
+        navigator.vibrate(pattern);
+      } catch (e) {
+        // Ignorar si el navegador bloquea vibración sin interacción previa
+      }
+    }
+  }
 
   // Elementos principales
   const screenCamera = document.getElementById("screen-camera");
   const screenDiego = document.getElementById("screen-diego");
   const screenMarta = document.getElementById("screen-marta");
 
-  // Barra de selección de Modo
+  // Barra de selección de Modo y estado
   const btnModeAssist = document.getElementById("btn-mode-assist");
   const btnModeFast = document.getElementById("btn-mode-fast");
   const shutterActionLabel = document.getElementById("shutter-action-label");
+  const statusIndicator = document.getElementById("status-indicator");
+  const statusText = document.getElementById("status-text");
+
+  // Capa de escaneo láser
+  const scanningOverlay = document.getElementById("scanning-overlay");
+  const scanningText = document.getElementById("scanning-text");
 
   // Visor y guía
   const cameraStream = document.getElementById("camera-stream");
@@ -99,8 +117,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // -------------------------------------------------------------
   // 1. Selector de Modo (Asistencia por defecto vs Modo Rápido)
   // -------------------------------------------------------------
-  function setMode(mode) {
+  function setMode(mode, save = true) {
     currentMode = mode;
+    if (save) {
+      try {
+        localStorage.setItem("kenken_mode", mode);
+      } catch (e) {
+        // En caso de restricciones de almacenamiento local
+      }
+    }
+    triggerHaptic(15);
     if (mode === "assist") {
       btnModeAssist.classList.add("active");
       btnModeAssist.setAttribute("aria-pressed", "true");
@@ -118,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnModeAssist.addEventListener("click", () => setMode("assist"));
   btnModeFast.addEventListener("click", () => setMode("fast"));
+  setMode(currentMode, false); // Inicializar con preferencia recordada
 
   // -------------------------------------------------------------
   // 2. Simulador de condiciones del visor (Active Viewfinder)
@@ -169,6 +196,32 @@ document.addEventListener("DOMContentLoaded", () => {
         tip: "💡 <strong>Consejo:</strong> Aléjate unos 10 cm para que el recuadro negro exterior entre completo.",
       },
     },
+    fused: {
+      reticleClass: "reticle-warning",
+      guidanceClass: "warning",
+      icon: "🧩",
+      msg: "Jaula dudosa · Trazo fino discontinuo detectado",
+      canCapture: true,
+      modal: {
+        icon: "🧩",
+        title: "Aviso de jaula dudosa (cst-90g)",
+        desc: "El detector encontró dos jaulas que podrían estar unidas en una sola debido a un trazo fino discontinuo.",
+        tip: "💡 <strong>Honestidad de lectura:</strong> La app señalará la jaula dudosa para que la confirmes en vez de inventar números erróneos.",
+      },
+    },
+    offline: {
+      reticleClass: "reticle-error",
+      guidanceClass: "error",
+      icon: "📡",
+      msg: "Sin conexión con el nodo de cómputo",
+      canCapture: false,
+      modal: {
+        icon: "📡",
+        title: "No encuentro el nodo en la red Wi-Fi",
+        desc: "No pudimos comunicar con la API en tu PC (192.168.1.45).",
+        tip: "💡 <strong>Plan B:</strong> Verifica que ambos estén en la misma Wi-Fi o conecta tu PC al punto de acceso del teléfono.",
+      },
+    },
   };
 
   function updateCondition(cond) {
@@ -182,6 +235,22 @@ document.addEventListener("DOMContentLoaded", () => {
     cameraGuidance.className = `camera-guidance-pill ${cfg.guidanceClass}`;
     guidanceIcon.textContent = cfg.icon;
     guidanceMsg.textContent = cfg.msg;
+
+    if (cond === "offline") {
+      statusIndicator.className = "status-indicator";
+      statusText.textContent = "Buscando nodo Wi-Fi... (Desconectado)";
+    } else {
+      statusIndicator.className = "status-indicator online";
+      statusText.textContent = "Nodo Wi-Fi conectado: 192.168.1.45";
+    }
+
+    if (cond === "ideal") {
+      const now = Date.now();
+      if (now - lastReadyHaptic > 1800) {
+        triggerHaptic(20);
+        lastReadyHaptic = now;
+      }
+    }
   }
 
   conditionChips.forEach((chip) => {
@@ -196,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnShutter.addEventListener("click", () => {
     const cfg = CONDITION_CONFIG[currentCondition];
     if (!cfg.canCapture) {
-      // Mostrar modal accionable con recomendación concreta (Heurística #9)
+      triggerHaptic([40, 50, 40]);
       modalIcon.textContent = cfg.modal.icon;
       modalTitle.textContent = cfg.modal.title;
       modalDesc.textContent = cfg.modal.desc;
@@ -205,8 +274,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Si la foto es apta, simular latencia de 280 ms y transición
     btnShutter.style.transform = "scale(0.85)";
+    triggerHaptic(30);
 
     // Si la cámara real está transmitiendo, capturamos el cuadro
     if (cameraStream.srcObject && cameraStream.videoWidth) {
@@ -225,9 +294,28 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // Activar capa de escaneo láser (percepción de latencia)
+    scanningOverlay.classList.remove("hidden");
+    scanningText.textContent = "Extrayendo rejilla y etiquetas...";
+
+    setTimeout(() => {
+      scanningText.textContent = "Resolviendo con OR-Tools CP-SAT...";
+    }, 180);
+
     setTimeout(() => {
       btnShutter.style.transform = "scale(1)";
+      scanningOverlay.classList.add("hidden");
       screenCamera.classList.remove("active");
+      triggerHaptic([30, 40, 30]);
+
+      if (currentCondition === "fused") {
+        // Honestidad de lectura (cst-90g): avisar sobre jaula dudosa
+        modalIcon.textContent = cfg.modal.icon;
+        modalTitle.textContent = cfg.modal.title;
+        modalDesc.textContent = cfg.modal.desc;
+        modalTip.innerHTML = cfg.modal.tip;
+        modalActionable.classList.remove("hidden");
+      }
 
       if (currentMode === "fast") {
         screenDiego.classList.add("active");
@@ -235,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resetMartaScaffolding();
         screenMarta.classList.add("active");
       }
-    }, 280);
+    }, 420);
   });
 
   btnModalDismiss.addEventListener("click", () => {
