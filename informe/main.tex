@@ -4,21 +4,40 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
-\usepackage{url}
+\usepackage{booktabs}
+\usepackage[hyphens]{url}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-tabla,es-nodecimaldot,es-noshorthands]{babel}
 
 % Toda cifra de este informe sale de un script de labs/tb1-kenken y se puede
-% volver a obtener. Si se cambia una, se cambia también el script que la da.
+% volver a obtener. Si se cambia una, se cambia también el script que la da:
+%   scripts/evaluar_real.py, scripts/comparar_ocr.py  -> 16 tableros iniciales
+%   scripts/benchmark_ocr.py (rama feature/tb1-scraper-kenken) -> 895 etiquetas
+%   scripts/punta_a_punta_scraped.py                 -> 70 tableros de punta a punta
+%   scripts/evaluar.py                               -> conjunto sintético
+%   scripts/medir_solver.py                          -> tiempos del solver
+% Compilar: tectonic main.tex   (o latexmk -pdf main.tex)
+
+% Empaquetado de flotantes (ajuste heredado de los papers de infelix): sin esto
+% las tablas se apilan al final de la columna.
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.8}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\emergencystretch=1em
 
 \begin{document}
 
 \title{Resolución de KenKen de punta a punta mediante Visión Computacional y Programación con Restricciones}
 
-% TODO: nombre del grupo e integrantes.
-\author{\IEEEauthorblockN{Grupo X}
-\IEEEauthorblockA{\textit{Tópicos en Ciencias de la Computación (1ACC0058)} \\
+\author{\IEEEauthorblockN{Rody Sebastian Vilchez Marin (U202216562),
+José Javier Villanueva Aramburu (U202311894),\\
+Jorge Rolando Garcia Roca (U202211490)}
+\IEEEauthorblockA{\textit{Grupo 3 · Tópicos en Ciencias de la Computación (1ACC0058)} \\
 \textit{Universidad Peruana de Ciencias Aplicadas (UPC)}\\
 Lima, Perú}
 }
@@ -26,7 +45,7 @@ Lima, Perú}
 \maketitle
 
 \begin{abstract}
-Presentamos un sistema que lee un tablero de KenKen desde una imagen y lo resuelve. La primera fase localiza y rectifica el tablero, deduce su tamaño por la periodicidad de la rejilla, separa las jaulas midiendo el grosor de cada arista y lee las etiquetas por correlación con plantillas tipográficas, sin aprendizaje automático. La segunda formula el puzzle como un modelo de Programación con Restricciones parametrizado en $n$ y lo resuelve con CP-SAT. Sobre 16 tableros reales publicados por KrazyDad, con la verdad extraída del texto vectorial de los propios PDF, la lectura de etiquetas alcanza un 98.8\% (412 etiquetas) y 8 de los 16 tableros se resuelven correctamente de punta a punta. En los otros 8 el sistema no devuelve ninguna solución errónea: la instancia se rechaza al validarla o el solver demuestra que no tiene solución. Resolver un tablero de hasta $9 \times 9$ tarda menos de 50~ms.
+Presentamos un sistema que lee un tablero de KenKen desde una imagen y lo resuelve. La primera fase localiza y rectifica el tablero, deduce su tamaño por la periodicidad de la rejilla, separa las jaulas midiendo el grosor de cada arista y lee las etiquetas por correlación con plantillas tipográficas, sin aprendizaje automático. La segunda formula el puzzle como un modelo de Programación con Restricciones parametrizado en $n$ y lo resuelve con CP-SAT. Sobre 70 tableros reales publicados por KrazyDad, de $4 \times 4$ a $9 \times 9$ y con la verdad extraída del texto vectorial de los propios PDF, la lectura de etiquetas alcanza un 97.1\% (895 etiquetas, $\kappa$ de Cohen de 0.969) y 48 tableros se leen correctamente de punta a punta. En los otros 22 el sistema no devuelve ninguna solución errónea: 3 lecturas se rechazan por una etiqueta ilegible y en 19 el solver demuestra que la instancia leída no tiene solución. El mismo mecanismo detectó un error en la verdad extraída de un PDF. Resolver un tablero de hasta $9 \times 9$ tarda menos de 50~ms.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -40,13 +59,15 @@ Separamos esas dos cosas con un contrato explícito: la fase de visión produce 
 \begin{itemize}
     \item un pipeline de visión sin aprendizaje que detecta las jaulas por el grosor de las aristas;
     \item un modelo de Programación con Restricciones (CP) parametrizado en $n$ que, además de resolver, comprueba si la solución es única;
-    \item una evaluación sobre tableros reales con verdad exacta, que muestra que un conjunto sintético sobreestima la precisión y que el solver actúa como verificador de la lectura.
+    \item una evaluación sobre 70 tableros reales con verdad exacta, que muestra que un conjunto sintético sobreestima la precisión y que el solver actúa como verificador de la lectura.
 \end{itemize}
+
+\textbf{Trabajo relacionado.} Mulamba \textit{et al.}~\cite{mulamba2024} estudian la resolución de restricciones basada en percepción sobre imágenes de sudoku: una red neuronal interpreta la imagen y el solver razona sobre sus predicciones. Proponen inferencia conjunta, en la que el solver elige la asignación más probable entre las que cumplen las reglas, y analizan qué hacer cuando lo percibido viola las restricciones. Nuestro sistema toma un camino más simple: la visión entrega una sola lectura y el solver la acepta o la rechaza. Los resultados de la Sección~\ref{sec:eval} muestran que ese rechazo ya es informativo, y la inferencia conjunta es el paso natural siguiente (Sección~\ref{sec:futuro}).
 
 \section{Datos}
 No encontramos un conjunto de datos público y etiquetado de tableros KenKen. El único precedente de KenKen por visión que hallamos (370 glifos reales) no declara licencia y trae los recortes estirados a $28 \times 28$, lo que destruye la proporción del glifo; se descartó. Trabajamos con dos fuentes propias.
 
-\textbf{Tableros reales.} Las 8 páginas de puzzles de dos cuadernillos de KrazyDad~\cite{krazydad}, uno de $6 \times 6$ y otro de $9 \times 9$: 16 tableros rasterizados a 150~ppp. Como los PDF son vectoriales, cada etiqueta está como texto con su caja; proyectándola con la homografía del tablero se obtiene su celda, y con ella una verdad exacta sin etiquetar nada a mano. La celda sale de la geometría y no del detector de jaulas, así que el detector no se mide contra sí mismo. KrazyDad autoriza el uso escolar y prohíbe el comercial; los PDF se descargan bajo demanda y no se redistribuyen.
+\textbf{Tableros reales.} Cinco cuadernillos de KrazyDad~\cite{krazydad}: $4 \times 4$ fácil y difícil, $6 \times 6$ fácil y difícil, y $9 \times 9$ difícil. Un extractor recorta cada tablero de la página, lo rectifica a $1000 \times 1000$ píxeles y recorta la etiqueta de cada jaula: 72 tableros (48, 16 y 8 por tamaño) y 895 etiquetas. Como los PDF son vectoriales, cada etiqueta está como texto con su caja; proyectándola con la homografía del tablero se obtiene su celda, y con ella una verdad exacta sin etiquetar nada a mano. La celda sale de la geometría y no del detector de jaulas, así que el detector no se mide contra sí mismo. Dos tableros quedaron sin verdad por un fallo del extractor, de modo que la evaluación de punta a punta usa 70. Los primeros experimentos (Tabla~\ref{tab:ocr}) se hicieron sobre un subconjunto inicial de 16 tableros de los cuadernillos de $6 \times 6$ y $9 \times 9$ difíciles, rasterizados a 150~ppp. KrazyDad autoriza el uso escolar y prohíbe el comercial; los PDF se descargan bajo demanda y no se redistribuyen.
 
 \textbf{Tableros sintéticos.} Un generador parte de un cuadrado latino aleatorio, lo divide en jaulas de hasta cuatro celdas, les asigna una operación compatible y dibuja el tablero con distintas tipografías, opcionalmente con perspectiva, iluminación desigual y ruido. Da verdad gratis y cubre condiciones que los PDF no tienen, pero, como se ve en la Sección~\ref{sec:eval}, no basta para medir.
 
@@ -74,46 +95,69 @@ Antes de llegar al solver la instancia se valida: las jaulas deben particionar e
 \subsection{Variables y dominios}
 Sea $X$ una matriz de variables enteras de $n \times n$ con
 \[ x_{i,j} \in \{1, 2, \dots, n\} \quad \forall\, i, j \in \{1, \dots, n\}. \]
+El modelo se construye a partir de la instancia y no contiene ningún dato de un tablero concreto: el mismo código resuelve cualquier $n$ y cualquier partición en jaulas.
 
 \subsection{Cuadrado latino}
-Cada fila y cada columna es una permutación de $1..n$, expresada con una restricción global \texttt{AllDifferent} por fila y otra por columna.
+Cada fila y cada columna es una permutación de $1..n$, expresada con la restricción global \texttt{AllDifferent}:
+\begin{gather*}
+\textsc{AllDifferent}(x_{i,1}, \dots, x_{i,n}), \\
+\textsc{AllDifferent}(x_{1,j}, \dots, x_{n,j})
+\end{gather*}
+para todo $i, j$: $2n$ restricciones globales en total.
 
 \subsection{Restricciones de jaula}
 Para cada jaula $C_k$ con variables $V_k$, operación $op_k$ y objetivo $T_k$:
 \begin{itemize}
     \item \textbf{Igualdad ($=$):} $v = T_k$, con $V_k = \{v\}$.
-    \item \textbf{Suma ($+$):} $\sum_{v \in V_k} v = T_k$.
-    \item \textbf{Producto ($\times$):} $\prod_{v \in V_k} v = T_k$.
+    \item \textbf{Suma ($+$):} $\sum_{v \in V_k} v = T_k$, una restricción lineal.
+    \item \textbf{Producto ($\times$):} $\prod_{v \in V_k} v = T_k$, con la restricción global de multiplicación de CP-SAT.
     \item \textbf{Resta ($-$):} con $V_k = \{a, b\}$, $\max(a,b) - \min(a,b) = T_k$.
     \item \textbf{División ($\div$):} con $V_k = \{a, b\}$, $\max(a,b) = T_k \cdot \min(a,b)$.
 \end{itemize}
-En resta y división el orden en que la visión lista las dos celdas no significa nada, y el par $\max/\min$ hace el modelo simétrico. Para la división basta la igualdad del producto: con dominios enteros positivos implica que el cociente es exacto.
+En resta y división el orden en que la visión lista las dos celdas no significa nada, y el par $\max/\min$ hace el modelo simétrico. Cada una de esas jaulas añade dos variables auxiliares, $M_k = \max(a,b)$ y $m_k = \min(a,b)$, con dominio $1..n$. Para la división basta la igualdad del producto: con dominios enteros positivos implica que el cociente es exacto.
+
+\subsection{Restricciones reificadas}
+La formulación directa de la resta es una disyunción, $(a - b = T_k) \lor (b - a = T_k)$, que se modela reificando cada lado en una variable booleana: $\beta_k \Rightarrow a - b = T_k$ y $\lnot \beta_k \Rightarrow b - a = T_k$ (en CP-SAT, \texttt{OnlyEnforceIf}). Lo mismo vale para la división. No la usamos: el par $\max/\min$ expresa la misma relación con dos restricciones globales que el solver propaga directamente, sin variables booleanas ni ramificación sobre el orden de las celdas. Ninguna otra restricción del modelo es condicional, así que no hay otro lugar donde la reificación haga falta.
+
+Donde sí será necesaria es en la reparación guiada por el solver (Sección~\ref{sec:futuro}): si la visión ofrece varias lecturas candidatas para una etiqueta, cada candidata $c$ de la jaula $k$ lleva su literal $\ell_{k,c}$, se impone $\sum_c \ell_{k,c} = 1$ y la restricción de la jaula se activa con $\ell_{k,c} \Rightarrow \textit{jaula}_k(c)$. Ese es el uso natural de la reificación en este problema: elegir qué lectura creer.
 
 \subsection{Resolución y unicidad}
 El modelo se resuelve con CP-SAT~\cite{cpsat}, que combina propagación de restricciones con un núcleo SAT con aprendizaje de cláusulas. Además de buscar una solución, el sistema cuenta soluciones con un tope de dos, deteniendo la enumeración al llegar a él. Un puzzle publicado tiene solución única, así que una lectura que deja el tablero sin solución, o con más de una, delata un error de la Fase 1.
 
+\subsection{Complejidad}\label{sec:complejidad}
+El modelo tiene $n^2$ variables de dominio $n$, $2n$ restricciones \texttt{AllDifferent}, una restricción por jaula y dos variables auxiliares por cada jaula de resta o división. Su tamaño es $O(n^2)$, lineal en el número de celdas.
+
+Resolverlo es otra cosa. El espacio de asignaciones tiene $n^{n^2}$ puntos; las restricciones de cuadrado latino lo reducen al número de cuadrados latinos de orden $n$~\cite{oeislatin}, que sigue creciendo de forma superexponencial: 576 para $n = 4$, unos $8.1 \times 10^{8}$ para $n = 6$ y unos $5.5 \times 10^{27}$ para $n = 9$. Completar un cuadrado latino parcial ya es NP-completo~\cite{colbourn1984}, y KenKen comparte esa estructura, así que no cabe esperar una garantía de tiempo polinomial. En la práctica, las jaulas de un puzzle publicado restringen tanto que la propagación de \texttt{AllDifferent} y de las restricciones aritméticas poda casi todo el árbol: como muestra la Sección~\ref{sec:tiempos}, ningún tablero de hasta $9 \times 9$ tarda más de 50~ms. El conteo con tope dos cuesta, en el peor caso, una búsqueda completa adicional: para demostrar que no hay una segunda solución, o que no hay ninguna, el solver tiene que agotar el árbol.
+
 \section{Evaluación}\label{sec:eval}
 
-\subsection{Fase 1 sobre tableros reales}
-La Tabla~\ref{tab:reales} resume la lectura de los 16 tableros reales. Las anclas cuentan las jaulas detectadas cuya celda ancla coincide con la de la verdad; las etiquetas se miden sobre esas anclas. De los 5 fallos de etiqueta, dos son un \texttt{5-} leído como \texttt{6-} y tres son etiquetas de cuatro cifras que desbordan su celda, de modo que el operador queda fuera del recorte.
+\subsection{Lectura de etiquetas sobre 70 tableros reales}
+Sobre las 895 etiquetas del conjunto real, la lectura completa (número y operación) coincide con la verdad en el 97.09\% de los casos. Como el reparto de etiquetas está muy desbalanceado, medimos también el acuerdo con el $\kappa$ de Cohen~\cite{cohen1960}, que descuenta el acuerdo esperable por azar: $\kappa = 0.969$, ``casi perfecto'' en la escala de Landis y Koch~\cite{landis1977}.
+
+La Tabla~\ref{tab:confusiones} agrupa los 26 fallos. Cuatro de cada cinco son la misma confusión, un \texttt{5} leído como \texttt{6} (21 de 26), y 17 de ellos caen en la etiqueta \texttt{5+}, muy frecuente en los tableros de $4 \times 4$. Los tres casos ilegibles son etiquetas de cuatro cifras que desbordan su celda y dejan el operador fuera del recorte. El error, por tanto, no está repartido: se concentra en un par de glifos y en un caso geométrico, y ambos tienen arreglo dirigido.
+
+La misma prueba, ejecutada en otra máquina con otro sistema operativo, dio 95.98\% y $\kappa = 0.957$. El banco de plantillas se renderiza con las tipografías instaladas en el sistema, que es la causa más probable de la diferencia; las cifras de este informe son las de la máquina descrita en la Sección~\ref{sec:tiempos}.
 
 \begin{table}[t]
-\caption{Fase 1 sobre 16 tableros reales de KrazyDad}
-\label{tab:reales}
+\caption{Fallos de lectura sobre 895 etiquetas reales}
+\label{tab:confusiones}
 \centering
-\begin{tabular}{lr}
-\hline
-Métrica & Resultado \\
-\hline
-Tamaño del tablero ($n$) & 16/16 \\
-Anclas de jaula & 412/418 (98.6\%) \\
-Etiqueta completa (operación y número) & 407/412 (98.8\%) \\
-\hline
+\begin{tabular}{llr}
+\toprule
+Verdad & Leído & Casos \\
+\midrule
+\texttt{5+} & \texttt{6+} & 17 \\
+\texttt{15+}, \texttt{15*}, \texttt{35*} & \texttt{16+}, \texttt{16*}, \texttt{36*} & 4 \\
+\texttt{2400*}, \texttt{4800*}, \texttt{2160*} & ilegible & 3 \\
+\texttt{6*}, \texttt{288*} & \texttt{8*}, \texttt{286*} & 2 \\
+\midrule
+Total & & 26 \\
+\bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Elección del OCR}
-Comparamos las plantillas con tres motores genéricos sobre las mismas 412 etiquetas (Tabla~\ref{tab:ocr}): Tesseract~\cite{tesseract}, RapidOCR, que ejecuta PP-OCR~\cite{ppocr} sobre ONNX Runtime, y TrOCR~\cite{trocr}. Plantillas y Tesseract no se distinguen: discrepan en 11 etiquetas, 9 a favor de las plantillas y 2 de Tesseract, con $p = 0.065$ en la prueba exacta de McNemar~\cite{mcnemar}. Los dos superan con claridad a RapidOCR y TrOCR ($p < 0.001$), que leen bien los números pero no los operadores.
+Sobre el subconjunto inicial de 16 tableros comparamos las plantillas con tres motores genéricos, con las mismas 412 etiquetas (Tabla~\ref{tab:ocr}): Tesseract~\cite{tesseract}, RapidOCR, que ejecuta PP-OCR~\cite{ppocr} sobre ONNX Runtime, y TrOCR~\cite{trocr}. Plantillas y Tesseract no se distinguen: discrepan en 11 etiquetas, 9 a favor de las plantillas y 2 de Tesseract, con $p = 0.065$ en la prueba exacta de McNemar~\cite{mcnemar}. Los dos superan con claridad a RapidOCR y TrOCR ($p < 0.001$), que leen bien los números pero no los operadores.
 
 Más que el orden, importa que los dos mejores fallan en etiquetas distintas: al menos un motor acierta 411 de las 412 etiquetas (99.8\%). Ese es el techo de un jurado de motores.
 
@@ -122,83 +166,105 @@ Más que el orden, importa que los dos mejores fallan en etiquetas distintas: al
 \label{tab:ocr}
 \centering
 \begin{tabular}{lrrr}
-\hline
+\toprule
 Método & Etiqueta & Operación & Número \\
-\hline
+\midrule
 Plantillas (este trabajo) & 98.8 & 99.3 & 98.8 \\
 Tesseract 5.3.4 & 97.1 & 97.8 & 97.8 \\
 RapidOCR (PP-OCR) & 64.8 & 68.4 & 94.2 \\
 TrOCR base printed & 60.9 & 63.6 & 95.1 \\
-\hline
+\bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Lo que el conjunto sintético escondía}
-En el conjunto sintético (80 tableros, $n$ de 4 a 7; Tabla~\ref{tab:sinteticos}) la Fase 1 llegó al 100\% en tableros limpios con tipografías del banco. Al estrenar los tableros reales falló en los 16: la rejilla real se interrumpe, la tinta no cae en el píxel predicho, el margen fijo cortaba los dígitos y KrazyDad imprime glifos que el banco no tenía. Los cuatro problemas son supuestos que el generador nunca puso a prueba. La tabla muestra además el peso de la tipografía: con una tipografía que el banco no conoce, la instancia completa cae al 81.0\% en limpio y al 52.4\% en foto. El conjunto sintético sirve para desarrollar, pero las cifras que valen son las de los tableros reales.
+En el conjunto sintético (80 tableros, $n$ de 4 a 7; Tabla~\ref{tab:sinteticos}) la Fase 1 llegó al 100\% en tableros limpios con tipografías del banco. Al estrenar los tableros reales falló en los 16 primeros: la rejilla real se interrumpe, la tinta no cae en el píxel predicho, el margen fijo cortaba los dígitos y KrazyDad imprime glifos que el banco no tenía. Los cuatro problemas son supuestos que el generador nunca puso a prueba. La tabla muestra además el peso de la tipografía: con una tipografía que el banco no conoce, la instancia completa cae al 81.0\% en limpio y al 52.4\% en foto. El conjunto sintético sirve para desarrollar, pero las cifras que valen son las de los tableros reales.
 
 \begin{table}[t]
 \caption{Fase 1 sobre 80 tableros sintéticos (\%)}
 \label{tab:sinteticos}
 \centering
 \begin{tabular}{llrr}
-\hline
+\toprule
 Condición & Tipografía & Etiquetas & Instancia completa \\
-\hline
+\midrule
 Limpio & En el banco & 100.0 & 100.0 \\
 Foto & En el banco & 99.8 & 96.6 \\
 Limpio & No vista & 99.4 & 81.0 \\
 Foto & No vista & 95.9 & 52.4 \\
-\hline
+\bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{De punta a punta}
-Pasando cada tablero real por el sistema completo y cotejando la instancia leída con la verdad del PDF, 8 de los 16 tableros se leen bien: 5 de 8 en $6 \times 6$ y 3 de 8 en $9 \times 9$. Los 8 se resuelven con solución única.
+Pasamos cada uno de los 70 tableros con verdad por el sistema completo, cotejamos la instancia leída con la del PDF y resolvimos lo leído (Tabla~\ref{tab:e2e}). El tamaño $n$ es correcto en los 67 tableros que producen una instancia, y la partición en jaulas coincide con la verdad en 66; la excepción es el tablero cuya verdad resultó errónea, que se discute abajo. Con otra rasterización, en el subconjunto inicial de 150~ppp, el detector fundía dos jaulas en 6 de 16 tableros; en las imágenes de $1000 \times 1000$ no ocurre. Los fallos que quedan son de etiqueta, los de la Tabla~\ref{tab:confusiones}.
 
-La causa dominante de los otros 8 no es el OCR sino el detector de jaulas. En 6 tableros una arista gruesa se clasificó como fina y fundió dos jaulas en una; son las 6 anclas que faltan en la Tabla~\ref{tab:reales}, una por tablero. Este error no se ve en la exactitud por etiqueta, que solo se mide sobre las anclas detectadas, pero basta para perder el tablero. Los otros dos fallos son etiquetas de cuatro cifras.
+\begin{table}[t]
+\caption{De punta a punta sobre 70 tableros reales}
+\label{tab:e2e}
+\centering
+\begin{tabular}{rrrrr}
+\toprule
+$n$ & Tableros & Bien leídos & Rechazados & Sin solución \\
+\midrule
+4 & 47 & 36 & 0 & 11 \\
+6 & 16 & 9 & 1 & 6 \\
+9 & 7 & 3 & 2 & 2 \\
+\midrule
+Total & 70 & 48 & 3 & 19 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-Lo importante es cómo falla: en ninguno de los 8 casos el sistema devuelve una solución errónea. En 6 la instancia se rechaza, sea al validarla (una jaula fundida que hereda una resta o una división y queda con más de dos celdas) o porque una etiqueta resulta ilegible. En los 2 restantes la instancia es válida pero el solver demuestra que no tiene solución. Con solo 16 tableros no es una garantía, pero muestra que el modelo CP sirve también para verificar la lectura.
+Lo importante es cómo falla: en ninguno de los 22 tableros mal leídos el sistema devuelve una solución errónea. En 3 una etiqueta resulta ilegible y la instancia se rechaza antes del solver; en los otros 19 la instancia es válida pero el solver demuestra que no tiene solución. En estos tableros, un solo dígito mal leído bastó para que el cuadrado latino dejara de cerrar.
 
-\subsection{Rendimiento del solver}
-La Tabla~\ref{tab:tiempos} da el tiempo de pared de \texttt{resolver}, incluida la construcción del modelo, sobre 30 instancias sintéticas por tamaño. Las instancias sintéticas no garantizan unicidad: miden el solver, no la dificultad de un puzzle publicado. En los 10 tableros reales con instancia válida, resolver tarda entre 9.5 y 10.3~ms en $6 \times 6$ y entre 18.0 y 42.8~ms en $9 \times 9$; el caso más lento es una instancia sin solución, donde el solver tiene que agotar la búsqueda para demostrarlo. En tres ejecuciones ningún caso pasó de 50~ms. Medido en un Intel Core Ultra~7 255U (14 hilos) con OR-Tools 9.15 y Python 3.13.
+El mismo mecanismo encontró un error en la verdad. En un tablero de $9 \times 9$ la instancia extraída del PDF no tiene solución, mientras que la lectura del sistema tiene una única; la diferencia es una jaula de división que el extractor no registró. Como un puzzle publicado tiene solución, el error está en la verdad y no en la lectura, y por eso ese tablero cuenta como bien leído en la Tabla~\ref{tab:e2e}. Con 70 tableros no es una garantía, pero muestra que el modelo CP sirve para verificar tanto la lectura como los datos con que se la evalúa.
+
+\subsection{Rendimiento del solver}\label{sec:tiempos}
+La Tabla~\ref{tab:tiempos} da el tiempo de pared de \texttt{resolver}, incluida la construcción del modelo, sobre 30 instancias sintéticas por tamaño. Las instancias sintéticas no garantizan unicidad: miden el solver, no la dificultad de un puzzle publicado. Sobre la verdad de los 70 tableros reales, la mediana es de 4.4~ms en $4 \times 4$, 4.1~ms en $6 \times 6$ y 10.8~ms en $9 \times 9$, con un máximo de 14.1~ms. Sobre lo que el sistema lee, incluidas las instancias sin solución, donde el solver tiene que agotar la búsqueda para demostrarlo, el máximo es de 20.4~ms. Medido en un procesador x86-64 de 14 hilos (Intel Core Ultra~7 255U) con OR-Tools 9.15 y Python 3.13.
 
 \begin{table}[t]
 \caption{Tiempo de \texttt{resolver} en instancias sintéticas (ms)}
 \label{tab:tiempos}
 \centering
 \begin{tabular}{rrrr}
-\hline
+\toprule
 $n$ & Mediana & P95 & Máximo \\
-\hline
+\midrule
 4 & 6.7 & 13.9 & 17.5 \\
 5 & 5.4 & 12.7 & 14.2 \\
 6 & 5.8 & 13.0 & 13.7 \\
 7 & 8.5 & 15.8 & 18.4 \\
 8 & 10.6 & 19.7 & 23.6 \\
 9 & 12.3 & 23.0 & 24.0 \\
-\hline
+\bottomrule
 \end{tabular}
 \end{table}
 
 \section{Integración}
-Un CLI (\texttt{solve.py}) encadena las dos fases: lee la imagen, construye la instancia, la resuelve y dibuja el tablero con la solución superpuesta. Si el solver no encuentra solución, lo informa y dibuja el tablero sin rellenar.
+Un CLI (\texttt{solve.py}) encadena las dos fases sin intervención manual: lee la imagen, construye la instancia, la valida, la resuelve y dibuja el tablero con la solución superpuesta. Si el solver no encuentra solución, lo informa y dibuja el tablero sin rellenar, en vez de inventar una.
 
-\section{Limitaciones y trabajo futuro}
+\section{Limitaciones y trabajo futuro}\label{sec:futuro}
 \begin{itemize}
-    \item \textbf{Aristas gruesas no detectadas.} Causan 6 de los 8 fallos de punta a punta y son la primera mejora pendiente.
+    \item \textbf{La confusión entre \texttt{5} y \texttt{6}.} Explica 21 de los 26 fallos de etiqueta. Es un problema de un par de glifos, no del método, y se puede atacar con plantillas específicas de la tipografía de KrazyDad o con un clasificador dedicado a ese par.
     \item \textbf{Etiquetas que desbordan su celda.} Hay que detectar que falta el operador y ampliar el recorte solo en ese caso; ampliarlo siempre mete la línea vecina, que se lee como un \texttt{1}.
-    \item \textbf{Muestra pequeña y de un solo editor.} Los 16 tableros reales son de un mismo editor y una misma tipografía, y son PDF rasterizados: tinta real pero sin sombras, curvatura de papel ni desenfoque. Falta un conjunto de tableros impresos y fotografiados.
-    \item \textbf{Jurado de motores y reparación guiada por el solver.} Donde los motores de OCR discrepan, se pueden pasar los candidatos al modelo CP y quedarse con el que deja el tablero con solución única. La misma idea serviría para elegir entre particiones alternativas de las jaulas.
+    \item \textbf{Un solo editor y sin fotos.} Los 70 tableros reales son de un mismo editor y una misma tipografía, y son PDF rasterizados: tinta real pero sin sombras, curvatura de papel ni desenfoque. Falta un conjunto amplio de tableros impresos y fotografiados.
+    \item \textbf{Jurado de motores y reparación guiada por el solver.} Hoy el solver rechaza una lectura errónea pero no la corrige. Donde los motores de OCR discrepan, o donde el clasificador duda entre \texttt{5} y \texttt{6}, se pueden pasar las candidatas al modelo CP con restricciones reificadas y quedarse con la combinación que deja el tablero con solución única. Es la inferencia conjunta de Mulamba \textit{et al.}~\cite{mulamba2024}, y los 19 tableros sin solución de la Tabla~\ref{tab:e2e} son exactamente los casos que aprovecharía.
 \end{itemize}
 
 \section{Declaración de uso de IA}
-El andamiaje de la Fase 1 (visión) se desarrolló con asistencia de IA generativa (Claude Code, de Anthropic). El modelo de Programación con Restricciones de la Fase 2 lo escribió el equipo, sin asistencia de IA. La revisión de este informe y el script que mide el solver (\texttt{scripts/medir\_solver.py}) también se hicieron con asistencia de IA. Todas las cifras salen de scripts del repositorio y se pueden volver a obtener.
+El andamiaje de la Fase 1 (visión) se desarrolló con asistencia de IA generativa (Claude Code, de Anthropic). El modelo de Programación con Restricciones de la Fase 2 lo escribió el equipo, sin asistencia de IA. La revisión y la compilación de este informe, el script que mide el solver (\texttt{scripts/medir\_solver.py}) y el de la evaluación de punta a punta (\texttt{scripts/punta\_a\_punta\_scraped.py}) se hicieron con asistencia de Claude Code; un integrante usó Gemini, de Google, para analizar la salida del benchmark de OCR. Todas las cifras salen de scripts del repositorio y se pueden volver a obtener, y el equipo las revisó.
 
 \begin{thebibliography}{00}
-\bibitem{krazydad} KrazyDad, ``Hard 6x6 Inkies, Volume 1, Book 1'' y ``Hard 9x9 Inkies, Volume 1, Book 1,'' KrazyDad.com. [En línea]. Disponible: \url{https://krazydad.com/inkies/}. Consultado: 18 de septiembre de 2026.
-\bibitem{cpsat} L. Perron y F. Didier, ``CP-SAT,'' Google OR-Tools, v9.15, 2026. [En línea]. Disponible: \url{https://developers.google.com/optimization/cp/cp_solver/}
+\bibitem{mulamba2024} M. Mulamba, J. Mandi, A. İ. Mahmutoğulları y T. Guns, ``Perception-based constraint solving for sudoku images,'' \textit{Constraints}, 2024, doi: 10.1007/s10601-024-09372-9.
+\bibitem{krazydad} KrazyDad, ``Inkies'' (cuadernillos $4 \times 4$, $6 \times 6$ y $9 \times 9$, Volume 1, Book 1), KrazyDad.com. [En línea]. Disponible: \url{https://krazydad.com/inkies/}. Consultado: 18 de septiembre de 2026.
 \bibitem{opencv} G. Bradski, ``The OpenCV Library,'' \textit{Dr. Dobb's Journal of Software Tools}, 2000.
 \bibitem{otsu} N. Otsu, ``A threshold selection method from gray-level histograms,'' \textit{IEEE Trans. Syst., Man, Cybern.}, vol. 9, no. 1, pp. 62--66, 1979.
+\bibitem{cpsat} L. Perron y F. Didier, ``CP-SAT,'' Google OR-Tools, v9.15, 2026. [En línea]. Disponible: \url{https://developers.google.com/optimization/cp/cp_solver/}
+\bibitem{oeislatin} OEIS Foundation, ``A002860: Number of Latin squares of order n,'' \textit{The On-Line Encyclopedia of Integer Sequences}. [En línea]. Disponible: \url{https://oeis.org/A002860}
+\bibitem{colbourn1984} C. J. Colbourn, ``The complexity of completing partial Latin squares,'' \textit{Discrete Applied Mathematics}, vol. 8, no. 1, pp. 25--30, 1984.
+\bibitem{cohen1960} J. Cohen, ``A coefficient of agreement for nominal scales,'' \textit{Educational and Psychological Measurement}, vol. 20, no. 1, pp. 37--46, 1960.
+\bibitem{landis1977} J. R. Landis y G. G. Koch, ``The measurement of observer agreement for categorical data,'' \textit{Biometrics}, vol. 33, no. 1, pp. 159--174, 1977.
 \bibitem{tesseract} R. Smith, ``An overview of the Tesseract OCR engine,'' en \textit{Proc. 9th Int. Conf. Document Analysis and Recognition (ICDAR)}, 2007, pp. 629--633.
 \bibitem{ppocr} Y. Du \textit{et al.}, ``PP-OCR: A practical ultra lightweight OCR system,'' arXiv:2009.09941, 2020.
 \bibitem{trocr} M. Li \textit{et al.}, ``TrOCR: Transformer-based optical character recognition with pre-trained models,'' en \textit{Proc. AAAI Conf. Artificial Intelligence}, 2023.
