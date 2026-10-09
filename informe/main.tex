@@ -77,6 +77,13 @@ La Fig.~\ref{fig:arquitectura} resume la arquitectura: la app envía la foto a u
 \label{fig:pipeline}
 \end{figure}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.56\columnwidth]{fig/telefono.png}
+\caption{El sistema funciona en un teléfono real. Captura de pantalla de un Pixel 9a, sin retoques: la app fotografió un tablero mostrado en una pantalla y dibujó la solución sobre la propia foto, cada número en su celda pese a la inclinación (Modo Rápido, Sección~\ref{sec:integracion}). Leerlo y resolverlo tomó 111~ms.}
+\label{fig:telefono}
+\end{figure}
+
 \section{Trabajo relacionado}
 \paragraph{Percibir y razonar a la vez}
 Mulamba \textit{et al.}~\cite{mulamba2024}, extendiendo~\cite{mulamba2020}, resuelven sudokus fotografiados con inferencia conjunta. Las probabilidades del clasificador entran al solver de restricciones, que elige la asignación más probable entre las que cumplen las reglas y así corrige errores de percepción. Muestran por qué hace falta: con un clasificador que acierta el 99\% de las celdas, predecir y luego resolver acierta el tablero completo solo en torno al 44\% de las veces. Es la base de la aplicación Sudoku Assistant de KU Leuven~\cite{kuleuven2023}. En la línea neurosimbólica, SATNet~\cite{satnet} integra un solver de satisfacibilidad diferenciable en una red. Pero Chang \textit{et al.}~\cite{chang2020} muestran que, sin etiquetas intermedias, no logra anclar los símbolos y su exactitud cae a cero.
@@ -320,12 +327,12 @@ $n$ & Tableros & Mediana & Máximo \\
 \section{Integración: de la foto a la solución sin intervención}\label{sec:integracion}
 Un CLI (\texttt{solve.py}) encadena las tres fases sin intervención manual: lee la imagen, construye y valida la instancia, la resuelve y dibuja la solución sobre una rejilla limpia (Fig.~\ref{fig:pipeline}). Si el solver no encuentra solución, lo informa y dibuja el tablero sin rellenar: no inventa una.
 
-La app móvil (Fig.~\ref{fig:app}) cierra el flujo para una persona con un KenKen en papel. Envía la foto en JSON a un servicio FastAPI en la PC (\texttt{kenken\_nodo}, \texttt{POST /resolver}) y recibe el estado, las jaulas leídas, la solución, las correcciones y un mensaje en llano (Fig.~\ref{fig:arquitectura}). La conexión pasa por \texttt{adb reverse}, por USB o por depuración Wi-Fi, sin abrir puertos en la PC. En Modo Asistencia, el modo por defecto, el tablero aparece sin números y la persona revela solo las casillas que quiere; en Modo Rápido ve la solución completa, sobre una rejilla limpia o dibujada encima de su propia foto: el nodo devuelve dónde cae cada celda en la imagen, proyectada con la inversa de la homografía (Fig.~\ref{fig:app}e). Cuando el nodo repara una lectura, la app lo dice y marca las jaulas corregidas; cuando se abstiene, muestra lo que leyó y pide otra foto. La ejecutamos en un teléfono Pixel; su usabilidad aún no está evaluada.
+La app móvil (Fig.~\ref{fig:app}) cierra el flujo para una persona con un KenKen en papel. Envía la foto en JSON a un servicio FastAPI en la PC (\texttt{kenken\_nodo}, \texttt{POST /resolver}) y recibe el estado, las jaulas leídas, la solución, las correcciones y un mensaje en llano (Fig.~\ref{fig:arquitectura}). La conexión pasa por \texttt{adb reverse}, por USB o por depuración Wi-Fi, sin abrir puertos en la PC. En Modo Asistencia, el modo por defecto, el tablero aparece sin números y la persona revela solo las casillas que quiere; en Modo Rápido ve la solución completa, sobre una rejilla limpia o dibujada encima de su propia foto: el nodo devuelve dónde cae cada celda en la imagen, proyectada con la inversa de la homografía (Fig.~\ref{fig:telefono}). Cuando el nodo repara una lectura, la app lo dice y marca las jaulas corregidas; cuando se abstiene, muestra lo que leyó y pide otra foto. La ejecutamos en un teléfono Pixel; su usabilidad aún no está evaluada.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.92\textwidth]{fig/app.png}
-\caption{La app muestra lo que el solver decidió, incluida la corrección. (a)~Inicio: estado del nodo y modo. (b)~Modo Asistencia: el tablero sin números; la persona revela solo las casillas que toca. (c)~Una foto de la Fig.~\ref{fig:pipeline}a tomada a la pantalla: la visión leyó los dos 3$\div$ como 3+, el solver reparó la lectura y la app marca las jaulas corregidas. (d)~Una foto cortada: el nodo no encuentra el tablero y lo dice en llano. (e)~Captura del teléfono (Pixel 9a): en Modo Rápido, la solución aparece dibujada sobre la foto, cada número en su celda pese a la inclinación. Resolverla tomó 111~ms.}
+\caption{La app muestra lo que el solver decidió, incluida la corrección. (a)~Inicio: estado del nodo y modo. (b)~Modo Asistencia: el tablero sin números; la persona revela solo las casillas que toca. (c)~Una foto de la Fig.~\ref{fig:pipeline}a tomada a la pantalla: la visión leyó los dos 3$\div$ como 3+, el solver reparó la lectura y la app marca las jaulas corregidas. (d)~Una foto cortada: el nodo no encuentra el tablero y lo dice en llano.}
 \label{fig:app}
 \end{figure*}
 
