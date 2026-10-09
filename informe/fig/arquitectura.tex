@@ -81,7 +81,8 @@
   {\textbf{reparación}\\\textbf{(reificada)}\\[1pt]prueba $\div\!\leftrightarrow\!+$ y $5\!\leftrightarrow\!6$; acepta solo si deja una solución};
 \node[caja=no,text width=1.9cm] (rech) at (16.88,1.3) {rechazo honesto con mensaje en llano};
 \draw[flecha] (dec.south -| uni) -- node[etq,left] {1} (uni);
-\draw[flecha] (dec.south -| rep) -- node[etq,right] {0 o $\geq$2} (rep);
+\draw[flecha] (dec.south -| rep) -- node[etq,right] {0} (rep);
+\draw[flecha] (dec.east) -- ++(0.25,0) |- node[etq,pos=0.25,right] {$\geq$2} (rech.east);
 \draw[flecha,dashed] (rep.west |- uni) -- (uni.east);
 \draw[flecha] (rep) -- node[etq,left] {sin arreglo} (rech);
 % ---------------------------------------------------------- flechas principales
