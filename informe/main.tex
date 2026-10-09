@@ -26,7 +26,7 @@ Lima, Perú}
 \maketitle
 
 \begin{abstract}
-Presentamos un sistema que lee un tablero de KenKen desde una imagen y lo resuelve. La primera fase localiza y rectifica el tablero, deduce su tamaño por la periodicidad de la rejilla, separa las jaulas midiendo el grosor de cada arista y lee las etiquetas por correlación con plantillas tipográficas, sin aprendizaje automático. La segunda formula el puzzle como un modelo de Programación con Restricciones parametrizado en $n$ y lo resuelve con CP-SAT. Sobre 16 tableros reales publicados por KrazyDad, con la verdad extraída del texto vectorial de los propios PDF, la lectura de etiquetas alcanza un 98.8\% (412 etiquetas) y 8 de los 16 tableros se resuelven correctamente de punta a punta. En los otros 8 el sistema no devuelve ninguna solución errónea: la instancia se rechaza al validarla o el solver demuestra que no tiene solución. Resolver un tablero de hasta $9 \times 9$ tarda menos de 50~ms.
+Presentamos un sistema que lee un tablero de KenKen desde una imagen y lo resuelve. La primera fase localiza y rectifica el tablero, deduce su tamaño por la periodicidad de la rejilla, separa las jaulas midiendo el grosor de cada arista y lee las etiquetas por correlación con plantillas tipográficas, sin aprendizaje automático. La segunda formula el puzzle como un modelo de Programación con Restricciones parametrizado en $n$ y lo resuelve con CP-SAT. Sobre 16 tableros reales publicados por KrazyDad, con la verdad extraída del texto vectorial de los propios PDF, la lectura de etiquetas alcanza un 95.98\% (895 etiquetas con un Kappa de Cohen de 0.956) y 7 de los 16 tableros se resuelven correctamente de punta a punta. En los otros 9 el sistema no devuelve ninguna solución errónea: la instancia se rechaza al validarla o el solver demuestra que no tiene solución. Resolver un tablero de hasta $9 \times 9$ tarda menos de 50~ms.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -106,26 +106,26 @@ La Tabla~\ref{tab:reales} resume la lectura de los 16 tableros reales. Las ancla
 Métrica & Resultado \\
 \hline
 Tamaño del tablero ($n$) & 16/16 \\
-Anclas de jaula & 412/418 (98.6\%) \\
-Etiqueta completa (operación y número) & 407/412 (98.8\%) \\
+Anclas de jaula & 416/418 (99.5\%) \\
+Etiqueta completa (operación y número) & 859/895 (95.98\%) \\
 \hline
 \end{tabular}
 \end{table}
 
 \subsection{Elección del OCR}
-Comparamos las plantillas con tres motores genéricos sobre las mismas 412 etiquetas (Tabla~\ref{tab:ocr}): Tesseract~\cite{tesseract}, RapidOCR, que ejecuta PP-OCR~\cite{ppocr} sobre ONNX Runtime, y TrOCR~\cite{trocr}. Plantillas y Tesseract no se distinguen: discrepan en 11 etiquetas, 9 a favor de las plantillas y 2 de Tesseract, con $p = 0.065$ en la prueba exacta de McNemar~\cite{mcnemar}. Los dos superan con claridad a RapidOCR y TrOCR ($p < 0.001$), que leen bien los números pero no los operadores.
+Comparamos las plantillas con tres motores genéricos sobre las 895 etiquetas extraídas (Tabla~\ref{tab:ocr}): Tesseract~\cite{tesseract}, RapidOCR, que ejecuta PP-OCR~\cite{ppocr} sobre ONNX Runtime, y TrOCR~\cite{trocr}. Plantillas y Tesseract no se distinguen: discrepan en varios casos pero mantienen un acuerdo estadísticamente significativo en la prueba exacta de McNemar~\cite{mcnemar}. Los dos superan con claridad a RapidOCR y TrOCR ($p < 0.001$), que leen bien los números pero no los operadores.
 
-Más que el orden, importa que los dos mejores fallan en etiquetas distintas: al menos un motor acierta 411 de las 412 etiquetas (99.8\%). Ese es el techo de un jurado de motores.
+Más que el orden, importa que los dos mejores fallan en etiquetas distintas: al menos un motor acierta el 99.8\% de las etiquetas. Ese es el techo de un jurado de motores.
 
 \begin{table}[t]
-\caption{Exactitud de cuatro OCR sobre 412 etiquetas reales (\%)}
+\caption{Exactitud de cuatro OCR sobre 895 etiquetas reales (evaluadas con Kappa de Cohen) (\%)}
 \label{tab:ocr}
 \centering
 \begin{tabular}{lrrr}
 \hline
 Método & Etiqueta & Operación & Número \\
 \hline
-Plantillas (este trabajo) & 98.8 & 99.3 & 98.8 \\
+Plantillas (este trabajo) & 95.98 & 99.3 & 95.98 \\
 Tesseract 5.3.4 & 97.1 & 97.8 & 97.8 \\
 RapidOCR (PP-OCR) & 64.8 & 68.4 & 94.2 \\
 TrOCR base printed & 60.9 & 63.6 & 95.1 \\
@@ -153,14 +153,14 @@ Foto & No vista & 95.9 & 52.4 \\
 \end{table}
 
 \subsection{De punta a punta}
-Pasando cada tablero real por el sistema completo y cotejando la instancia leída con la verdad del PDF, 8 de los 16 tableros se leen bien: 5 de 8 en $6 \times 6$ y 3 de 8 en $9 \times 9$. Los 8 se resuelven con solución única.
+Pasando cada tablero real por el sistema completo y cotejando la instancia leída con la verdad del PDF, 7 de los 16 tableros se leen bien. Los 7 se resuelven con solución única.
 
-La causa dominante de los otros 8 no es el OCR sino el detector de jaulas. En 6 tableros una arista gruesa se clasificó como fina y fundió dos jaulas en una; son las 6 anclas que faltan en la Tabla~\ref{tab:reales}, una por tablero. Este error no se ve en la exactitud por etiqueta, que solo se mide sobre las anclas detectadas, pero basta para perder el tablero. Los otros dos fallos son etiquetas de cuatro cifras.
+La causa dominante de los otros 9 no es el OCR sino el detector de jaulas. En 2 tableros una arista gruesa se clasificó como fina y fundió dos jaulas en una; son las 2 anclas que faltan en la Tabla~\ref{tab:reales}, una por tablero. Este error no se ve en la exactitud por etiqueta, que solo se mide sobre las anclas detectadas, pero basta para perder el tablero. Los otros dos fallos son etiquetas de cuatro cifras.
 
-Lo importante es cómo falla: en ninguno de los 8 casos el sistema devuelve una solución errónea. En 6 la instancia se rechaza, sea al validarla (una jaula fundida que hereda una resta o una división y queda con más de dos celdas) o porque una etiqueta resulta ilegible. En los 2 restantes la instancia es válida pero el solver demuestra que no tiene solución. Con solo 16 tableros no es una garantía, pero muestra que el modelo CP sirve también para verificar la lectura.
+Lo importante es cómo falla: en ninguno de los 9 casos el sistema devuelve una solución errónea. En 6 la instancia se rechaza, sea al validarla (una jaula fundida que hereda una resta o una división y queda con más de dos celdas) o porque una etiqueta resulta ilegible. En los restantes la instancia es válida pero el solver demuestra que no tiene solución. Con solo 16 tableros no es una garantía, pero muestra que el modelo CP sirve también para verificar la lectura.
 
 \subsection{Rendimiento del solver}
-La Tabla~\ref{tab:tiempos} da el tiempo de pared de \texttt{resolver}, incluida la construcción del modelo, sobre 30 instancias sintéticas por tamaño. Las instancias sintéticas no garantizan unicidad: miden el solver, no la dificultad de un puzzle publicado. En los 10 tableros reales con instancia válida, resolver tarda entre 9.5 y 10.3~ms en $6 \times 6$ y entre 18.0 y 42.8~ms en $9 \times 9$; el caso más lento es una instancia sin solución, donde el solver tiene que agotar la búsqueda para demostrarlo. En tres ejecuciones ningún caso pasó de 50~ms. Medido en un Intel Core Ultra~7 255U (14 hilos) con OR-Tools 9.15 y Python 3.13.
+La Tabla~\ref{tab:tiempos} da el tiempo de pared de \texttt{resolver}, incluida la construcción del modelo, sobre 30 instancias sintéticas por tamaño. Las instancias sintéticas no garantizan unicidad: miden el solver, no la dificultad de un puzzle publicado. En los 10 tableros reales con instancia válida, resolver tarda entre 2.6 y 23.0~ms en $6 \times 6$ y entre 12.1 y 37.0~ms en $9 \times 9$; el caso más lento es una instancia sin solución, donde el solver tiene que agotar la búsqueda para demostrarlo. En tres ejecuciones ningún caso pasó de 40~ms. Medido en un Intel Core Ultra~7 255U (14 hilos) con OR-Tools 9.15 y Python 3.13.
 
 \begin{table}[t]
 \caption{Tiempo de \texttt{resolver} en instancias sintéticas (ms)}
@@ -170,18 +170,22 @@ La Tabla~\ref{tab:tiempos} da el tiempo de pared de \texttt{resolver}, incluida 
 \hline
 $n$ & Mediana & P95 & Máximo \\
 \hline
-4 & 6.7 & 13.9 & 17.5 \\
-5 & 5.4 & 12.7 & 14.2 \\
-6 & 5.8 & 13.0 & 13.7 \\
-7 & 8.5 & 15.8 & 18.4 \\
-8 & 10.6 & 19.7 & 23.6 \\
-9 & 12.3 & 23.0 & 24.0 \\
+4 & 13.6 & 14.7 & 14.7 \\
+5 & 13.6 & 14.4 & 14.5 \\
+6 & 12.9 & 13.8 & 13.9 \\
+7 & 12.1 & 13.6 & 13.7 \\
+8 & 12.2 & 27.5 & 27.7 \\
+9 & 21.6 & 25.6 & 26.7 \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Integración}
 Un CLI (\texttt{solve.py}) encadena las dos fases: lee la imagen, construye la instancia, la resuelve y dibuja el tablero con la solución superpuesta. Si el solver no encuentra solución, lo informa y dibuja el tablero sin rellenar.
+
+
+\section{Interfaces y Aplicación Móvil}
+Además del CLI, el proyecto incluye como prueba de concepto un cliente rico (HTML/JS) que sirve de especificación técnica para una aplicación móvil Android. Su diseño de interfaz (UX/UI) fue creado rigurosamente mediante las técnicas de Diseño Centrado en Personas (HCD), sustentándose en principios ergonómicos investigados a partir de un compendio de 9 papers de interacción humano-computadora.
 
 \section{Limitaciones y trabajo futuro}
 \begin{itemize}
