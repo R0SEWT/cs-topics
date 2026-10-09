@@ -547,6 +547,77 @@
 
   VIZ.recortes = (el) => (s) => el.classList.toggle("marcar", s >= 1);
 
+  // --------------------------------- cómo se lee una etiqueta: plantillas
+
+  VIZ.plantillas = (el) => {
+    const P = D.foto.plantillas, W = 740, H = 480, esc = 2.6;
+    const svg = lienzo(el, W, H).classed("lienzo-plantillas", true);
+    svg.append("defs").append("marker").attr("id", "flecha-pl").attr("viewBox", "0 0 10 10").attr("refX", 9).attr("refY", 5)
+      .attr("markerWidth", 7).attr("markerHeight", 7).attr("orient", "auto")
+      .append("path").attr("d", "M0,0 L10,5 L0,10 z").style("fill", "var(--suave)");
+    const cw = P.ancho * esc, ch = P.alto * esc;
+    const [dig, op] = P.glifos;
+    const nombre = { "−": "− menos", "-": "- guion", "÷": "÷", "+": "+", "×": "×", "x": "x", "/": "/" };
+
+    const gR = svg.append("g").attr("opacity", 0);
+    gR.append("image").attr("href", P.recorte).attr("width", cw).attr("height", ch).attr("preserveAspectRatio", "none");
+    gR.append("rect").attr("width", cw).attr("height", ch).attr("rx", 6).style("fill", "none").style("stroke", "var(--borde)");
+    gR.append("text").attr("class", "rotulo-eje").attr("y", ch + 18).text(`recorte real · jaula (${P.ancla[0] + 1},${P.ancla[1] + 1})`);
+
+    const gC = svg.append("g").attr("opacity", 0);
+    gC.selectAll("rect").data(P.glifos).join("rect")
+      .attr("x", (g) => g.caja[0] * esc - 4).attr("y", (g) => g.caja[1] * esc - 4)
+      .attr("width", (g) => (g.caja[2] - g.caja[0]) * esc + 8).attr("height", (g) => (g.caja[3] - g.caja[1]) * esc + 8)
+      .attr("rx", 5).style("fill", "none").attr("stroke-width", 3)
+      .style("stroke", (g, i) => (i === 1 ? "var(--naranja)" : "var(--indigo)"));
+
+    const x0N = 400, ladoN = 112;
+    const gN = svg.append("g").attr("opacity", 0);
+    gN.append("path").attr("d", `M${cw + 12},${ch / 2} L${x0N - 14},${ch / 2}`).style("stroke", "var(--suave)")
+      .attr("stroke-width", 1.6).attr("marker-end", "url(#flecha-pl)");
+    P.glifos.forEach((g, i) => {
+      const x = x0N + i * (ladoN + 46), y = ch / 2 - ladoN / 2;
+      gN.append("image").attr("href", g.normal).attr("x", x).attr("y", y).attr("width", ladoN).attr("height", ladoN);
+      gN.append("rect").attr("x", x).attr("y", y).attr("width", ladoN).attr("height", ladoN)
+        .style("fill", "none").attr("stroke-width", 2.5).style("stroke", i === 1 ? "var(--naranja)" : "var(--indigo)");
+      gN.append("text").attr("class", "rotulo-eje").attr("x", x + ladoN / 2).attr("y", y + ladoN + 18)
+        .attr("text-anchor", "middle").text(`carácter ${i + 1}`);
+    });
+    gN.append("text").attr("class", "rotulo-eje").attr("x", x0N).attr("y", ch / 2 - ladoN / 2 - 10).text("28 × 28 píxeles, sin deformar");
+
+    const y0B = 278, fila = 44, x = d3.scaleLinear([0, 1], [128, W - 190]);
+    const gB = svg.append("g").attr("opacity", 0);
+    gB.append("text").attr("class", "anot fuerte").attr("y", y0B - 14).text("¿A qué plantilla se parece el carácter 2?");
+    const filas = gB.selectAll("g.fila").data(op.puntos.slice(0, 4)).join("g").attr("class", "fila")
+      .attr("transform", (d, k) => `translate(0,${y0B + k * fila})`);
+    filas.append("image").attr("href", (d) => d.img).attr("width", 34).attr("height", 34);
+    filas.append("rect").attr("width", 34).attr("height", 34).style("fill", "none").style("stroke", "var(--borde)");
+    filas.append("text").attr("class", "mono").attr("x", 44).attr("y", 24).attr("font-size", 19).attr("font-weight", 600)
+      .text((d) => nombre[d.ch] ?? d.ch);
+    const barras = filas.append("rect").attr("x", x(0)).attr("y", 6).attr("height", 22).attr("rx", 4)
+      .attr("width", 0).style("fill", "var(--suave)");
+    const valores = filas.append("text").attr("class", "mono").attr("y", 23).attr("font-size", 15).attr("opacity", 0)
+      .attr("x", (d) => x(d.s) + 8).text((d) => d.s.toFixed(3));
+    const marcas = filas.append("text").attr("class", "anot fuerte").attr("y", 23).attr("opacity", 0)
+      .attr("x", (d) => x(d.s) + 64)
+      .text((d) => (d.ch === "+" ? "gana: leímos 3+" : d.ch === "÷" ? "el correcto, a 0.010" : ""));
+    const nota = gB.append("text").attr("class", "anot").attr("y", y0B + 4 * fila + 14).attr("opacity", 0)
+      .text(`El carácter 1 es un «${dig.puntos[0].ch}» sin dudas: ${dig.puntos[0].s.toFixed(3)}, frente a ${dig.puntos[1].s.toFixed(3)} del «${dig.puntos[1].ch}».`);
+
+    return (s) => {
+      gR.transition().duration(T).attr("opacity", s >= 1 ? 1 : 0);
+      gC.transition().duration(T).attr("opacity", s >= 2 ? 1 : 0);
+      gN.transition().duration(T).attr("opacity", s >= 3 ? 1 : 0);
+      gB.transition().duration(T).attr("opacity", s >= 4 ? 1 : 0);
+      barras.transition().delay((d, k) => (s >= 4 ? k * 120 : 0)).duration(T)
+        .attr("width", (d) => (s >= 4 ? x(d.s) - x(0) : 0))
+        .style("fill", (d) => (s >= 5 && d.ch === "+" ? "var(--naranja)" : s >= 5 && d.ch === "÷" ? "var(--indigo)" : "var(--suave)"));
+      valores.transition().delay(s >= 4 ? 500 : 0).duration(300).attr("opacity", s >= 4 ? 1 : 0);
+      marcas.transition().duration(T).attr("opacity", s >= 5 ? 1 : 0);
+      nota.transition().duration(T).attr("opacity", s >= 4 ? 1 : 0);
+    };
+  };
+
   // ---------------------------------------------- la reparación sobre la foto
 
   VIZ["reparar-foto"] = (el) => {
