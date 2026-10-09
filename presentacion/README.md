@@ -1,5 +1,7 @@
 # Diapositivas del TB1 (Quarto + reveal.js + D3)
 
+En línea: <https://kenken-tb1.netlify.app>
+
 `index.qmd` es la exposición del TB1, «¿Qué sobrevive a una lectura equivocada?»: 22
 diapositivas y un apéndice con limitaciones, la comparación de OCR y los tiempos. Sigue el
 hilo del informe (`../informe/main.pdf`) con la misma familia visual del deck de Jev.
@@ -44,6 +46,16 @@ Deja `_site/TB1-KenKen-diapositivas.html` (~9 MB), con imágenes, datos y D3 ade
 adjuntarlo al release. Ese perfil apaga la pizarra (no admite un solo archivo) y cambia la
 celda OJS de la reparación por el mismo control en JS, porque Quarto no ejecuta OJS desde
 `file://`.
+
+## Publicar en Netlify
+
+```bash
+quarto render index.qmd && quarto render index.qmd --profile autonomo
+npx netlify-cli deploy --prod --dir _site --site kenken-tb1
+```
+
+La raíz sirve la versión con pizarra y OJS; `/TB1-KenKen-diapositivas.html` es el archivo
+único.
 
 ## Qué usa de Quarto y D3
 
