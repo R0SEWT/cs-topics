@@ -25,6 +25,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from kenken_cp.reparar import reparar
 from kenken_cp.solver import contar_soluciones, resolver
 from kenken_cv.glyphs import EtiquetaIlegible
 from kenken_cv.grid import TableroNoEncontrado
@@ -33,6 +34,8 @@ from kenken_cv.schema import InstanciaInvalida
 
 MENSAJES = {
     "resuelto": "Listo.",
+    "reparado": "Leí mal {k} y lo corregí con el solver: es la única corrección que deja "
+    "el tablero con solución única. Revisa las jaulas marcadas.",
     "varias": "Leí el tablero, pero así como lo leí tiene más de una solución: "
     "seguramente confundí alguna etiqueta. Toma otra foto, más de frente y con buena luz.",
     "sin_solucion": "Leí el tablero, pero así como lo leí no tiene solución: "
@@ -73,8 +76,8 @@ def _decodificar(imagen: str) -> np.ndarray:
 
 
 def _respuesta(estado: str, t_vision: float, *, mensaje: str | None = None, lectura=None,
-               solucion=None, t_solver: float = 0.0) -> dict:
-    instancia = lectura.instancia if lectura else None
+               solucion=None, t_solver: float = 0.0, instancia=None, correcciones=()) -> dict:
+    instancia = instancia or (lectura.instancia if lectura else None)
     return {
         "estado": estado,
         "mensaje": mensaje or MENSAJES[estado],
@@ -86,6 +89,12 @@ def _respuesta(estado: str, t_vision: float, *, mensaje: str | None = None, lect
         "solucion": [list(fila) for fila in solucion] if solucion else None,
         "confianza": round(lectura.confianza, 3) if lectura else None,
         "avisos": list(lectura.avisos) if lectura else [],
+        "correcciones": [
+            {"celda": list(c.celda),
+             "leido": {"op": c.leido[0], "objetivo": c.leido[1]},
+             "corregido": {"op": c.corregido[0], "objetivo": c.corregido[1]}}
+            for c in correcciones
+        ],
         "ms": {"vision": round(t_vision, 1), "solver": round(t_solver, 1)},
     }
 
@@ -130,7 +139,17 @@ def _resolver(gris: np.ndarray) -> dict:
     t_solver = 1000 * (time.perf_counter() - t1)
 
     if solucion is None:
-        return _respuesta("sin_solucion", t_vision, lectura=lectura, t_solver=t_solver)
+        # Antes de rendirse, el solver intenta reparar la lectura (ver kenken_cp.reparar).
+        r = reparar(lectura.instancia)
+        t_solver = 1000 * (time.perf_counter() - t1)
+        if r is None:
+            return _respuesta("sin_solucion", t_vision, lectura=lectura, t_solver=t_solver)
+        k = len(r.correcciones)
+        return _respuesta(
+            "reparado", t_vision, lectura=lectura, instancia=r.instancia, solucion=r.solucion,
+            t_solver=t_solver, correcciones=r.correcciones,
+            mensaje=MENSAJES["reparado"].format(k="una etiqueta" if k == 1 else f"{k} etiquetas"),
+        )
     if not unica:
         return _respuesta("varias", t_vision, lectura=lectura, t_solver=t_solver)
     return _respuesta("resuelto", t_vision, lectura=lectura, solucion=solucion, t_solver=t_solver)

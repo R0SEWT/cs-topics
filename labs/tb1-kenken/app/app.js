@@ -345,7 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Dibujado del tablero KenKen vectorial (SVG)
-  function dibujarTablero(n, jaulas, solucion, modo) {
+  function dibujarTablero(n, jaulas, solucion, modo, corregidas = new Set()) {
     tableroEnvoltura.innerHTML = "";
 
     const S = 60;
@@ -529,7 +529,9 @@ document.addEventListener("DOMContentLoaded", () => {
       textoEt.setAttribute("x", anclaC * S + 4);
       textoEt.setAttribute("y", anclaR * S + tamEtiqueta + 3);
       textoEt.setAttribute("font-size", tamEtiqueta);
-      textoEt.setAttribute("class", "etiqueta-jaula");
+      // Las etiquetas que el solver corrigió se marcan con el color de acento.
+      const corregida = corregidas.has(`${anclaR},${anclaC}`);
+      textoEt.setAttribute("class", corregida ? "etiqueta-jaula etiqueta-corregida" : "etiqueta-jaula");
       textoEt.textContent = texto;
       capaEtiquetas.appendChild(textoEt);
     });
@@ -576,7 +578,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderizarResultado(datos) {
     mostrarVista("resultado");
 
-    const esResuelto = datos.estado === "resuelto";
+    const esReparado = datos.estado === "reparado";
+    const esResuelto = datos.estado === "resuelto" || esReparado;
+    const correcciones = Array.isArray(datos.correcciones) ? datos.correcciones : [];
+    const corregidas = new Set(correcciones.map((c) => `${c.celda[0]},${c.celda[1]}`));
     const tieneJaulas = Array.isArray(datos.jaulas) && datos.jaulas.length > 0 && typeof datos.n === "number";
 
     tableroEnvoltura.innerHTML = "";
@@ -584,13 +589,30 @@ document.addEventListener("DOMContentLoaded", () => {
     avisosEnvoltura.classList.add("vista-oculta");
     mensajeEnvoltura.classList.add("vista-oculta");
     btnRevelarTodo.classList.add("vista-oculta");
+    mensajeEnvoltura.querySelector(".lista-correcciones")?.remove();
 
     if (esResuelto) {
-      resultadoTitulo.textContent = "Solución";
+      resultadoTitulo.textContent = esReparado ? "Solución, con lectura corregida" : "Solución";
       resultadoMeta.textContent = formatearMetadatos(datos.ms);
       resultadoMeta.classList.remove("vista-oculta");
 
-      dibujarTablero(datos.n, datos.jaulas, datos.solucion, modoActual);
+      dibujarTablero(datos.n, datos.jaulas, datos.solucion, modoActual, corregidas);
+
+      if (esReparado) {
+        // Honestidad de lectura: decir qué se corrigió y dónde.
+        mensajeTexto.textContent = datos.mensaje || "";
+        const lista = document.createElement("ul");
+        lista.className = "lista-correcciones";
+        correcciones.forEach((c) => {
+          const li = document.createElement("li");
+          const leido = `${c.leido.objetivo}${formatearOperador(c.leido.op)}`;
+          const era = `${c.corregido.objetivo}${formatearOperador(c.corregido.op)}`;
+          li.textContent = `Fila ${c.celda[0] + 1}, columna ${c.celda[1] + 1}: leí ${leido}, es ${era}`;
+          lista.appendChild(li);
+        });
+        mensajeEnvoltura.appendChild(lista);
+        mensajeEnvoltura.classList.remove("vista-oculta");
+      }
 
       if (modoActual === "asistencia") {
         btnRevelarTodo.classList.remove("vista-oculta");

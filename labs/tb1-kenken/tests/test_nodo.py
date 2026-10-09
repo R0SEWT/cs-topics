@@ -80,3 +80,24 @@ def test_una_foto_sin_tablero_lo_dice_en_llano():
 def test_imagen_corrupta_es_error_del_cliente():
     r = cliente.post("/resolver", json={"imagen": "esto no es base64 de una imagen"})
     assert r.status_code == 400
+
+
+def test_una_lectura_sin_solucion_se_repara_si_es_inequivoco(monkeypatch):
+    # El caso de la foto de la Fig. 1: los dos 3÷ se leyeron 3+.
+    from dataclasses import replace
+
+    import kenken_nodo.servidor as servidor
+    from kenken_cv.schema import Instance
+
+    verdad, _ = random_instance(6, random.Random(2026))
+    jaulas = tuple(
+        replace(c, op="+") if min(c.cells) in {(1, 3), (1, 5)} else c for c in verdad.cages
+    )
+    leida = Instance(size=6, cages=jaulas)
+    real = servidor.leer
+    monkeypatch.setattr(servidor, "leer", lambda gris: replace(real(gris), instancia=leida))
+    cuerpo = cliente.post("/resolver", json={"imagen": _png_b64(render(verdad))}).json()
+    assert cuerpo["estado"] == "reparado"
+    assert sorted(tuple(c["celda"]) for c in cuerpo["correcciones"]) == [(1, 3), (1, 5)]
+    assert all(c["corregido"]["op"] == "/" for c in cuerpo["correcciones"])
+    assert [tuple(f) for f in cuerpo["solucion"]] == list(resolver(verdad))

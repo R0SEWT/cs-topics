@@ -438,6 +438,20 @@ html, body {
   fill: var(--texto-principal);
 }
 
+/* Etiqueta que el solver corrigió: mismo peso, color de acento. */
+.etiqueta-jaula.etiqueta-corregida {
+  fill: var(--acento);
+  text-decoration: underline;
+}
+
+.lista-correcciones {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--texto-principal);
+}
+
 .valor-celda {
   font-family: var(--fuente);
   font-weight: 700;
