@@ -5,3 +5,4 @@ __pycache__/
 .pytest_cache/
 dataset_real/
 docs/papers/
+data_scraped
