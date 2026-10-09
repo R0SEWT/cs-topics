@@ -3,6 +3,8 @@
 # Aula Virtual bloqueó la descarga de jade.jar / commons-codec-1.3.jar
 # (ver manifest.json, status: blocked_by_browser_policy), así que se toman del repo oficial.
 set -euo pipefail
+# lib/ solo guarda jars, que están gitignoreados: en un clon limpio no existe.
+mkdir -p "$(dirname "$0")/lib"
 cd "$(dirname "$0")/lib"
 
 fetch() { # url  destino

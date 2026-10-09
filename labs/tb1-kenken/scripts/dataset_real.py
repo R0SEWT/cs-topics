@@ -44,6 +44,26 @@ OPERADORES = {"+": "+", "-": "-", "−": "-", "×": "*", "x": "*", "/": "/", "÷
 NOMBRE_OP = {"=": "eq", "+": "plus", "-": "minus", "*": "times", "/": "div"}
 
 
+def rasterizar_pagina(pdf: Path, pagina: int, destino: Path) -> None:
+    """Rasteriza una página del PDF a imagen PNG a 150 DPI."""
+    try:
+        import pypdfium2 as pdfium
+
+        doc = pdfium.PdfDocument(str(pdf))
+        page = doc[pagina - 1]
+        img = page.render(scale=DPI / 72.0).to_pil()
+        img.save(str(destino))
+        return
+    except ImportError:
+        pass
+
+    subprocess.run(
+        ["pdftoppm", "-r", str(DPI), "-png", "-f", str(pagina), "-l", str(pagina),
+         str(pdf), str(destino.parent / f"pg_{pdf.stem}")],
+        check=True,
+    )
+
+
 def descargar(destino: Path) -> None:
     destino.mkdir(parents=True, exist_ok=True)
     for archivo, _ in CUADERNILLOS:
@@ -59,58 +79,68 @@ def descargar(destino: Path) -> None:
         for pagina in PAGINAS:
             png = destino / f"pg_{pdf.stem}-{pagina}.png"
             if not png.exists():
-                subprocess.run(
-                    ["pdftoppm", "-r", str(DPI), "-png", "-f", str(pagina), "-l", str(pagina),
-                     str(pdf), str(destino / f"pg_{pdf.stem}")],
-                    check=True,
-                )
+                rasterizar_pagina(pdf, pagina, png)
 
 
-def verdad_de_pagina(pdf: Path, pagina: int, n: int, rejilla) -> dict[tuple[int, int], tuple[str, int]]:
-    """{(fila, col): (operación, objetivo)} a partir del texto vectorial."""
+def extraer_palabras_pagina(pdf: Path, pagina: int) -> list[tuple[float, float, float, float, str]]:
+    """Extrae palabras del texto vectorial de la página (xMin, yMin, xMax, yMax, texto)."""
+    try:
+        import pypdfium2 as pdfium
+
+        doc = pdfium.PdfDocument(str(pdf))
+        page = doc[pagina - 1]
+        _, h_pt = page.get_size()
+        textpage = page.get_textpage()
+        words = []
+        curr_chars, curr_boxes = [], []
+        for i in range(textpage.count_chars()):
+            ch = textpage.get_text_range()[i]
+            if ch.isspace():
+                if curr_chars:
+                    words.append((
+                        min(b[0] for b in curr_boxes),
+                        h_pt - max(b[3] for b in curr_boxes),
+                        max(b[2] for b in curr_boxes),
+                        h_pt - min(b[1] for b in curr_boxes),
+                        "".join(curr_chars),
+                    ))
+                    curr_chars, curr_boxes = [], []
+            else:
+                curr_chars.append(ch)
+                curr_boxes.append(textpage.get_charbox(i))
+        if curr_chars:
+            words.append((
+                min(b[0] for b in curr_boxes),
+                h_pt - max(b[3] for b in curr_boxes),
+                max(b[2] for b in curr_boxes),
+                h_pt - min(b[1] for b in curr_boxes),
+                "".join(curr_chars),
+            ))
+        return [
+            (a, b, c, d, t.strip())
+            for a, b, c, d, t in words
+            if t.strip() and (t.strip().isdigit() or t.strip() in OPERADORES)
+        ]
+    except ImportError:
+        pass
+
     xml = subprocess.run(
         ["pdftotext", "-f", str(pagina), "-l", str(pagina), "-bbox", str(pdf), "-"],
         capture_output=True, text=True,
     ).stdout
-    crudas = [
+    return [
         (float(a), float(b), float(c), float(d), t.strip())
         for a, b, c, d, t in PALABRA.findall(xml)
         if t.strip() and (t.strip().isdigit() or t.strip() in OPERADORES)
     ]
-    if not crudas:
-        return {}
 
-    lado = rejilla.warp.shape[0]
-    paso = lado / n
-    puntos = np.array(
-        [[[(a + c) / 2 * PUNTO_A_PIXEL, (b + d) / 2 * PUNTO_A_PIXEL]] for a, b, c, d, _ in crudas],
-        dtype=np.float32,
-    )
-    # Fuera del tablero quedan el encabezado, el título y las instrucciones del
-    # pie, que también traen dígitos y ensuciarían el reparto por celdas.
-    proyectados = cv2.perspectiveTransform(puntos, rejilla.homografia).reshape(-1, 2)
 
-    celdas: dict[tuple[int, int], list[tuple[float, str]]] = defaultdict(list)
-    for (x, y), (*_, t) in zip(proyectados, crudas):
-        if not (0 <= x < lado and 0 <= y < lado):
-            continue
-        # La etiqueta va impresa en la esquina superior izquierda de su celda.
-        # Sin esta condición se colaba el "© 2026 KrazyDad.com" del pie, que
-        # cae dentro del tablero rectificado y convertía la verdad de la última
-        # celda en cosas como "22026/".
-        dentro_y, dentro_x = (y % paso) / paso, (x % paso) / paso
-        if dentro_y > 0.55 or dentro_x > 0.85:
-            continue
-        celdas[(int(y // paso), int(x // paso))].append((x, t))
+def verdad_de_pagina(pdf: Path, pagina: int, n: int, rejilla) -> dict[tuple[int, int], tuple[str, int]]:
+    """{(fila, col): (operación, objetivo)} a partir del texto vectorial."""
+    from kenken_cv.extractor import asociar_etiquetas_celdas
 
-    verdad = {}
-    for celda, trozos in celdas.items():
-        ordenados = [t for _, t in sorted(trozos)]
-        digitos = "".join(t for t in ordenados if t.isdigit())
-        simbolos = [OPERADORES[t] for t in ordenados if t in OPERADORES]
-        if digitos:
-            verdad[celda] = (simbolos[-1] if simbolos else "=", int(digitos))
-    return verdad
+    crudas = extraer_palabras_pagina(pdf, pagina)
+    return asociar_etiquetas_celdas(crudas, rejilla, n, punto_a_pixel=PUNTO_A_PIXEL)
 
 
 def main() -> None:

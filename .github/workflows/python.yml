@@ -1,0 +1,50 @@
+name: Python
+
+on:
+  push:
+    paths:
+      - "labs/cp/**"
+      - "labs/tb1-kenken/**"
+      - ".github/workflows/python.yml"
+  pull_request:
+    paths:
+      - "labs/cp/**"
+      - "labs/tb1-kenken/**"
+      - ".github/workflows/python.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lab: [labs/cp, labs/tb1-kenken]
+    name: ${{ matrix.lab }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.lab }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # Los dos labs fijan <3.14: OR-Tools todavía no publica ruedas para 3.14.
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      # El banco de plantillas del OCR del TB1 son tipografías del sistema; el
+      # runner no trae FreeFont ni Liberation Sans Narrow (que en 24.04 salió de
+      # fonts-liberation a su propio paquete).
+      - name: Install fonts
+        if: matrix.lab == 'labs/tb1-kenken'
+        run: sudo apt-get update -q && sudo apt-get install -yq fonts-dejavu-core fonts-freefont-ttf fonts-liberation fonts-liberation-sans-narrow
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Test
+        run: uv run pytest -q

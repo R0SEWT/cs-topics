@@ -2,6 +2,7 @@
 
 Repo del curso **Tópicos en Ciencias de la Computación (1ACC0058)**, UPC, ciclo 2026-20.
 No es un proyecto de software con usuarios: es el cuaderno de trabajo de un ciclo.
+Repo hermano y mismo patrón: `../concurrente`.
 
 ## Contexto
 
@@ -23,16 +24,22 @@ Estructura por tipo, no por semana — las unidades pueden reordenarse, los labs
 ```bash
 notes/         # apuntes .md por sesión (_template.md es la plantilla)
 materials/     # PDFs y slides del profe, carpeta por semana (week-NN/)
-labs/cp/       # Constraint Programming — Python + OR-Tools, gestionado con uv
-labs/agents/   # JADE / FIPA — Java 21 + javac + Makefile, sin Maven ni Gradle
+labs/cp/         # Constraint Programming — Python + OR-Tools, gestionado con uv
+labs/tb1-kenken/ # TB1, fase 1: visión computacional sobre tableros KenKen — Python + OpenCV, uv
+labs/agents/     # JADE / FIPA — Java 21 + javac + Makefile, sin Maven ni Gradle
 ```
 
 Cada lab es una raíz de proyecto independiente con su propio toolchain:
 
 ```bash
-cd labs/cp     && uv sync && uv run pytest
-cd labs/agents && make deps && make run AGENT=upc.topicos.week11.HolaAgent
+cd labs/cp         && uv sync && uv run pytest
+cd labs/tb1-kenken && uv sync && uv run pytest
+cd labs/agents     && make build && make run AGENT=upc.topicos.week11.HolaAgent
 ```
+
+La CI (`.github/workflows/`) corre esas mismas puertas en cada push y PR que toque el lab:
+`python.yml` hace `uv run pytest` en `labs/cp` y `labs/tb1-kenken`; `jade.yml` hace
+`make build` en `labs/agents` (compila, no arranca la plataforma).
 
 ## Archivos clave
 
@@ -51,8 +58,19 @@ cd labs/agents && make deps && make run AGENT=upc.topicos.week11.HolaAgent
 - **Material NO versionado**: `materials/` está en `.gitignore` (repo público, material
   del profesor). Se reconstruye con `aula sync`; `manifest.json` es la receta y sí se
   commitea. Los jars de `labs/agents/lib/` tampoco — se bajan con `make deps`.
-- **Ramas**: `main` estable, `dev` de integración, `feat/<algo>` para cada trabajo.
-  Nada va directo a `main`.
+- **Git Flow**, igual que en `concurrente`. Nada entra directo a `develop` ni a `main`:
+  - Una rama por unidad de trabajo, desde `develop`: `feature/<algo>`, `fix/<algo>`,
+    `chore/<algo>`. Entra por PR contra `develop`, con la CI en verde.
+  - `main` es lo entregado. Recibe una PR de release `develop` → `main` por entregable
+    (TB1, …), y al fusionarla se marca el tag (`tb1`, …). `main` no se toca después de la
+    fecha de entrega.
+  - Un arreglo urgente sobre lo entregado va en `hotfix/<algo>` contra `main`, y luego la
+    misma rama en otra PR contra `develop` para que no diverjan.
+  - Título de la PR: `<Entregable> · <qué hace>` (`TB1 · Jurado de motores OCR`). Si no
+    pertenece a un entregable, solo el qué. En la descripción, el bead que cierra.
+  - Una rama descartada no se borra sin más: se marca con un tag `archive/<rama>`.
+- **Skills del repo**: la fuente es `.agents/skills/` (la lee Codex); `.claude/skills/<skill>`
+  es un enlace simbólico a ella, para que las dos copias no diverjan.
 - **Los labs se escriben con TDD**: test primero, luego el modelo o el agente.
 - La plataforma JADE no termina sola; `make run` se corta con Ctrl-C. No la lances
   en foreground esperando que retorne.

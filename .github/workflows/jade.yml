@@ -1,0 +1,34 @@
+name: JADE
+
+on:
+  push:
+    paths:
+      - "labs/agents/**"
+      - ".github/workflows/jade.yml"
+  pull_request:
+    paths:
+      - "labs/agents/**"
+      - ".github/workflows/jade.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: labs/agents
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      # Solo compila: `make run` levanta la plataforma JADE, que no termina sola.
+      - name: Build
+        run: make build

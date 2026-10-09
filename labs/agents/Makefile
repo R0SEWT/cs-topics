@@ -3,7 +3,9 @@ JAVAC   := javac
 JAVA    := java
 SRC_DIR := src
 OUT_DIR := build
-CP      := $(OUT_DIR):$(shell ls lib/*.jar 2>/dev/null | tr '\n' ':')
+# "=" y no ":=": los jars los baja `deps`, así que el classpath se arma al
+# ejecutar la receta, no al leer el Makefile (en un clon limpio aún no están).
+CP       = $(OUT_DIR):$(shell ls lib/*.jar 2>/dev/null | tr '\n' ':')
 SOURCES := $(shell find $(SRC_DIR) -name '*.java')
 
 # Agente a lanzar: make run AGENT=upc.topicos.week11.HolaAgent
