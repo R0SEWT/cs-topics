@@ -872,11 +872,12 @@
   VIZ.video = (el) => {
     const v = el.querySelector("video");
     const marcas = [...el.querySelectorAll("[data-t]")];
-    marcas.forEach((b) => (b.onclick = () => { v.currentTime = +b.dataset.t; v.play(); }));
-    v.addEventListener("timeupdate", () => {
-      const actual = marcas.filter((b) => +b.dataset.t <= v.currentTime + 0.1).pop();
+    const marcar = (t) => {
+      const actual = marcas.filter((b) => +b.dataset.t <= t + 0.1).pop();
       marcas.forEach((b) => b.closest("li").classList.toggle("actual", b === actual));
-    });
+    };
+    marcas.forEach((b) => (b.onclick = () => { marcar(+b.dataset.t); v.currentTime = +b.dataset.t; v.play(); }));
+    ["timeupdate", "seeked"].forEach((ev) => v.addEventListener(ev, () => marcar(v.currentTime)));
   };
 
   // ----------------------------------- la regla del margen (la llama el OJS)
