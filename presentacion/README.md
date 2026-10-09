@@ -36,6 +36,17 @@ Reparto propuesto en las notas: Rody abre y cuenta el solver y la reparación; J
 Fase 1 y la app; José, los datos y la lectura de etiquetas. La demo en vivo necesita el
 nodo levantado y `adb reverse tcp:8723 tcp:8723`; `scrcpy` refleja el celular en la laptop.
 
+## La demo grabada
+
+`video/demo.mp4` es el respaldo de la demo en vivo: la pantalla del celular grabada con
+`scrcpy --record`, recortada a 1 min 27 s y comprimida para web (3 MB). La diapositiva
+«La demo, grabada en el celular» lo reproduce sola al llegar, con capítulos que saltan.
+
+```bash
+scrcpy --no-audio --stay-awake --record demo.mkv
+ffmpeg -i demo.mkv -t 87.4 -an -vf "scale=540:-2,fps=30" -c:v libx264 -crf 26 -movflags +faststart video/demo.mp4
+```
+
 ## Un solo archivo, sin servidor
 
 ```bash

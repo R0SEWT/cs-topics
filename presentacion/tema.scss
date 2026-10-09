@@ -265,3 +265,17 @@ $selection-bg: $indigo-palido;
 .app-fila > img, .app-fila > p > img { width: 100%; margin: 0 !important; border-radius: 8px; }
 .reveal .app-pasos li { counter-increment: none; padding-left: 0; }
 .reveal .app-pasos li::before { display: none; }
+
+// La demo grabada: el video con forma de teléfono y capítulos que saltan.
+.video-fila { display: grid; grid-template-columns: auto 1fr; gap: 1.6em; align-items: center; }
+.reveal video.video-cel {
+  height: 560px; width: auto; display: block; background: #000;
+  border-radius: 26px; border: 7px solid #2E3040; box-shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
+}
+.reveal .capitulos button {
+  font: 600 0.78em $font-family-monospace; color: var(--indigo); background: var(--indigo-palido);
+  border: none; border-radius: 999px; padding: 0.1em 0.6em; margin-right: 0.55em; cursor: pointer;
+}
+.reveal .capitulos li.actual { color: var(--tinta); }
+.reveal .capitulos li.actual::before { background: var(--indigo); color: #fff; }
+.reveal .capitulos li.actual button { background: var(--indigo); color: #fff; }
