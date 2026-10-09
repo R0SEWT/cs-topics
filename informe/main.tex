@@ -9,6 +9,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-tabla,es-nodecimaldot,es-noshorthands]{babel}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
 
 % Toda cifra de este informe sale de un script de labs/tb1-kenken y se puede
 % volver a obtener. Si se cambia una, se cambia también el script que la da y
@@ -58,6 +60,14 @@ KenKen, Programación con Restricciones, CP-SAT, Visión Computacional, OCR, ver
 KenKen es un cuadrado latino de $n \times n$ dividido en \emph{jaulas}: grupos de celdas contiguas con una operación aritmética y un objetivo que los valores de la jaula deben cumplir. Resolverlo desde una foto exige percibir la estructura del tablero (tamaño, jaulas y etiquetas) y razonar sobre ella. Las dos cosas fallan de manera distinta. Un solver de restricciones es exacto sobre la instancia que recibe; la visión, no. Si la visión lee un \texttt{5} donde hay un \texttt{6}, el solver resolverá con exactitud el puzzle equivocado, o eso cabría temer.
 
 Separamos las dos fases con un contrato: la visión entrega una \emph{instancia} (tamaño y lista de jaulas con sus celdas, operación y objetivo) y el razonamiento solo ve esa instancia. Esa separación tiene un efecto que no buscábamos y que resulta ser el hallazgo central: como un puzzle publicado tiene solución única, el solver sabe cuándo lo que recibe no puede ser un puzzle publicado. Aportamos tres cosas: (1)~un pipeline de visión sin aprendizaje que detecta las jaulas por el grosor de las aristas; (2)~un modelo de CP parametrizado en $n$ que resuelve y además cuenta soluciones, y cuyas restricciones globales resuelven todos los tableros reales sin búsqueda; y (3)~una evaluación sobre 70 tableros reales con verdad exacta, en la que ningún tablero mal leído llega a una solución errónea y un conjunto sintético resulta ser un mal juez de la precisión.
+La Fig.~\ref{fig:arquitectura} resume la arquitectura: la app envía la foto a un nodo de cómputo, la visión la convierte en una instancia, el solver la resuelve y cuenta sus soluciones, y solo una solución única vuelve a la app como respuesta.
+
+\begin{figure*}[t]
+\centering
+\resizebox{\textwidth}{!}{\input{fig/arquitectura.tex}}
+\caption{La visión y el solver solo se hablan a través de la instancia, y solo una solución única vuelve al usuario. (1)~La app móvil toma la foto y la envía en JSON; (2)~\texttt{adb reverse} la lleva por USB o Wi-Fi al puerto 8723 de la PC sin abrir puertos; (3)~el nodo de cómputo atiende \texttt{POST /resolver}. (4)~La Fase~1 reconstruye el tablero sin aprendizaje y (5)~entrega la instancia, que es el contrato entre fases; (6)~la Fase~2 la resuelve en CP-SAT y cuenta hasta dos soluciones; (7)~con una sola, se devuelve; con ninguna o varias, la reparación guiada por el solver (en trazo discontinuo) prueba confusiones típicas con restricciones reificadas y solo acepta una corrección que deje solución única; si no la hay, el sistema rechaza con un mensaje en llano. (8)~La respuesta vuelve a la app. El CLI \texttt{solve.py} recorre las mismas dos fases sobre una imagen.}
+\label{fig:arquitectura}
+\end{figure*}
 
 \begin{figure}[t]
 \centering
@@ -302,12 +312,12 @@ $n$ & Tableros & Mediana & Máximo \\
 \section{Integración: de la foto a la solución sin intervención}\label{sec:integracion}
 Un CLI (\texttt{solve.py}) encadena las tres fases sin intervención manual: lee la imagen, construye y valida la instancia, la resuelve y dibuja la solución sobre una rejilla limpia (Fig.~\ref{fig:pipeline}). Si el solver no encuentra solución, lo informa y dibuja el tablero sin rellenar, en vez de inventar una.
 
-Prototipamos además una app móvil para el mismo flujo (Fig.~\ref{fig:app}). El visor avisa antes de capturar si la foto está inclinada, oscura o cortada, que son las condiciones en las que la Fase~1 falla. Su modo por defecto lleva al usuario la idea central de este informe: en vez de revelar la solución, verifica lo que la persona ya escribió a lápiz y le señala qué número no cuadra. El prototipo es solo interfaz: el puente con el nodo de cómputo, una PC en la misma red Wi-Fi que corre el pipeline, aún no está implementado, y los tableros y tiempos que muestra son de ejemplo.
+Prototipamos además una app móvil para el mismo flujo (Fig.~\ref{fig:app}). El visor avisa antes de capturar si la foto está inclinada, oscura o cortada, que son las condiciones en las que la Fase~1 falla. Su modo por defecto lleva al usuario la idea central de este informe: en vez de revelar la solución, verifica lo que la persona ya escribió a lápiz y le señala qué número no cuadra. La versión~1 de la app ya está conectada al nodo de cómputo (Fig.~\ref{fig:arquitectura}): envía la foto en JSON a un servicio FastAPI en la PC (\texttt{kenken\_nodo}, \texttt{POST /resolver}) y recibe el estado, las jaulas leídas, la solución y un mensaje. La conexión pasa por \texttt{adb reverse}, por USB o por depuración Wi-Fi, sin abrir puertos en la PC. La hemos ejecutado en un teléfono Pixel; su usabilidad aún no está evaluada.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.92\textwidth]{fig/app.png}
-\caption{El prototipo de app lleva el verificador al usuario. (a)~El visor confirma que el tablero está listo para capturar. (b)~Avisa antes de capturar si la foto está inclinada. (c)~Modo Asistencia, por defecto: verifica el avance a lápiz y señala que un número no cuadra, sin revelar la solución. (d)~Modo Rápido: proyecta la solución sobre la foto. Prototipo de interfaz, aún sin conectar al nodo de cómputo; tableros y tiempos son de ejemplo.}
+\caption{El prototipo de app lleva el verificador al usuario. (a)~El visor confirma que el tablero está listo para capturar. (b)~Avisa antes de capturar si la foto está inclinada. (c)~Modo Asistencia, por defecto: verifica el avance a lápiz y señala que un número no cuadra, sin revelar la solución. (d)~Modo Rápido: proyecta la solución sobre la foto. Capturas previas a la conexión con el nodo; tableros y tiempos son de ejemplo.}
 \label{fig:app}
 \end{figure*}
 

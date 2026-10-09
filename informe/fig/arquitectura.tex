@@ -1,0 +1,105 @@
+% Arquitectura del sistema (TikZ). Se incluye con \input desde main.tex.
+% Paleta suave y apta para daltonismo: azul = app, verde = visión,
+% naranja = CP-SAT, gris = contrato/transporte, púrpura = rechazo.
+\definecolor{appF}{HTML}{DDEAF6}\definecolor{appD}{HTML}{3A6EA5}
+\definecolor{visF}{HTML}{E2F0DA}\definecolor{visD}{HTML}{4A8A3B}
+\definecolor{cpF}{HTML}{FBE7D2}\definecolor{cpD}{HTML}{BC6618}
+\definecolor{conF}{HTML}{ECECEA}\definecolor{conD}{HTML}{6B6B6B}
+\definecolor{noF}{HTML}{F3E0EA}\definecolor{noD}{HTML}{9C4A74}
+\definecolor{panF}{HTML}{F7F7F5}\definecolor{panD}{HTML}{BDBDBD}
+\definecolor{arrC}{HTML}{3F3F3F}
+\begin{tikzpicture}[
+  font=\sffamily\fontsize{6.6}{7.6}\selectfont,
+  >={Stealth[length=4pt,width=3.2pt]},
+  flecha/.style={->,draw=arrC,line width=0.55pt},
+  caja/.style={draw=#1D,fill=#1F,rounded corners=2pt,line width=0.45pt,
+               align=center,inner sep=1.6pt,minimum height=0.36cm},
+  panel/.style={draw=#1D!55,fill=#1F!35,rounded corners=3pt,line width=0.45pt},
+  titulo/.style={font=\sffamily\bfseries\fontsize{7.2}{8.2}\selectfont,text=#1D,anchor=west,inner sep=0pt},
+  badge/.style={circle,fill=#1D,text=white,font=\sffamily\bfseries\fontsize{5.6}{6}\selectfont,
+                inner sep=0pt,minimum size=8.5pt},
+  etq/.style={font=\sffamily\fontsize{6}{7}\selectfont,text=arrC,inner sep=1pt},
+]
+% ---------------------------------------------------------------- panel app
+\draw[panel=app] (0,0) rectangle (2.75,6.3);
+\node[badge=app] at (0.25,6.0) {1};
+\node[titulo=app] at (0.45,6.0) {App móvil};
+\node[anchor=west,inner sep=0pt,text=appD] at (0.12,5.68) {Android, Capacitor};
+\node[anchor=west,inner sep=0pt,text=appD] at (0.12,5.42) {WebView (HTML/JS)};
+\node[caja=app,text width=2.3cm] (cam) at (1.375,4.85) {cámara nativa\\toma la foto};
+\node[caja=app,text width=2.3cm] (modos) at (1.375,3.35)
+  {\textbf{Asistencia}:\\revela celda a celda\\[2pt]\textbf{Rápido}:\\solución completa};
+\node[caja=app,text width=2.3cm] (dib) at (1.375,1.65) {dibuja la solución\\o explica el rechazo};
+% ---------------------------------------------------------- transporte
+\draw[panel=con] (2.88,0.25) rectangle (4.3,5.65);
+\node[badge=con] at (3.59,5.65) {2};
+\node[text width=1.3cm,align=center,text=conD] (adb) at (3.59,2.9)
+  {\textbf{HTTP/JSON}\\[3pt]{\ttfamily\bfseries adb\\reverse}\\[3pt]USB o\\Wi-Fi\\[3pt]{\ttfamily localhost\\:8723}\\[3pt]sin abrir\\puertos};
+% ---------------------------------------------------------- nodo de cómputo
+\draw[panel=pan,fill=panF,draw=panD] (4.45,0) rectangle (18.0,6.3);
+\node[badge=con] at (4.7,6.0) {3};
+\node[titulo=con] at (4.9,6.0) {Nodo de cómputo (PC, FastAPI)};
+\node[caja=con,font=\ttfamily\fontsize{6.2}{7}\selectfont] (post) at (11.6,6.0) {POST /resolver};
+\node[caja=con,font=\ttfamily\fontsize{6.2}{7}\selectfont,anchor=west] at ($(post.east)+(0.15,0)$) {GET /salud};
+% ---- Fase 1
+\draw[panel=vis] (4.65,0.85) rectangle (8.3,5.7);
+\node[badge=vis] at (4.88,5.48) {4};
+\node[titulo=vis] at (5.06,5.48) {Fase 1: visión};
+\node[etq,anchor=west,text=visD,inner sep=0pt] at (5.06,5.2) {sin aprendizaje automático};
+\begin{scope}[every node/.style={caja=vis,text width=3.3cm}]
+  \node (v1) at (6.475,4.85) {umbral adaptativo};
+  \node[below=0.17cm of v1] (v2) {contorno + homografía\\(rectificación)};
+  \node[below=0.17cm of v2] (v3) {tamaño $n$ por periodicidad\\de la rejilla};
+  \node[below=0.17cm of v3] (v4) {jaulas por grosor de arista\\(Otsu + unión-búsqueda)};
+  \node[below=0.17cm of v4] (v5) {etiquetas: correlación\\normalizada con plantillas};
+  \node[below=0.17cm of v5] (v6) {validación del contrato};
+\end{scope}
+\foreach \a/\b in {v1/v2,v2/v3,v3/v4,v4/v5,v5/v6} \draw[flecha] (\a) -- (\b);
+% ---- Instancia (contrato)
+\node[caja=con,text width=1.6cm,minimum height=2.3cm,line width=0.6pt] (inst) at (9.35,3.2)
+  {\textbf{Instancia}\\(JSON)\\[3pt]\texttt{n}\\[1pt]\texttt{jaulas[\,]}:\\celdas,\\operación,\\objetivo};
+\node[badge=con] at ($(inst.north)+(0,0.05)$) {5};
+\node[etq,text width=1.9cm,align=center] at (9.35,5.0) {único canal\\entre las fases};
+% ---- Fase 2
+\draw[panel=cp] (10.45,0.85) rectangle (13.75,5.7);
+\node[badge=cp] at (10.68,5.48) {6};
+\node[titulo=cp] at (10.86,5.48) {Fase 2: CP-SAT};
+\node[etq,anchor=west,text=cpD,inner sep=0pt] at (10.86,5.2) {resuelve y verifica};
+\begin{scope}[every node/.style={caja=cp,text width=2.95cm}]
+  \node (c1) at (12.1,4.75) {$x_{i,j} \in \{1,\dots,n\}$};
+  \node[below=0.42cm of c1] (c2) {\texttt{AllDifferent}\\por fila y por columna};
+  \node[below=0.42cm of c2] (c3) {restricciones de jaula:\\suma lineal, producto,\\máx/mín (resta, división)};
+  \node[below=0.42cm of c3] (c4) {contar soluciones\\(tope 2)};
+\end{scope}
+\foreach \a/\b in {c1/c2,c2/c3,c3/c4} \draw[flecha] (\a) -- (\b);
+% ---- Decisión / verificación
+\node[badge=con] at (14.2,5.48) {7};
+\node[titulo=con] at (14.38,5.48) {Decisión y verificación};
+\node[caja=con,text width=3.3cm] (dec) at (15.95,4.75) {\textquestiondown{}cuántas soluciones?};
+\node[caja=app,text width=1.4cm] (uni) at (14.85,3.3) {solución\\única: se\\devuelve};
+\node[caja=cp,dashed,text width=1.9cm] (rep) at (16.88,3.1)
+  {\textbf{reparación}\\\textbf{(reificada)}\\[1pt]prueba $\div\!\leftrightarrow\!+$ y $5\!\leftrightarrow\!6$; acepta solo si deja una solución};
+\node[caja=no,text width=1.9cm] (rech) at (16.88,1.3) {rechazo honesto con mensaje en llano};
+\draw[flecha] (dec.south -| uni) -- node[etq,left] {1} (uni);
+\draw[flecha] (dec.south -| rep) -- node[etq,right] {0 o $\geq$2} (rep);
+\draw[flecha,dashed] (rep.west |- uni) -- (uni.east);
+\draw[flecha] (rep) -- node[etq,left] {sin arreglo} (rech);
+% ---------------------------------------------------------- flechas principales
+% petición: app -> nodo
+\draw[flecha] (cam.east) -- node[etq,above,pos=0.42] {foto en base64} (v1.west);
+\draw[flecha] (v6.east) -| (inst.south);
+\draw[flecha] (inst.east) -- ++(0.13,0) |- (c1.west);
+\draw[flecha] (c4.east) -- ++(0.2,0) |- (dec.west);
+% respuesta: nodo -> app
+\coordinate (bus) at (0,0.68);
+\coordinate (subida) at (2.2,0);
+\draw[draw=arrC,line width=0.55pt] (uni.south) -- (uni.south |- bus);
+\draw[draw=arrC,line width=0.55pt] (rech.south) -- (rech.south |- bus);
+\draw[flecha] (rech.south |- bus) -- (2.2,0.68) -- (dib.south -| subida);
+\node[badge=con] at (8.4,0.68) {8};
+\node[etq,fill=panF,anchor=west] at (8.58,0.68)
+  {respuesta JSON: \texttt{estado}, \texttt{jaulas}, \texttt{solución}, \texttt{mensaje}, \texttt{ms}};
+% CLI
+\node[caja=con,dashed,anchor=south west,font=\sffamily\fontsize{6}{7}\selectfont] at (4.65,0.05)
+  {CLI \texttt{solve.py}: imagen $\to$ Fases 1--2 $\to$ PNG};
+\end{tikzpicture}
