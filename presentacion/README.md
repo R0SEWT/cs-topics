@@ -1,6 +1,6 @@
 # Diapositivas del TB1 (Quarto + reveal.js + D3)
 
-En línea: <https://kenken-tb1.netlify.app>
+En línea: <https://kenken.rosewt.dev> (Netlify, sitio `kenken-tb1`; el DNS de `rosewt.dev` vive en Netlify).
 
 `index.qmd` es la exposición del TB1, «¿Qué sobrevive a una lectura equivocada?»: 22
 diapositivas y un apéndice con limitaciones, la comparación de OCR y los tiempos. Sigue el
@@ -51,7 +51,7 @@ celda OJS de la reparación por el mismo control en JS, porque Quarto no ejecuta
 
 ```bash
 quarto render index.qmd && quarto render index.qmd --profile autonomo
-npx netlify-cli deploy --prod --dir _site --site kenken-tb1
+npx netlify-cli deploy --prod --no-build --dir _site --site bb637f31-313c-4159-aa95-e771143dd00a
 ```
 
 La raíz sirve la versión con pizarra y OJS; `/TB1-KenKen-diapositivas.html` es el archivo
