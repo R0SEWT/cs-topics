@@ -279,3 +279,12 @@ $selection-bg: $indigo-palido;
 .reveal .capitulos li.actual { color: var(--tinta); }
 .reveal .capitulos li.actual::before { background: var(--indigo); color: #fff; }
 .reveal .capitulos li.actual button { background: var(--indigo); color: #fff; }
+
+// Jerarquía de cada diapositiva: sección numerada, título corto y la conclusión en una línea.
+.reveal h2 .eyebrow { font-size: 0.36em; font-weight: 500; letter-spacing: 0.14em; margin-bottom: 0.5em !important; line-height: 1; }
+.reveal h2 { margin-bottom: 0.15em; }
+.reveal .bajada { font-size: 0.8em; line-height: 1.35; color: var(--suave); max-width: 44em; margin: 0 0 0.75em; }
+.reveal .bajada p { margin: 0; }
+.reveal .has-dark-background .bajada { color: #B9B8CC; }
+.reveal video.video-cel { height: 500px; }
+.lienzo-plantillas image { image-rendering: pixelated; }
