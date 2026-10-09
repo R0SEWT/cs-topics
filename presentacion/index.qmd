@@ -674,7 +674,7 @@ window.KK.margen(lienzoMargen, cambios, margen)
 
 [Informe y fotos: release **TB1 - KenKen**]{.chica}
 
-[Estas diapositivas: [kenken-tb1.netlify.app](https://kenken-tb1.netlify.app)]{.chica}
+[Estas diapositivas: [kenken.rosewt.dev](https://kenken.rosewt.dev)]{.chica}
 
 [Dataset de fotos: [huggingface.co/datasets/rosewt/kenken-tb1-fotos](https://huggingface.co/datasets/rosewt/kenken-tb1-fotos)]{.chica}
 
