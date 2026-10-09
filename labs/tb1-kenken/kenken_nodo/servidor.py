@@ -12,8 +12,12 @@ from __future__ import annotations
 
 import base64
 import binascii
+import json
+import os
 import platform
 import time
+from datetime import datetime
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -40,6 +44,10 @@ MENSAJES = {
     "sin_tablero": "No encuentro el tablero en la foto. "
     "Que el borde exterior entre completo y que haya buena luz.",
 }
+
+# Si KENKEN_GUARDAR apunta a una carpeta, cada foto recibida se guarda ahí junto con lo que
+# el nodo respondió: así las pruebas con tableros impresos alimentan el dataset fotográfico.
+CARPETA_FOTOS = Path(os.environ["KENKEN_GUARDAR"]) if os.environ.get("KENKEN_GUARDAR") else None
 
 app = FastAPI(title="Nodo KenKen", version="1")
 # La app corre en un WebView (origen capacitor/localhost) o en un navegador de prueba.
@@ -87,9 +95,23 @@ def salud() -> dict:
     return {"ok": True, "nodo": platform.node(), "version": app.version}
 
 
+def _guardar(gris: np.ndarray, respuesta: dict) -> None:
+    CARPETA_FOTOS.mkdir(parents=True, exist_ok=True)
+    nombre = datetime.now().strftime("foto_%Y%m%d_%H%M%S_%f")
+    cv2.imwrite(str(CARPETA_FOTOS / f"{nombre}.jpg"), gris, [cv2.IMWRITE_JPEG_QUALITY, 92])
+    (CARPETA_FOTOS / f"{nombre}.json").write_text(json.dumps(respuesta, ensure_ascii=False, indent=2))
+
+
 @app.post("/resolver")
 def resolver_foto(pedido: Pedido) -> dict:
     gris = _decodificar(pedido.imagen)
+    respuesta = _resolver(gris)
+    if CARPETA_FOTOS:
+        _guardar(gris, respuesta)
+    return respuesta
+
+
+def _resolver(gris: np.ndarray) -> dict:
 
     t0 = time.perf_counter()
     try:
