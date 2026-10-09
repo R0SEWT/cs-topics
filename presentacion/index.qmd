@@ -626,6 +626,27 @@ window.KK.margen(lienzoMargen, cambios, margen)
 **Jorge + Rody.** Antes de la clase: cable USB, `adb devices`, `adb reverse tcp:8723 tcp:8723`, nodo levantado (`cd labs/tb1-kenken && uv run python -m kenken_nodo`). Para que todos vean el celular: `scrcpy` refleja la pantalla en la laptop. Tomar la foto a un tablero impreso o a la diapositiva 2. Mostrar Modo Rápido «Sobre tu foto». Si la foto sale mal, mejor: la app explica por qué y se repite. Plan B si falla el celular: esta captura es real, sin retoques.
 :::
 
+## La demo, grabada en el celular {#demo-video background-color="#15161D"}
+
+<div class="video-fila" data-viz="video">
+<video class="video-cel" src="video/demo.mp4" poster="video/demo-poster.jpg" data-autoplay muted playsinline controls></video>
+<div>
+[Respaldo · 1 min 27 s · toca un capítulo para saltar]{.eyebrow}
+<ol class="pasos capitulos">
+<li><button data-t="0">0:00</button>Una lectura <strong>sin solución única</strong>: la app lo dice y pide otra foto.</li>
+<li><button data-t="4">0:04</button><strong>Modo Rápido:</strong> foto a un 5×5 en la pantalla y la solución sobre la foto, en 59 ms.</li>
+<li><button data-t="24">0:24</button><strong>Modo Asistencia:</strong> el mismo tablero, sin números.</li>
+<li><button data-t="40">0:40</button>Otra foto: el nodo la lee y la resuelve en 60 ms.</li>
+<li><button data-t="58">0:58</button><strong>Sobre tu foto</strong> y <strong>tablero limpio</strong>.</li>
+<li><button data-t="68">1:08</button>Asistencia: revelar casilla por casilla y «¿Voy bien?».</li>
+</ol>
+</div>
+</div>
+
+::: {.notes}
+**Respaldo.** Si la demo en vivo falla, esta diapositiva reproduce la grabación de la pantalla del celular (scrcpy), sin sonido: narrarla en vivo. Los capítulos saltan a cada parte.
+:::
+
 ## Separar percepción y razonamiento nos dio un verificador {#conclusiones}
 
 :::: {.columns}
