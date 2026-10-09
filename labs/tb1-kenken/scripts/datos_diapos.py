@@ -15,7 +15,7 @@ Uso: PYTHONPATH=. uv run python scripts/datos_diapos.py FOTO [data_scraped/extra
 """
 from __future__ import annotations
 
-import json, sys, time
+import base64, json, sys, time
 from pathlib import Path
 
 import cv2
@@ -27,6 +27,7 @@ from comparar_formulaciones import medir  # noqa: E402
 from kenken_cp.reparar import candidatas, reparar  # noqa: E402
 from kenken_cp.solver import contar_soluciones, resolver  # noqa: E402
 from kenken_cv.cages import _otsu_1d, medir_aristas  # noqa: E402
+import kenken_cv.glyphs as G  # noqa: E402
 from kenken_cv.glyphs import EtiquetaIlegible, leer_recorte, recortar_etiqueta  # noqa: E402
 from kenken_cv.grid import LADO, _binarizar, _perfil, _puntuar, rectificar  # noqa: E402
 from kenken_cv.pipeline import leer  # noqa: E402
@@ -37,6 +38,50 @@ OP = {"+": "+", "*": "×", "-": "−", "/": "÷", "=": ""}
 
 def etiqueta(op: str, t: int) -> str:
     return f"{t}{OP[op]}"
+
+
+def _png(img: np.ndarray) -> str:
+    return "data:image/png;base64," + base64.b64encode(cv2.imencode(".png", img)[1]).decode()
+
+
+def glifos(rejilla, ancla: tuple[int, int]) -> dict:
+    """Cómo se leyó una etiqueta: componentes, glifos normalizados y la correlación de
+    cada uno con las plantillas. Espía a `glyphs` en vez de copiar su lógica."""
+    cajas, grupos, parches = [], [], []
+    agrupar, clasificar = G._agrupar, G.clasificar
+
+    def _agrupar(c):
+        cajas.extend(c)
+        g = agrupar(c)
+        grupos.extend(g)
+        return g
+
+    def _clasificar(patch, fuentes):
+        parches.append(patch.copy())
+        return clasificar(patch, fuentes)
+
+    G._agrupar, G.clasificar = _agrupar, _clasificar
+    try:
+        recorte = recortar_etiqueta(rejilla, ancla)
+        op, objetivo, _ = leer_recorte(recorte)
+    finally:
+        G._agrupar, G.clasificar = agrupar, clasificar
+    banco = G._plantillas(G.BANCO)
+    salida = []
+    for grupo, patch in zip(grupos, parches):
+        normal = G._normalizar(patch)
+        puntos = []
+        for ch, plantillas in banco.items():
+            s, mejor = max((G._correlacion(normal, t), t) for t in plantillas)
+            puntos.append({"ch": ch, "s": round(s, 3), "img": _png((255 - mejor * 255).astype(np.uint8))})
+        puntos.sort(key=lambda d: -d["s"])
+        caja = [min(cajas[j][0] for j in grupo), min(cajas[j][1] for j in grupo),
+                max(cajas[j][0] + cajas[j][2] for j in grupo), max(cajas[j][1] + cajas[j][3] for j in grupo)]
+        salida.append({"caja": [int(v) for v in caja], "componentes": [[int(v) for v in cajas[j]] for j in grupo],
+                       "normal": _png((255 - normal * 255).astype(np.uint8)), "puntos": puntos[:5]})
+    return {"ancla": list(ancla), "alto": int(recorte.shape[0]), "ancho": int(recorte.shape[1]),
+            "recorte": _png(recorte),
+            "leido": etiqueta(op, objetivo), "glifos": salida, "fuentes": len(G.BANCO)}
 
 
 def fase1(foto: Path, salida: Path) -> dict:
@@ -105,6 +150,7 @@ def fase1(foto: Path, salida: Path) -> dict:
                           "corregido": etiqueta(c.corregido[0], c.corregido[1])}
                          for c in (rep.correcciones if rep else ())],
         "solucion": [list(f) for f in rep.solucion] if rep else None,
+        "plantillas": glifos(rej, tuple(rep.correcciones[0].celda)) if rep else None,
     }
 
 

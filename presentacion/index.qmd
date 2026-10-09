@@ -7,19 +7,21 @@ date: 2026-10-09
 date-format: "D [de] MMMM [de] YYYY"
 ---
 
-## Una foto, dos fases que fallan distinto {#problema}
+## [01 · El problema]{.eyebrow} Resolver un KenKen desde una foto {#problema}
+
+::: {.bajada}
+Son dos tareas distintas que fallan de forma distinta: percibir el tablero y razonar sobre él.
+:::
 
 :::: {.columns}
 ::: {.column width="34%"}
-<div class="lienzo" style="aspect-ratio: 3 / 4; width: min(100%, 400px);">
+<div class="lienzo" style="aspect-ratio: 3 / 4; width: min(100%, 330px);">
 <img src="datos/img/f1_foto.jpg" alt="Foto real de un KenKen de 6×6 tomada con el celular a una pantalla">
 </div>
 [Foto real, tomada con el celular a una pantalla.]{.nota}
 :::
 
 ::: {.column width="62%"}
-[Resolver un KenKen desde una foto]{.eyebrow}
-
 :::: {.columns}
 ::: {.column width="49%"}
 ::: {.card .naranja-borde}
@@ -53,7 +55,11 @@ Si la visión lee un **5** donde hay un **6**, el solver resuelve con exactitud 
 **Rody.** Abrir con la foto: es real, la tomamos con el celular a la pantalla. El KenKen es un cuadrado latino con jaulas aritméticas. Resolverlo desde una foto son dos problemas distintos que fallan distinto. El solver es exacto, pero sobre lo que recibe: si la visión lee un 5 por un 6, resuelve perfecto el puzzle equivocado. Esa es la pregunta del trabajo.
 :::
 
-## Leer bien el 97% de las etiquetas es acertar 7 de cada 10 tableros {#compuesto}
+## [01 · El problema]{.eyebrow} Los errores pequeños se acumulan {#compuesto}
+
+::: {.bajada}
+Leer bien el 97% de las etiquetas significa acertar unos 7 de cada 10 tableros completos.
+:::
 
 :::: {.columns}
 ::: {.column width="62%"}
@@ -74,7 +80,11 @@ Si la visión lee un **5** donde hay un **6**, el solver resuelve con exactitud 
 **Rody.** Este es el porqué del trabajo. 97% por etiqueta suena muy bien, pero un tablero tiene unas 12 etiquetas y basta una mal leída. Si los errores fueran independientes, la curva dice que acertaríamos unos 7 de cada 10 tableros; medimos 48 de 70. Mulamba y otros (KU Leuven) muestran lo mismo en sudoku: 99% por celda es 44% por tablero. Conclusión: no vamos a llegar a leer perfecto, así que el sistema tiene que saber cuándo leyó mal. La curva es una estimación con errores independientes, no está en el informe como resultado.
 :::
 
-## La visión y el solver solo se hablan a través de la instancia {#arquitectura}
+## [02 · Arquitectura]{.eyebrow} Cómo está armado el sistema {#arquitectura}
+
+::: {.bajada}
+La visión y el solver solo se comunican a través de la instancia.
+:::
 
 <div class="lienzo solo" data-viz="arquitectura" data-label="Arquitectura: app, nodo, Fase 1, instancia, Fase 2 y sus tres salidas"></div>
 
@@ -98,9 +108,11 @@ Si la visión lee un **5** donde hay un **6**, el solver resuelve con exactitud 
 **Rody.** Recorrer el diagrama paso a paso. La idea clave es el contrato: la visión entrega una instancia (tamaño y lista de jaulas con operación y objetivo) y el solver no ve nada más. Eso es lo que nos permite usar al solver como verificador: solo una solución única vuelve al usuario. Pasar la palabra a Jorge para la Fase 1.
 :::
 
-## Sin aprendizaje: la foto se endereza con una homografía {#fase1-foto}
+## [03 · Fase 1: visión]{.eyebrow} Encontrar y enderezar el tablero {#fase1-foto}
 
-[Fase 1 · Visión]{.eyebrow}
+::: {.bajada}
+Umbral, contorno y homografía. Todo lo que sigue trabaja sobre la imagen enderezada.
+:::
 
 :::: {.columns}
 ::: {.column width="64%"}
@@ -128,9 +140,11 @@ Si la visión lee un **5** donde hay un **6**, el solver resuelve con exactitud 
 **Jorge.** Toda la Fase 1 es visión clásica con OpenCV, sin entrenar nada. Primero binarizamos con umbral adaptativo, que aguanta luz desigual. Del contorno externo más grande sacamos un cuadrilátero y con sus cuatro esquinas una homografía que deja el tablero cuadrado. Desde aquí todo trabaja sobre esa imagen rectificada; la homografía inversa la usamos al final para dibujar la solución sobre la foto.
 :::
 
-## El tamaño sale de la periodicidad, no de líneas completas {#fase1-n}
+## [03 · Fase 1: visión]{.eyebrow} Detectar el tamaño del tablero {#fase1-n}
 
-[Fase 1 · Visión]{.eyebrow}
+::: {.bajada}
+Se prueba cada n posible: el correcto es el mayor cuyas líneas existen todas.
+:::
 
 :::: {.columns}
 ::: {.column width="64%"}
@@ -151,9 +165,11 @@ Si la visión lee un **5** donde hay un **6**, el solver resuelve con exactitud 
 **Jorge.** En un KenKen impreso la línea fina se corta donde la atraviesa una jaula, así que no podemos exigir líneas completas. Lo que se conserva es la periodicidad. Para cada n candidato predecimos dónde caen las líneas y miramos la más débil: con el n correcto todas tienen tinta, con uno equivocado alguna cae en blanco. Los divisores también pasan (3 explica la mitad de las líneas de un 6), por eso nos quedamos con el mayor. Si alguien pregunta, se puede tocar cada n en vivo.
 :::
 
-## Las jaulas se separan por el grosor de cada arista {#fase1-jaulas}
+## [03 · Fase 1: visión]{.eyebrow} Separar las jaulas {#fase1-jaulas}
 
-[Fase 1 · Visión]{.eyebrow}
+::: {.bajada}
+Los bordes de jaula se imprimen más gruesos: basta medir el grosor de cada arista.
+:::
 
 :::: {.columns}
 ::: {.column width="40%"}
@@ -175,9 +191,11 @@ Si la visión lee un **5** donde hay un **6**, el solver resuelve con exactitud 
 **Jorge.** Conocida la rejilla, sabemos dónde está cada arista y basta medir su grosor. Tomamos la mediana del ancho del trazo más cercano, que ignora los cruces y los dígitos. El puzzle se imprime con dos plumas, así que los grosores son bimodales y el método de Otsu pone el umbral. Pasar el mouse por un punto marca su arista en el tablero. Las celdas que no separa un borde grueso se agrupan con unión-búsqueda.
 :::
 
-## Las etiquetas se leen por correlación con plantillas {#fase1-etiquetas}
+## [03 · Fase 1: visión]{.eyebrow} Leer las etiquetas {#fase1-etiquetas}
 
-[Fase 1 · Visión]{.eyebrow}
+::: {.bajada}
+Los 17 recortes reales de la foto, con lo que leyó la visión debajo de cada uno.
+:::
 
 <div class="recortes" data-viz="recortes">
 <div class="recorte"><img src="datos/img/f1_etiqueta_00.png" alt=""><div class="leido">1</div></div>
@@ -199,26 +217,44 @@ Si la visión lee un **5** donde hay un **6**, el solver resuelve con exactitud 
 <div class="recorte"><img src="datos/img/f1_etiqueta_16.png" alt=""><div class="leido">2</div></div>
 </div>
 
-[Los 17 recortes reales de la foto, con lo que leyó la visión debajo.]{.nota}
-
-:::: {.columns}
-::: {.column width="49%"}
-[Cada carácter se compara por **correlación normalizada** con plantillas en siete tipografías. El ÷ son tres manchas que se reagrupan.]{.chica}
-:::
-::: {.column width="49%"}
 ::: {.fragment}
-[Aquí, los puntos del ÷ se fundieron con la barra. **La visión leyó 3+ dos veces.** Nada en la Fase 1 puede saberlo.]{.chica .naranja-t}
+[Aquí, los puntos del ÷ se fundieron con la barra y **la visión leyó 3+ dos veces**. La instancia sigue siendo válida: nada en la Fase 1 puede saberlo.]{.chica .naranja-t}
 :::
-:::
-::::
 
 ::: {.notes}
 **Jorge.** La etiqueta va en la esquina superior izquierda de la celda ancla. La recortamos con un margen que se mide, no fijo (un margen fijo cortaba los dígitos y era el peor error del pipeline). Separamos caracteres por componentes conexas y los comparamos con plantillas por correlación normalizada. En esta foto pasó algo: los puntos del ÷ se fundieron con la barra y leímos 3+ dos veces. La instancia es válida, pasa el contrato. Nada en la visión puede darse cuenta. Devolver a Rody.
 :::
 
-## El modelo cabe en una pantalla y no conoce ningún tablero {#modelo}
+## [03 · Fase 1: visión]{.eyebrow} Cómo leemos una etiqueta: plantillas {#plantillas}
 
-[Fase 2 · Programación con restricciones]{.eyebrow}
+::: {.bajada}
+Cada carácter se compara con plantillas dibujadas en 7 tipografías, y gana la más parecida.
+:::
+
+:::: {.columns}
+::: {.column width="60%"}
+<div class="lienzo solo" data-viz="plantillas" data-label="Cómo se leyó la etiqueta 3÷ de la jaula (2,4): componentes, glifos normalizados y correlación con plantillas"></div>
+:::
+::: {.column width="38%"}
+<ol class="pasos">
+<li class="fragment"><strong>Recorte</strong> de la esquina de la celda, donde se imprime la etiqueta.</li>
+<li class="fragment"><strong>Una mancha de tinta, un carácter.</strong> El ÷ son tres manchas y se reagrupan; aquí los puntos se fundieron con la barra.</li>
+<li class="fragment"><strong>Normalizar</strong> cada carácter a 28 × 28 píxeles, sin deformarlo.</li>
+<li class="fragment"><strong>Comparar</strong> con la plantilla de cada carácter por correlación normalizada: 1 es idéntico.</li>
+<li class="fragment"><strong>Gana el más parecido.</strong> El + le ganó al ÷ por un centésimo: leímos 3+.</li>
+</ol>
+:::
+::::
+
+::: {.notes}
+**Jorge.** Este es nuestro método de lectura, el que en la tabla del apéndice se llama «plantillas». No entrenamos nada: dibujamos cada carácter posible (dígitos y operadores) en siete tipografías y comparamos. Separamos los caracteres por manchas de tinta, llevamos cada uno a 28 × 28 sin deformarlo y calculamos la correlación normalizada con cada plantilla (1 es idéntico). Gana el más parecido. En esta foto, los puntos del ÷ se pegaron a la barra y el + ganó por 0.01. Esa duda de la visión es la que después resuelve el solver. Comparado con Tesseract empata, y supera a RapidOCR y TrOCR, que no leen bien los operadores.
+:::
+
+## [04 · Fase 2: solver]{.eyebrow} El modelo de restricciones {#modelo}
+
+::: {.bajada}
+Un modelo genérico en CP-SAT: sirve para cualquier tamaño y cualquier tablero.
+:::
 
 :::: {.columns}
 ::: {.column width="64%"}
@@ -264,11 +300,11 @@ El modelo es $O(n^2)$, pero completar un cuadrado latino ya es NP-completo. En l
 **Rody.** Este es el modelo completo. Variables de 1 a n por celda. AllDifferent por fila y columna. Una restricción por jaula: igualdad, suma lineal, la multiplicación global de CP-SAT, y para resta y división el par max/min, que no depende del orden en que la visión lista las celdas y no necesita booleanos. Para la división basta max = T·min: con enteros positivos el cociente es exacto. El modelo no tiene ningún dato de un tablero: sirve para cualquier n y cualquier partición. Lo escribimos nosotros sin IA (lo declaramos en el informe).
 :::
 
-## Contar soluciones convierte al solver en verificador {#verificador}
+## [04 · Fase 2: solver]{.eyebrow} El solver también verifica la lectura {#verificador}
 
-[Fase 2 · Programación con restricciones]{.eyebrow}
-
-[Un puzzle publicado tiene **solución única**. Así que contamos, con tope de dos, y cada resultado dice algo de la visión:]{.suave}
+::: {.bajada}
+Un puzzle publicado tiene una sola solución. Contarlas dice si lo que leyó la visión es confiable.
+:::
 
 :::: {.columns}
 ::: {.column width="32%"}
@@ -310,9 +346,11 @@ contar_soluciones(instancia, tope=2)   # enumerate_all_solutions + StopSearch al
 **Rody.** Este es el giro del trabajo. Como un puzzle publicado tiene solución única, el número de soluciones es una prueba sobre la lectura. Una: se devuelve. Cero: el solver demuestra que la visión se equivocó, y ahí entra la reparación. Dos o más: no hay base para decidir, se rechaza. Contar con tope de dos cuesta, en el peor caso, una búsqueda completa más.
 :::
 
-## Para resolver no hace falta reificar; para reparar, sí {#reparar-modelo}
+## [04 · Fase 2: solver]{.eyebrow} Reparar una lectura equivocada {#reparar-modelo}
 
-[Reparación guiada por el solver]{.eyebrow}
+::: {.bajada}
+Si no hay solución, el solver prueba lecturas parecidas hasta dar con la única que funciona.
+:::
 
 :::: {.columns}
 ::: {.column width="60%"}
@@ -352,17 +390,19 @@ $$\ell_{k,c} \Rightarrow \textit{jaula}_k(c) \qquad \textstyle\sum_c \ell_{k,c} 
 **Rody.** Para resolver no reificamos nada (medimos: la disyunción reificada rinde igual que max/min). Para reparar sí: es el uso natural de la reificación, decidir qué lectura creer. Cada jaula tiene su lectura y alternativas a un glifo de distancia, cada una con un literal booleano que activa su restricción; exactamente una por jaula. Minimizamos cuántas lecturas cambian y, a igual número, la menos plausible según los fallos observados (5 leído como 6 pesa 1, + leído por ÷ pesa 2). La regla de aceptación es la que evita errores silenciosos; la vemos en dos diapositivas.
 :::
 
-## En la foto real, el solver encontró los dos ÷ que la visión leyó como + {#reparar-foto}
+## [04 · Fase 2: solver]{.eyebrow} Un ejemplo real de reparación {#reparar-foto}
+
+::: {.bajada}
+La visión leyó dos 3÷ como 3+. El solver lo detectó y lo corrigió.
+:::
 
 :::: {.columns}
 ::: {.column width="44%"}
-<div class="lienzo" data-viz="reparar-foto" style="aspect-ratio: 3 / 4; width: min(100%, 430px);">
+<div class="lienzo" data-viz="reparar-foto" style="aspect-ratio: 3 / 4; width: min(100%, 375px);">
 <img src="datos/img/f1_foto.jpg" alt="Foto real del tablero">
 </div>
 :::
 ::: {.column width="54%"}
-[Reparación guiada por el solver]{.eyebrow}
-
 <ol class="pasos">
 <li class="fragment"><strong>La visión lee 17 jaulas</strong> y la instancia cumple el contrato.</li>
 <li class="fragment"><strong>Dos dicen 3+.</strong> En el papel dicen 3÷.</li>
@@ -378,9 +418,11 @@ $$\ell_{k,c} \Rightarrow \textit{jaula}_k(c) \qquad \textstyle\sum_c \ell_{k,c} 
 **Rody.** Este es el caso real de la app. La foto era del tablero de la figura del informe, a la pantalla. La visión leyó 3+ en dos jaulas que eran 3÷. La instancia es válida, pero el solver demuestra en milisegundos que no tiene solución. Entonces prueba las alternativas: 3÷ (peso 2), 8+ (peso 3), 3× (peso 4). La única corrección que deja solución única es cambiar las dos a ÷. La app lo dice y marca las jaulas corregidas. Pasar a José para la evaluación.
 :::
 
-## La verdad sale del propio PDF {#datos}
+## [05 · Evaluación]{.eyebrow} Con qué datos evaluamos {#datos}
 
-[Evaluación]{.eyebrow}
+::: {.bajada}
+Tableros reales de KrazyDad, con la respuesta correcta sacada del propio PDF.
+:::
 
 ::: {.numeros}
 ::: {.numero}
@@ -422,9 +464,11 @@ KrazyDad autoriza el uso escolar y prohíbe el comercial. Los PDF se descargan b
 **José.** No encontramos un dataset público y etiquetado de KenKen, así que lo armamos. Scrapeamos cinco cuadernillos de KrazyDad y, como los PDF son vectoriales, el texto de cada etiqueta trae su posición: la proyectamos con la homografía y obtenemos la celda. Verdad exacta sin etiquetar nada a mano. Separamos dos cuadernillos de desarrollo (6H, 9H) y tres que no usamos para ajustar nada (4E, 4H, 6E).
 :::
 
-## El error no se reparte: 21 de los 26 fallos son un 5 leído como 6 {#waffle}
+## [05 · Evaluación]{.eyebrow} Qué tan bien leemos las etiquetas {#waffle}
 
-[Evaluación · lectura de etiquetas]{.eyebrow}
+::: {.bajada}
+Acertamos el 97% de 895 etiquetas, y 4 de cada 5 errores son el mismo: un 5 leído como 6.
+:::
 
 <div class="lienzo solo" data-viz="waffle" data-label="Cada cuadrado es una etiqueta real; los fallos se marcan por tipo"></div>
 <div class="leyenda"><span><i class="cuadro" style="background:var(--rejilla)"></i>bien leída</span><span><i class="cuadro" style="background:var(--naranja)"></i>un 5 leído como 6</span><span><i class="cuadro" style="background:var(--suave)"></i>otro fallo (3 ilegibles de cuatro cifras, 6×→8×, 288×→286×)</span></div>
@@ -439,9 +483,11 @@ KrazyDad autoriza el uso escolar y prohíbe el comercial. Los PDF se descargan b
 **José.** Cada cuadrado es una etiqueta real. Leemos bien el 97.09%, con kappa 0.969. Lo interesante es que el error no se reparte: 21 de 26 fallos son un 5 leído como 6, y en los cuadernillos que no usamos para desarrollar, 16 de 17 son la etiqueta 5+ leída como 6+, muy común en 4×4. La diferencia entre los dos conjuntos no es significativa (Fisher, p = 0.24), pero el modo de fallo dominante solo apareció en datos que nadie miró. Los tres ilegibles son etiquetas de cuatro cifras que desbordan la celda.
 :::
 
-## Ningún tablero mal leído produce una solución errónea {#e2e}
+## [05 · Evaluación]{.eyebrow} Resultado con los 70 tableros {#e2e}
 
-[Evaluación · de punta a punta]{.eyebrow}
+::: {.bajada}
+Ningún tablero mal leído terminó en una solución equivocada.
+:::
 
 :::: {.columns}
 ::: {.column width="66%"}
@@ -463,9 +509,11 @@ KrazyDad autoriza el uso escolar y prohíbe el comercial. Los PDF se descargan b
 **José / Rody.** Cada punto es un tablero. 48 de 70 se leen bien completos. Los otros 22 no llegan nunca a una solución equivocada: 3 se rechazan por una etiqueta ilegible, y en 19 el solver demuestra que lo leído no tiene solución. La reparación devuelve la solución verdadera en 16 y se abstiene en 3. Resultado: 64 resueltos bien, 6 sin respuesta, cero errores silenciosos. Dato extra: el solver también encontró un error en nuestra verdad (un 9×9 cuyo PDF perdió una jaula de división); contado estricto, 47 de 70.
 :::
 
-## La regla que evita errores silenciosos salió de un error {#margen}
+## [05 · Evaluación]{.eyebrow} Cuándo aceptar una corrección {#margen}
 
-[Reparación · pruébalo]{.eyebrow}
+::: {.bajada}
+Solo si ninguna otra corrección parecida lleva a otro tablero. Prueba los parámetros.
+:::
 
 :::: {.columns}
 ::: {.column width="62%"}
@@ -531,9 +579,11 @@ window.KK.margen(lienzoMargen, cambios, margen)
 **Rody.** Esta diapositiva es interactiva (Observable dentro de Quarto). Cambiar el margen a 0 y mostrar el cuadrado rojo: es el error silencioso real que encontramos al medir. Con margen 1 desaparece, a cambio de dos abstenciones más en algunos parámetros. Con 3 cambios máximos y margen 1, que es lo que usa el nodo: 16 bien, 3 abstenciones, 0 errores. Preferimos rechazar a inventar.
 :::
 
-## Las restricciones globales hacen el trabajo: cero ramas {#formulaciones}
+## [05 · Evaluación]{.eyebrow} Por qué usar AllDifferent {#formulaciones}
 
-[Fase 2 · ¿qué aporta cada decisión del modelo?]{.eyebrow}
+::: {.bajada}
+Con restricciones globales, ningún tablero real necesita búsqueda.
+:::
 
 :::: {.columns}
 ::: {.column width="66%"}
@@ -558,9 +608,11 @@ window.KK.margen(lienzoMargen, cambios, margen)
 **Rody.** Medimos tres formulaciones con un solo hilo para que las ramas sean comparables. Con AllDifferent, ningún tablero real ramifica: la propagación hace todo. Reemplazar cada AllDifferent por sus desigualdades binarias dice lo mismo, pero propaga menos y los 9×9 llegan a 5 883 ramas. La versión reificada de resta y división rinde igual que max/min (6.9 vs 7.7 ms): la reificación no cuesta ni aporta para resolver. Esto conecta directo con lo del curso: restricciones globales y propagación.
 :::
 
-## Un conjunto sintético es un mal juez de la precisión {#sintetico}
+## [05 · Evaluación]{.eyebrow} Datos sintéticos frente a reales {#sintetico}
 
-[Evaluación]{.eyebrow}
+::: {.bajada}
+Sirvieron para desarrollar, pero hacen creer que leemos mejor de lo que leemos.
+:::
 
 :::: {.columns}
 ::: {.column width="64%"}
@@ -582,9 +634,11 @@ window.KK.margen(lienzoMargen, cambios, margen)
 **José / Rody.** El generador sintético fue clave para desarrollar, pero sobreestima: con tipografías del banco lee bien el 97.8% de tableros limpios; en los reales, 48 de 70. Cuatro supuestos que el generador nunca puso a prueba aparecieron el primer día con tableros reales. Por eso las cifras que valen son las de los tableros reales y, entre ellas, las de los cuadernillos no usados.
 :::
 
-## La app muestra lo que el solver decidió, incluida la corrección {#app}
+## [06 · La app]{.eyebrow} La app en el celular {#app}
 
-[Integración]{.eyebrow}
+::: {.bajada}
+Muestra lo que decidió el solver, incluida la corrección.
+:::
 
 <div class="app-fila">
 <img src="img/app.png" alt="Cuatro pantallas de la app: inicio, modo asistencia, una lectura reparada y una foto sin tablero">
@@ -600,12 +654,10 @@ window.KK.margen(lienzoMargen, cambios, margen)
 **Jorge.** La app (Capacitor, Android) envía la foto al nodo y recibe estado, jaulas, solución, correcciones y un mensaje en llano. Modo Asistencia por defecto: el tablero aparece sin números y revelas casilla por casilla, para no arruinar el puzzle. Modo Rápido: la solución completa, en rejilla limpia o encima de tu foto. Cuando el nodo repara, lo dice; cuando se abstiene, muestra lo que leyó y pide otra foto. La usabilidad todavía no está evaluada con usuarios.
 :::
 
-## Demo: de la foto a la solución {#demo background-color="#15161D"}
+## [06 · La app]{.eyebrow} Demo en vivo {#demo background-color="#15161D"}
 
 :::: {.columns}
 ::: {.column width="56%"}
-[En vivo]{.eyebrow}
-
 <ol class="pasos">
 <li><strong>Foto</strong> con el Pixel, a un KenKen impreso o en pantalla.</li>
 <li><strong>Nodo</strong> en la laptop: <code>uv run python -m kenken_nodo</code></li>
@@ -626,12 +678,15 @@ window.KK.margen(lienzoMargen, cambios, margen)
 **Jorge + Rody.** Antes de la clase: cable USB, `adb devices`, `adb reverse tcp:8723 tcp:8723`, nodo levantado (`cd labs/tb1-kenken && uv run python -m kenken_nodo`). Para que todos vean el celular: `scrcpy` refleja la pantalla en la laptop. Tomar la foto a un tablero impreso o a la diapositiva 2. Mostrar Modo Rápido «Sobre tu foto». Si la foto sale mal, mejor: la app explica por qué y se repite. Plan B si falla el celular: esta captura es real, sin retoques.
 :::
 
-## La demo, grabada en el celular {#demo-video background-color="#15161D"}
+## [06 · La app]{.eyebrow} Demo grabada {#demo-video background-color="#15161D"}
+
+::: {.bajada}
+Respaldo por si falla la demo en vivo: 1 min 27 s. Toca un capítulo para saltar.
+:::
 
 <div class="video-fila" data-viz="video">
 <video class="video-cel" src="video/demo.mp4" poster="video/demo-poster.jpg" data-autoplay muted playsinline controls></video>
 <div>
-[Respaldo · 1 min 27 s · toca un capítulo para saltar]{.eyebrow}
 <ol class="pasos capitulos">
 <li><button data-t="0">0:00</button>Una lectura <strong>sin solución única</strong>: la app lo dice y pide otra foto.</li>
 <li><button data-t="4">0:04</button><strong>Modo Rápido:</strong> foto a un 5×5 en la pantalla y la solución sobre la foto, en 59 ms.</li>
@@ -647,7 +702,7 @@ window.KK.margen(lienzoMargen, cambios, margen)
 **Respaldo.** Si la demo en vivo falla, esta diapositiva reproduce la grabación de la pantalla del celular (scrcpy), sin sonido: narrarla en vivo. Los capítulos saltan a cada parte.
 :::
 
-## Separar percepción y razonamiento nos dio un verificador {#conclusiones}
+## [07 · Cierre]{.eyebrow} Conclusiones {#conclusiones}
 
 :::: {.columns}
 ::: {.column width="32%"}
@@ -714,9 +769,7 @@ window.KK.margen(lienzoMargen, cambios, margen)
 Abrir preguntas. Si piden detalle: el apéndice tiene limitaciones, la comparación con Tesseract y otros OCR, y los tiempos del solver.
 :::
 
-## Limitaciones {#limitaciones visibility="uncounted"}
-
-[Apéndice]{.eyebrow}
+## [Apéndice]{.eyebrow} Limitaciones {#limitaciones visibility="uncounted"}
 
 1. Los 70 tableros son de **un solo editor y una tipografía** (Helvetica; el banco tiene un clon). No miden tipografías desconocidas.
 2. Son **PDF rasterizados**: tinta real, sin sombras, curvatura ni desenfoque. Lo fotográfico solo lo cubre el sintético.
@@ -724,9 +777,11 @@ Abrir preguntas. Si piden detalle: el apéndice tiene limitaciones, la comparaci
 4. Las etiquetas de **cuatro cifras** que desbordan su celda se rechazan antes del solver.
 5. Las 16 reparaciones son sobre **19 tableros de un editor**. Falta reparar ilegibles, lecturas con varias soluciones y ponderar con la confianza del clasificador (inferencia conjunta, Mulamba et al.).
 
-## Plantillas y Tesseract empatan; los demás no leen operadores {#ocr visibility="uncounted"}
+## [Apéndice]{.eyebrow} Comparación con otros OCR {#ocr visibility="uncounted"}
 
-[Apéndice · 412 etiquetas del conjunto de desarrollo (%)]{.eyebrow}
+::: {.bajada}
+Exactitud (%) sobre las 412 etiquetas del conjunto de desarrollo. «Plantillas» es nuestro método: correlación normalizada contra los caracteres dibujados en 7 tipografías.
+:::
 
 | Método | Etiqueta | Operación | Número |
 |:--|--:|--:|--:|
@@ -735,11 +790,15 @@ Abrir preguntas. Si piden detalle: el apéndice tiene limitaciones, la comparaci
 | RapidOCR (PP-OCR) | 64.8 | 68.4 | 94.2 |
 | TrOCR base printed | 60.9 | 63.6 | 95.1 |
 
+[«Etiqueta» exige número y operación correctos; «Operación» y «Número» miden cada parte por separado.]{.nota}
+
 [Plantillas frente a Tesseract: discrepan en 11 etiquetas, 9 a favor de las plantillas (McNemar, p = 0.065). Al menos uno de los dos acierta 411 de 412. Es una cota optimista: se midió sobre el conjunto con que se ajustaron las plantillas.]{.chica .suave}
 
-## El solver no es el cuello de botella {#tiempos visibility="uncounted"}
+## [Apéndice]{.eyebrow} Tiempo del solver {#tiempos visibility="uncounted"}
 
-[Apéndice · `resolver` sobre la verdad de los 70 tableros (ms)]{.eyebrow}
+::: {.bajada}
+`resolver` sobre la verdad de los 70 tableros (ms): el solver no es el cuello de botella.
+:::
 
 | n | Tableros | Mediana | Máximo |
 |--:|--:|--:|--:|
