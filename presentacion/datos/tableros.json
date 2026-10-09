@@ -1,0 +1,1072 @@
+[
+{
+"id": "INKY_4E_b001_4pp_p1_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 3.05,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.8,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "abstiene"
+},
+{
+"id": "INKY_4E_b001_4pp_p1_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 4.65,
+"ramas": 0
+},
+"binaria": {
+"ms": 7.45,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "abstiene"
+},
+{
+"id": "INKY_4E_b001_4pp_p1_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 4.15,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.72,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p1_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 4.75,
+"ramas": 0
+},
+"binaria": {
+"ms": 16.57,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p2_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 1.89,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.46,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p2_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 2.87,
+"ramas": 0
+},
+"binaria": {
+"ms": 5.36,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p2_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 3.98,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.3,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p2_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 3.47,
+"ramas": 0
+},
+"binaria": {
+"ms": 5.53,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p3_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 3.56,
+"ramas": 0
+},
+"binaria": {
+"ms": 5.89,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "abstiene"
+},
+{
+"id": "INKY_4E_b001_4pp_p3_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 5.4,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.84,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p3_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 1.94,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.48,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p3_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 4.65,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.79,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p4_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 1.84,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.25,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p4_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 2.14,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.47,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p4_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 1.29,
+"ramas": 0
+},
+"binaria": {
+"ms": 2.46,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p4_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 1.55,
+"ramas": 0
+},
+"binaria": {
+"ms": 2.59,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p5_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 1.94,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.44,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p5_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 4.03,
+"ramas": 0
+},
+"binaria": {
+"ms": 7.41,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p5_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 2.39,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.5,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p5_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 5.39,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.1,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p6_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 3.35,
+"ramas": 0
+},
+"binaria": {
+"ms": 5.69,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p6_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 3.92,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.69,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p6_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 3.1,
+"ramas": 0
+},
+"binaria": {
+"ms": 5.15,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4E_b001_4pp_p6_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 3.02,
+"ramas": 0
+},
+"binaria": {
+"ms": 5.63,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p1_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 2.04,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.71,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p1_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 4.91,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.66,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p1_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 3.91,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.77,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p2_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 3.77,
+"ramas": 0
+},
+"binaria": {
+"ms": 7.72,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p2_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 4.42,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.76,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p2_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 3.36,
+"ramas": 0
+},
+"binaria": {
+"ms": 5.6,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p2_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 6,
+"global": {
+"ms": 5.35,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.06,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p3_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 6,
+"global": {
+"ms": 6.41,
+"ramas": 0
+},
+"binaria": {
+"ms": 7.38,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p3_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 5.13,
+"ramas": 0
+},
+"binaria": {
+"ms": 8.1,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p3_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 5.44,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.91,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p3_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 4.65,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.82,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p4_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 4.4,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.4,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p4_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 4.76,
+"ramas": 0
+},
+"binaria": {
+"ms": 7.72,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p4_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 2.89,
+"ramas": 0
+},
+"binaria": {
+"ms": 4.01,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p4_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 2.3,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.54,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p5_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 3.15,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.37,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p5_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 6,
+"global": {
+"ms": 1.94,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.62,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p5_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 1.93,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.3,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p5_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 1.74,
+"ramas": 0
+},
+"binaria": {
+"ms": 2.92,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p6_q1_tl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 4.3,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.55,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p6_q2_tr",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 8,
+"global": {
+"ms": 4.07,
+"ramas": 0
+},
+"binaria": {
+"ms": 5.56,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p6_q3_bl",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 1.87,
+"ramas": 0
+},
+"binaria": {
+"ms": 3.54,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_4H_b001_4pp_p6_q4_br",
+"cuadernillo": "4x4",
+"n": 4,
+"etiquetas": 7,
+"global": {
+"ms": 3.48,
+"ramas": 0
+},
+"binaria": {
+"ms": 4.01,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_6E_b001_1pp_p1",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 17,
+"global": {
+"ms": 3.48,
+"ramas": 0
+},
+"binaria": {
+"ms": 10.67,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_6E_b001_1pp_p2",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 17,
+"global": {
+"ms": 3.11,
+"ramas": 0
+},
+"binaria": {
+"ms": 11.27,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_6E_b001_1pp_p3",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 16,
+"global": {
+"ms": 4.74,
+"ramas": 0
+},
+"binaria": {
+"ms": 7.39,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_6E_b001_1pp_p4",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 17,
+"global": {
+"ms": 5.06,
+"ramas": 0
+},
+"binaria": {
+"ms": 4.91,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_6E_b001_1pp_p5",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 17,
+"global": {
+"ms": 5.11,
+"ramas": 0
+},
+"binaria": {
+"ms": 9.72,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_6E_b001_1pp_p6",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 17,
+"global": {
+"ms": 2.37,
+"ramas": 0
+},
+"binaria": {
+"ms": 5.3,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_6E_b001_1pp_p7",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 14,
+"global": {
+"ms": 4.8,
+"ramas": 0
+},
+"binaria": {
+"ms": 8.85,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_6E_b001_1pp_p8",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 17,
+"global": {
+"ms": 4.47,
+"ramas": 0
+},
+"binaria": {
+"ms": 8.75,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_6H_b001_1pp_p1",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 16,
+"global": {
+"ms": 4.25,
+"ramas": 0
+},
+"binaria": {
+"ms": 6.06,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_6H_b001_1pp_p2",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 16,
+"global": {
+"ms": 6.89,
+"ramas": 0
+},
+"binaria": {
+"ms": 34.91,
+"ramas": 809
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_6H_b001_1pp_p3",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 16,
+"global": {
+"ms": 10.04,
+"ramas": 0
+},
+"binaria": {
+"ms": 53.37,
+"ramas": 782
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_6H_b001_1pp_p4",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 15,
+"global": {
+"ms": 6.42,
+"ramas": 0
+},
+"binaria": {
+"ms": 58.41,
+"ramas": 1251
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_6H_b001_1pp_p5",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 17,
+"global": {
+"ms": 8.92,
+"ramas": 0
+},
+"binaria": {
+"ms": 20.65,
+"ramas": 0
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_6H_b001_1pp_p6",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 16,
+"global": {
+"ms": 9.16,
+"ramas": 0
+},
+"binaria": {
+"ms": 72.42,
+"ramas": 524
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_6H_b001_1pp_p7",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 14,
+"global": {
+"ms": 4.55,
+"ramas": 0
+},
+"binaria": {
+"ms": 50.76,
+"ramas": 873
+},
+"lectura": "rechazado"
+},
+{
+"id": "INKY_6H_b001_1pp_p8",
+"cuadernillo": "6x6",
+"n": 6,
+"etiquetas": 16,
+"global": {
+"ms": 9.38,
+"ramas": 0
+},
+"binaria": {
+"ms": 18.43,
+"ramas": 0
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_9H_b001_1pp_p1",
+"cuadernillo": "9x9",
+"n": 9,
+"etiquetas": 36,
+"global": {
+"ms": 15.65,
+"ramas": 0
+},
+"binaria": {
+"ms": 267.09,
+"ramas": 2962
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_9H_b001_1pp_p2",
+"cuadernillo": "9x9",
+"n": 9,
+"etiquetas": 35,
+"global": {
+"ms": 12.63,
+"ramas": 0
+},
+"binaria": {
+"ms": 16.41,
+"ramas": 0
+},
+"lectura": "bien",
+"verdad_erronea": true
+},
+{
+"id": "INKY_9H_b001_1pp_p4",
+"cuadernillo": "9x9",
+"n": 9,
+"etiquetas": 36,
+"global": {
+"ms": 10.82,
+"ramas": 0
+},
+"binaria": {
+"ms": 86.51,
+"ramas": 2656
+},
+"lectura": "rechazado"
+},
+{
+"id": "INKY_9H_b001_1pp_p5",
+"cuadernillo": "9x9",
+"n": 9,
+"etiquetas": 39,
+"global": {
+"ms": 11.63,
+"ramas": 0
+},
+"binaria": {
+"ms": 116.47,
+"ramas": 2847
+},
+"lectura": "sin_solucion",
+"reparacion": "bien"
+},
+{
+"id": "INKY_9H_b001_1pp_p6",
+"cuadernillo": "9x9",
+"n": 9,
+"etiquetas": 37,
+"global": {
+"ms": 11.37,
+"ramas": 0
+},
+"binaria": {
+"ms": 194.14,
+"ramas": 5004
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_9H_b001_1pp_p7",
+"cuadernillo": "9x9",
+"n": 9,
+"etiquetas": 36,
+"global": {
+"ms": 12.4,
+"ramas": 0
+},
+"binaria": {
+"ms": 188.39,
+"ramas": 5883
+},
+"lectura": "bien"
+},
+{
+"id": "INKY_9H_b001_1pp_p8",
+"cuadernillo": "9x9",
+"n": 9,
+"etiquetas": 35,
+"global": {
+"ms": 29.22,
+"ramas": 0
+},
+"binaria": {
+"ms": 232.33,
+"ramas": 2603
+},
+"lectura": "rechazado"
+}
+]
