@@ -8,6 +8,8 @@ dependencies = [
     "opencv-python-headless>=4.10",
     "ortools>=9.15.6755",
     "pillow>=10.0",
+    "pypdfium2>=5.13.0",
+    "scikit-learn>=1.9.1",
 ]
 
 [dependency-groups]

@@ -1,19 +1,24 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{url}
 \usepackage[utf8]{inputenc}
-\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-nodecimaldot,es-noshorthands]{babel}
+
+% Toda cifra de este informe sale de un script de labs/tb1-kenken y se puede
+% volver a obtener. Si se cambia una, se cambia también el script que la da.
 
 \begin{document}
 
-\title{Resolución de KenKen End-to-End mediante Visión Computacional y Programación con Restricciones}
+\title{Resolución de KenKen de punta a punta mediante Visión Computacional y Programación con Restricciones}
 
+% TODO: nombre del grupo e integrantes.
 \author{\IEEEauthorblockN{Grupo X}
-\IEEEauthorblockA{\textit{Tópicos en Ciencia de la Computación (CC58)} \\
+\IEEEauthorblockA{\textit{Tópicos en Ciencias de la Computación (1ACC0058)} \\
 \textit{Universidad Peruana de Ciencias Aplicadas (UPC)}\\
 Lima, Perú}
 }
@@ -21,52 +26,183 @@ Lima, Perú}
 \maketitle
 
 \begin{abstract}
-Este informe detalla el diseño e implementación de un sistema end-to-end capaz de interpretar y resolver el acertijo lógico matemático KenKen a partir de una imagen. El pipeline se divide en tres fases principales: un subsistema de Visión Computacional responsable de preprocesar la imagen, extraer la cuadrícula, segmentar las jaulas y usar un Reconocimiento Óptico de Caracteres (OCR) basado en correlación de plantillas para identificar números objetivos y operadores; un modelo formal de Programación con Restricciones (CP) parametrizado que formula el problema matemático; y un sistema de integración que vincula ambas partes y visualiza la solución. Los resultados muestran una precisión del 98.8\% en la lectura de etiquetas reales, logrando una automatización completa sin intervención manual.
+Presentamos un sistema que lee un tablero de KenKen desde una imagen y lo resuelve. La primera fase localiza y rectifica el tablero, deduce su tamaño por la periodicidad de la rejilla, separa las jaulas midiendo el grosor de cada arista y lee las etiquetas por correlación con plantillas tipográficas, sin aprendizaje automático. La segunda formula el puzzle como un modelo de Programación con Restricciones parametrizado en $n$ y lo resuelve con CP-SAT. Sobre 16 tableros reales publicados por KrazyDad, con la verdad extraída del texto vectorial de los propios PDF, la lectura de etiquetas alcanza un 98.8\% (412 etiquetas) y 8 de los 16 tableros se resuelven correctamente de punta a punta. En los otros 8 el sistema no devuelve ninguna solución errónea: la instancia se rechaza al validarla o el solver demuestra que no tiene solución. Resolver un tablero de hasta $9 \times 9$ tarda menos de 50~ms.
 \end{abstract}
 
 \begin{IEEEkeywords}
-KenKen, Constraint Programming, Visión Computacional, OCR, OR-Tools
+KenKen, Programación con Restricciones, CP-SAT, Visión Computacional, OCR
 \end{IEEEkeywords}
 
 \section{Introducción}
-El proyecto aborda la resolución automatizada del puzzle KenKen. Para lograrlo, se ha dividido el problema en dos dominios: la percepción visual y el razonamiento lógico. 
+KenKen es un cuadrado latino de $n \times n$ dividido en \emph{jaulas}: grupos de celdas contiguas con una operación aritmética y un objetivo que los valores de la jaula deben cumplir. Resolverlo desde una imagen exige dos cosas de naturaleza distinta: percibir la estructura del tablero (tamaño, jaulas y etiquetas) y razonar sobre ella.
 
-\section{Fase 1: Visión Computacional (Extracción de Datos)}
-El objetivo es transformar los píxeles en un estado inicial formal (\textit{Instance}).
-
-\subsection{Detección de la Cuadrícula y Segmentación}
-Se emplea procesamiento de imágenes mediante OpenCV. La cuadrícula se aísla buscando contornos tras aplicar técnicas de umbralización adaptativa. El tamaño $n \times n$ se infiere geométricamente.
-La diferenciación de bordes gruesos y finos permite identificar las ``jaulas''. Se aplica una partición morfológica para agrupar celdas adyacentes rodeadas por un borde grueso.
-
-\subsection{Reconocimiento Óptico de Caracteres (OCR)}
-La lectura del operador y el objetivo se realiza mediante un banco de plantillas por correlación. Según los experimentos ejecutados sobre un dataset de 412 etiquetas reales extraídas de documentos KrazyDad, el OCR de plantillas obtuvo una exactitud del 98.8\%, superando a soluciones genéricas y redes profundas en este dominio acotado gracias a la corrección estricta de las cajas delimitadoras.
-
-\section{Fase 2: Constraint Programming (Modelado y Resolución)}
-Una vez obtenida la estructura del KenKen, se construye un modelo formal parametrizado para cualquier $n$.
-
-\subsection{Variables y Dominios}
-Sea $X$ una matriz de variables enteras de tamaño $n \times n$. El dominio de cada variable $x_{i,j}$ se define como:
-\[ x_{i,j} \in \{1, 2, \dots, n\} \quad \forall i, j \in [1, n] \]
-
-\subsection{Restricciones Globales}
-El tablero es fundamentalmente un cuadrado latino. Se aplica la restricción \texttt{AllDifferent} tanto para filas como para columnas.
-
-\subsection{Restricciones de Jaulas}
-Para cada jaula $C_k$ con conjunto de variables $V_k$, operador $op_k$ y objetivo $T_k$:
+Separamos esas dos cosas con un contrato explícito: la fase de visión produce una \emph{instancia} (tamaño y lista de jaulas con sus celdas, operación y objetivo) y la fase de razonamiento solo ve esa instancia. Las contribuciones son tres:
 \begin{itemize}
-    \item \textbf{Igualdad (=):} $v = T_k$, donde $V_k = \{v\}$.
-    \item \textbf{Suma (+):} $\sum_{v \in V_k} v = T_k$.
-    \item \textbf{Producto (*):} $\prod_{v \in V_k} v = T_k$.
-    \item \textbf{Resta (-):} Dado $V_k = \{a, b\}$, $\max(a,b) - \min(a,b) = T_k$.
-    \item \textbf{División (/):} Dado $V_k = \{a, b\}$, se restringe la división exacta y resultado $T_k$. Se modela como: $\max(a,b) = T_k \times \min(a,b)$.
+    \item un pipeline de visión sin aprendizaje que detecta las jaulas por el grosor de las aristas;
+    \item un modelo de Programación con Restricciones (CP) parametrizado en $n$ que, además de resolver, comprueba si la solución es única;
+    \item una evaluación sobre tableros reales con verdad exacta, que muestra que un conjunto sintético sobreestima la precisión y que el solver actúa como verificador de la lectura.
 \end{itemize}
 
-Estas restricciones binarias y n-arias garantizan la simetría e independencia del orden espacial en la cuadrícula.
+\section{Datos}
+No encontramos un conjunto de datos público y etiquetado de tableros KenKen. El único precedente de KenKen por visión que hallamos (370 glifos reales) no declara licencia y trae los recortes estirados a $28 \times 28$, lo que destruye la proporción del glifo; se descartó. Trabajamos con dos fuentes propias.
 
-\section{Complejidad y Rendimiento}
-La solución se apoya en \texttt{OR-Tools} (CP-SAT), que resuelve internamente transformando el modelo a satisfactibilidad booleana (SAT). Para instancias típicas ($4 \times 4$ a $9 \times 9$), el solver encuentra la solución factible (o determina su ausencia si el OCR erró) en tiempo sub-segundo ($<100$ ms).
+\textbf{Tableros reales.} Las 8 páginas de puzzles de dos cuadernillos de KrazyDad~\cite{krazydad}, uno de $6 \times 6$ y otro de $9 \times 9$: 16 tableros rasterizados a 150~ppp. Como los PDF son vectoriales, cada etiqueta está como texto con su caja; proyectándola con la homografía del tablero se obtiene su celda, y con ella una verdad exacta sin etiquetar nada a mano. La celda sale de la geometría y no del detector de jaulas, así que el detector no se mide contra sí mismo. KrazyDad autoriza el uso escolar y prohíbe el comercial; los PDF se descargan bajo demanda y no se redistribuyen.
+
+\textbf{Tableros sintéticos.} Un generador parte de un cuadrado latino aleatorio, lo divide en jaulas de hasta cuatro celdas, les asigna una operación compatible y dibuja el tablero con distintas tipografías, opcionalmente con perspectiva, iluminación desigual y ruido. Da verdad gratis y cubre condiciones que los PDF no tienen, pero, como se ve en la Sección~\ref{sec:eval}, no basta para medir.
+
+\section{Fase 1: de la imagen a la instancia}
+
+\subsection{Localización y rectificación}
+La imagen en escala de grises se binariza con umbral adaptativo, que tolera una iluminación desigual. Del contorno externo de mayor área se obtiene, por aproximación poligonal, un cuadrilátero cuyas esquinas definen una homografía que rectifica el tablero a un cuadrado~\cite{opencv}. Todo lo posterior trabaja sobre esa imagen rectificada, nunca sobre la original.
+
+\subsection{Tamaño del tablero}
+En un KenKen impreso la línea fina se interrumpe donde la atraviesa una jaula, y un sesgo de medio grado la parte en tramos a distintas alturas, así que no se puede exigir que cada línea cruce el tablero. Lo que sí se conserva es la periodicidad. Para cada candidato $n$ se predicen las líneas interiores de ambos ejes y se puntúa la tinta de la \emph{más débil}; con el $n$ correcto esa línea conserva alrededor del 29\% de su longitud en tinta y con uno equivocado cae a cero. Se elige el mayor $n$ con todas sus líneas presentes: los divisores del $n$ correcto también pasan la prueba (una rejilla de 3 cae sobre la mitad de las líneas de un tablero de 6), pero solo la más fina las explica todas.
+
+\subsection{Jaulas}
+Conocida la rejilla se sabe dónde está cada arista interior, y basta medir su grosor. Se toma la mediana, a lo largo de la arista, del ancho del trazo de tinta \emph{más cercano} a la posición prevista. La mediana descarta los cruces con otras líneas y con los dígitos, y buscar el trazo más cercano, en vez de exigir tinta en el píxel exacto, absorbe el error de la rectificación. Los grosores son bimodales porque el puzzle se imprime con dos anchos de pluma; el umbral entre fino y grueso sale del método de Otsu~\cite{otsu}, con el marco exterior como referencia de grueso. Las celdas que no separa un borde grueso se agrupan con una estructura de unión-búsqueda.
+
+\subsection{Etiquetas}
+La etiqueta se imprime en la esquina superior izquierda de la celda \emph{ancla} de la jaula, la primera en orden de fila y columna. El margen del recorte no es fijo: se mide dónde termina la línea de la rejilla y se deja un respiro proporcional. Con un margen fijo del 10\% de la celda se cortaba la parte superior de los dígitos (un \texttt{40} se leía \texttt{4U}), y era el mayor error de todo el pipeline.
+
+Los caracteres se separan por componentes conexas, reagrupando las que se solapan en horizontal porque el signo $\div$ se imprime como tres manchas. Cada carácter se clasifica por correlación normalizada contra plantillas renderizadas en siete tipografías, conservando la proporción del glifo. Probamos añadir rasgos estructurales, como el número de huecos cerrados, para separar \texttt{3} de \texttt{8}, y la precisión sintética \emph{bajó} de 99.4\% a 95.4\%; lo que sí resolvió esas confusiones fue ampliar el banco de tipografías.
+
+\subsection{Validación}
+Antes de llegar al solver la instancia se valida: las jaulas deben particionar el tablero y ser conexas, y las de resta y división deben tener exactamente dos celdas. Una lectura que viola el contrato se rechaza aquí y no llega a la Fase 2.
+
+\section{Fase 2: modelo de Programación con Restricciones}
+
+\subsection{Variables y dominios}
+Sea $X$ una matriz de variables enteras de $n \times n$ con
+\[ x_{i,j} \in \{1, 2, \dots, n\} \quad \forall\, i, j \in \{1, \dots, n\}. \]
+
+\subsection{Cuadrado latino}
+Cada fila y cada columna es una permutación de $1..n$, expresada con una restricción global \texttt{AllDifferent} por fila y otra por columna.
+
+\subsection{Restricciones de jaula}
+Para cada jaula $C_k$ con variables $V_k$, operación $op_k$ y objetivo $T_k$:
+\begin{itemize}
+    \item \textbf{Igualdad ($=$):} $v = T_k$, con $V_k = \{v\}$.
+    \item \textbf{Suma ($+$):} $\sum_{v \in V_k} v = T_k$.
+    \item \textbf{Producto ($\times$):} $\prod_{v \in V_k} v = T_k$.
+    \item \textbf{Resta ($-$):} con $V_k = \{a, b\}$, $\max(a,b) - \min(a,b) = T_k$.
+    \item \textbf{División ($\div$):} con $V_k = \{a, b\}$, $\max(a,b) = T_k \cdot \min(a,b)$.
+\end{itemize}
+En resta y división el orden en que la visión lista las dos celdas no significa nada, y el par $\max/\min$ hace el modelo simétrico. Para la división basta la igualdad del producto: con dominios enteros positivos implica que el cociente es exacto.
+
+\subsection{Resolución y unicidad}
+El modelo se resuelve con CP-SAT~\cite{cpsat}, que combina propagación de restricciones con un núcleo SAT con aprendizaje de cláusulas. Además de buscar una solución, el sistema cuenta soluciones con un tope de dos, deteniendo la enumeración al llegar a él. Un puzzle publicado tiene solución única, así que una lectura que deja el tablero sin solución, o con más de una, delata un error de la Fase 1.
+
+\section{Evaluación}\label{sec:eval}
+
+\subsection{Fase 1 sobre tableros reales}
+La Tabla~\ref{tab:reales} resume la lectura de los 16 tableros reales. Las anclas cuentan las jaulas detectadas cuya celda ancla coincide con la de la verdad; las etiquetas se miden sobre esas anclas. De los 5 fallos de etiqueta, dos son un \texttt{5-} leído como \texttt{6-} y tres son etiquetas de cuatro cifras que desbordan su celda, de modo que el operador queda fuera del recorte.
+
+\begin{table}[t]
+\caption{Fase 1 sobre 16 tableros reales de KrazyDad}
+\label{tab:reales}
+\centering
+\begin{tabular}{lr}
+\hline
+Métrica & Resultado \\
+\hline
+Tamaño del tablero ($n$) & 16/16 \\
+Anclas de jaula & 412/418 (98.6\%) \\
+Etiqueta completa (operación y número) & 407/412 (98.8\%) \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Elección del OCR}
+Comparamos las plantillas con tres motores genéricos sobre las mismas 412 etiquetas (Tabla~\ref{tab:ocr}): Tesseract~\cite{tesseract}, RapidOCR, que ejecuta PP-OCR~\cite{ppocr} sobre ONNX Runtime, y TrOCR~\cite{trocr}. Plantillas y Tesseract no se distinguen: discrepan en 11 etiquetas, 9 a favor de las plantillas y 2 de Tesseract, con $p = 0.065$ en la prueba exacta de McNemar~\cite{mcnemar}. Los dos superan con claridad a RapidOCR y TrOCR ($p < 0.001$), que leen bien los números pero no los operadores.
+
+Más que el orden, importa que los dos mejores fallan en etiquetas distintas: al menos un motor acierta 411 de las 412 etiquetas (99.8\%). Ese es el techo de un jurado de motores.
+
+\begin{table}[t]
+\caption{Exactitud de cuatro OCR sobre 412 etiquetas reales (\%)}
+\label{tab:ocr}
+\centering
+\begin{tabular}{lrrr}
+\hline
+Método & Etiqueta & Operación & Número \\
+\hline
+Plantillas (este trabajo) & 98.8 & 99.3 & 98.8 \\
+Tesseract 5.3.4 & 97.1 & 97.8 & 97.8 \\
+RapidOCR (PP-OCR) & 64.8 & 68.4 & 94.2 \\
+TrOCR base printed & 60.9 & 63.6 & 95.1 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Lo que el conjunto sintético escondía}
+En el conjunto sintético (80 tableros, $n$ de 4 a 7; Tabla~\ref{tab:sinteticos}) la Fase 1 llegó al 100\% en tableros limpios con tipografías del banco. Al estrenar los tableros reales falló en los 16: la rejilla real se interrumpe, la tinta no cae en el píxel predicho, el margen fijo cortaba los dígitos y KrazyDad imprime glifos que el banco no tenía. Los cuatro problemas son supuestos que el generador nunca puso a prueba. La tabla muestra además el peso de la tipografía: con una tipografía que el banco no conoce, la instancia completa cae al 81.0\% en limpio y al 52.4\% en foto. El conjunto sintético sirve para desarrollar, pero las cifras que valen son las de los tableros reales.
+
+\begin{table}[t]
+\caption{Fase 1 sobre 80 tableros sintéticos (\%)}
+\label{tab:sinteticos}
+\centering
+\begin{tabular}{llrr}
+\hline
+Condición & Tipografía & Etiquetas & Instancia completa \\
+\hline
+Limpio & En el banco & 100.0 & 100.0 \\
+Foto & En el banco & 99.8 & 96.6 \\
+Limpio & No vista & 99.4 & 81.0 \\
+Foto & No vista & 95.9 & 52.4 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{De punta a punta}
+Pasando cada tablero real por el sistema completo y cotejando la instancia leída con la verdad del PDF, 8 de los 16 tableros se leen bien: 5 de 8 en $6 \times 6$ y 3 de 8 en $9 \times 9$. Los 8 se resuelven con solución única.
+
+La causa dominante de los otros 8 no es el OCR sino el detector de jaulas. En 6 tableros una arista gruesa se clasificó como fina y fundió dos jaulas en una; son las 6 anclas que faltan en la Tabla~\ref{tab:reales}, una por tablero. Este error no se ve en la exactitud por etiqueta, que solo se mide sobre las anclas detectadas, pero basta para perder el tablero. Los otros dos fallos son etiquetas de cuatro cifras.
+
+Lo importante es cómo falla: en ninguno de los 8 casos el sistema devuelve una solución errónea. En 6 la instancia se rechaza, sea al validarla (una jaula fundida que hereda una resta o una división y queda con más de dos celdas) o porque una etiqueta resulta ilegible. En los 2 restantes la instancia es válida pero el solver demuestra que no tiene solución. Con solo 16 tableros no es una garantía, pero muestra que el modelo CP sirve también para verificar la lectura.
+
+\subsection{Rendimiento del solver}
+La Tabla~\ref{tab:tiempos} da el tiempo de pared de \texttt{resolver}, incluida la construcción del modelo, sobre 30 instancias sintéticas por tamaño. Las instancias sintéticas no garantizan unicidad: miden el solver, no la dificultad de un puzzle publicado. En los 10 tableros reales con instancia válida, resolver tarda entre 9.5 y 10.3~ms en $6 \times 6$ y entre 18.0 y 42.8~ms en $9 \times 9$; el caso más lento es una instancia sin solución, donde el solver tiene que agotar la búsqueda para demostrarlo. En tres ejecuciones ningún caso pasó de 50~ms. Medido en un Intel Core Ultra~7 255U (14 hilos) con OR-Tools 9.15 y Python 3.13.
+
+\begin{table}[t]
+\caption{Tiempo de \texttt{resolver} en instancias sintéticas (ms)}
+\label{tab:tiempos}
+\centering
+\begin{tabular}{rrrr}
+\hline
+$n$ & Mediana & P95 & Máximo \\
+\hline
+4 & 6.7 & 13.9 & 17.5 \\
+5 & 5.4 & 12.7 & 14.2 \\
+6 & 5.8 & 13.0 & 13.7 \\
+7 & 8.5 & 15.8 & 18.4 \\
+8 & 10.6 & 19.7 & 23.6 \\
+9 & 12.3 & 23.0 & 24.0 \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Integración}
-El sistema funciona de principio a fin a través de un CLI que engancha automáticamente la lectura, la resolución, y renderiza gráficamente el tablero resuelto superponiendo los números computados.
+Un CLI (\texttt{solve.py}) encadena las dos fases: lee la imagen, construye la instancia, la resuelve y dibuja el tablero con la solución superpuesta. Si el solver no encuentra solución, lo informa y dibuja el tablero sin rellenar.
+
+\section{Limitaciones y trabajo futuro}
+\begin{itemize}
+    \item \textbf{Aristas gruesas no detectadas.} Causan 6 de los 8 fallos de punta a punta y son la primera mejora pendiente.
+    \item \textbf{Etiquetas que desbordan su celda.} Hay que detectar que falta el operador y ampliar el recorte solo en ese caso; ampliarlo siempre mete la línea vecina, que se lee como un \texttt{1}.
+    \item \textbf{Muestra pequeña y de un solo editor.} Los 16 tableros reales son de un mismo editor y una misma tipografía, y son PDF rasterizados: tinta real pero sin sombras, curvatura de papel ni desenfoque. Falta un conjunto de tableros impresos y fotografiados.
+    \item \textbf{Jurado de motores y reparación guiada por el solver.} Donde los motores de OCR discrepan, se pueden pasar los candidatos al modelo CP y quedarse con el que deja el tablero con solución única. La misma idea serviría para elegir entre particiones alternativas de las jaulas.
+\end{itemize}
+
+\section{Declaración de uso de IA}
+El andamiaje de la Fase 1 (visión) se desarrolló con asistencia de IA generativa (Claude Code, de Anthropic). El modelo de Programación con Restricciones de la Fase 2 lo escribió el equipo, sin asistencia de IA. La revisión de este informe y el script que mide el solver (\texttt{scripts/medir\_solver.py}) también se hicieron con asistencia de IA. Todas las cifras salen de scripts del repositorio y se pueden volver a obtener.
+
+\begin{thebibliography}{00}
+\bibitem{krazydad} KrazyDad, ``Hard 6x6 Inkies, Volume 1, Book 1'' y ``Hard 9x9 Inkies, Volume 1, Book 1,'' KrazyDad.com. [En línea]. Disponible: \url{https://krazydad.com/inkies/}. Consultado: 18 de septiembre de 2026.
+\bibitem{cpsat} L. Perron y F. Didier, ``CP-SAT,'' Google OR-Tools, v9.15, 2026. [En línea]. Disponible: \url{https://developers.google.com/optimization/cp/cp_solver/}
+\bibitem{opencv} G. Bradski, ``The OpenCV Library,'' \textit{Dr. Dobb's Journal of Software Tools}, 2000.
+\bibitem{otsu} N. Otsu, ``A threshold selection method from gray-level histograms,'' \textit{IEEE Trans. Syst., Man, Cybern.}, vol. 9, no. 1, pp. 62--66, 1979.
+\bibitem{tesseract} R. Smith, ``An overview of the Tesseract OCR engine,'' en \textit{Proc. 9th Int. Conf. Document Analysis and Recognition (ICDAR)}, 2007, pp. 629--633.
+\bibitem{ppocr} Y. Du \textit{et al.}, ``PP-OCR: A practical ultra lightweight OCR system,'' arXiv:2009.09941, 2020.
+\bibitem{trocr} M. Li \textit{et al.}, ``TrOCR: Transformer-based optical character recognition with pre-trained models,'' en \textit{Proc. AAAI Conf. Artificial Intelligence}, 2023.
+\bibitem{mcnemar} Q. McNemar, ``Note on the sampling error of the difference between correlated proportions or percentages,'' \textit{Psychometrika}, vol. 12, no. 2, pp. 153--157, 1947.
+\end{thebibliography}
 
 \end{document}
