@@ -80,6 +80,9 @@ verdad sacada del texto vectorial de los propios PDF:
   vale es la de los tableros impresos.
 - **El cuello de botella era el recorte, no el OCR.** Medir el margen en vez de fijarlo subió las
   etiquetas de 83,5 % a 98,8 %; entre motores de OCR había tres puntos de diferencia.
+- **Con el recorte arreglado, las plantillas (98,8 %) y Tesseract (97,1 %) no se distinguen**
+  (McNemar, p = 0,065), y se equivocan en etiquetas distintas: solo coinciden en errar las tres
+  que desbordan su celda. Eso es lo que hace viable un jurado de motores.
 - **No existe un dataset público etiquetado de KenKen.** La sección de datos del informe es trabajo
   propio.
 
