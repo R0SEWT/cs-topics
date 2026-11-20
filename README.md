@@ -177,7 +177,7 @@ nada a mano:
 
 ## Probarlo
 
-<a href="https://github.com/R0SEWT/cs-topics/actions/workflows/python.yml"><img alt="pytest" src="https://img.shields.io/github/actions/workflow/status/R0SEWT/cs-topics/python.yml?branch=main&label=pytest"></a>
+<a href="https://github.com/R0SEWT/cs-topics/actions/workflows/python.yml"><img alt="pytest" src="https://img.shields.io/github/actions/workflow/status/R0SEWT/cs-topics/python.yml?branch=develop&label=pytest"></a>
 
 Hace falta [uv](https://docs.astral.sh/uv/) y, en Linux, las tipografías del banco de
 plantillas, las mismas que instala la CI. Sin ellas el lab no arranca, y el error dice qué
@@ -267,7 +267,7 @@ unidades pueden reordenarse y los labs no.
 - [`labs/tb1-kenken/`](labs/tb1-kenken): el TB1 de arriba.
 - [`labs/agents/`](labs/agents): agentes, MDP y FIPA con JADE 4.3 y Java 21, unidad 5. Por
   ahora, el esqueleto: un `HolaAgent`.
-  <a href="https://github.com/R0SEWT/cs-topics/actions/workflows/jade.yml"><img alt="Compilación de JADE" src="https://img.shields.io/github/actions/workflow/status/R0SEWT/cs-topics/jade.yml?branch=main&label=jade%20build"></a>
+  <a href="https://github.com/R0SEWT/cs-topics/actions/workflows/jade.yml"><img alt="Compilación de JADE" src="https://img.shields.io/github/actions/workflow/status/R0SEWT/cs-topics/jade.yml?branch=develop&label=jade%20build"></a>
 - [`notes/`](notes): apuntes por sesión; por ahora, la semana 1.
 - [`manifest.json`](manifest.json): índice del material del Aula Virtual. `materials/` no se
   versiona, porque el repo es público y el material es del profesor; `aula sync` lo reconstruye
