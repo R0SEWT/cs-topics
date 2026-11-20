@@ -25,7 +25,7 @@ Estructura por tipo, no por semana — las unidades pueden reordenarse, los labs
 notes/         # apuntes .md por sesión (_template.md es la plantilla)
 materials/     # PDFs y slides del profe, carpeta por semana (week-NN/)
 labs/cp/         # Constraint Programming — Python + OR-Tools, gestionado con uv
-labs/tb1-kenken/ # TB1, fase 1: visión computacional sobre tableros KenKen — Python + OpenCV, uv
+labs/tb1-kenken/ # TB1: visión (OpenCV) y CP-SAT sobre tableros KenKen, el nodo y la app — Python, uv
 labs/agents/     # JADE / FIPA — Java 21 + javac + Makefile, sin Maven ni Gradle
 ```
 
@@ -64,6 +64,8 @@ La CI (`.github/workflows/`) corre esas mismas puertas en cada push y PR que toq
   - `main` es lo entregado. Recibe una PR de release `develop` → `main` por entregable
     (TB1, …), y al fusionarla se marca el tag (`tb1`, …). `main` no se toca después de la
     fecha de entrega.
+  - En GitHub, la rama por defecto es `develop`: la página del repo muestra la portada al
+    día, y lo entregado se lee en `main` y en sus tags.
   - Un arreglo urgente sobre lo entregado va en `hotfix/<algo>` contra `main`, y luego la
     misma rama en otra PR contra `develop` para que no diverjan.
   - Título de la PR: `<Entregable> · <qué hace>` (`TB1 · Jurado de motores OCR`). Si no

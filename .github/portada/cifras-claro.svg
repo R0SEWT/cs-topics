@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-labelledby="t d" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif">
+<title id="t">El TB1 en cuatro cifras</title>
+<desc id="d">97.09%: de 895 etiquetas en PDF, leídas sin error; 48 de 70: tableros en PDF leídos sin un solo error; 16 de 19: lecturas sin solución, reparadas por el solver; 0 de 22: mal leídos que terminan en una solución errónea</desc>
+<style></style>
+<rect width="760" height="300" rx="24" fill="#F5F3EE"/>
+<line x1="380" y1="26" x2="380" y2="274" stroke="#DEDBD2" stroke-width="2"/>
+<line x1="26" y1="150" x2="734" y2="150" stroke="#DEDBD2" stroke-width="2"/>
+<text x="190.0" y="66.0" font-size="54" font-weight="700" fill="#4B45C9" text-anchor="middle" letter-spacing="-1">97.09%</text>
+<text x="190.0" y="100.0" font-size="23" font-weight="400" fill="#4A4D5A" text-anchor="middle">de 895 etiquetas en PDF,</text>
+<text x="190.0" y="128.0" font-size="23" font-weight="400" fill="#4A4D5A" text-anchor="middle">leídas sin error</text>
+<text x="570.0" y="66.0" font-size="54" font-weight="700" fill="#4B45C9" text-anchor="middle" letter-spacing="-1">48 de 70</text>
+<text x="570.0" y="100.0" font-size="23" font-weight="400" fill="#4A4D5A" text-anchor="middle">tableros en PDF leídos</text>
+<text x="570.0" y="128.0" font-size="23" font-weight="400" fill="#4A4D5A" text-anchor="middle">sin un solo error</text>
+<text x="190.0" y="216.0" font-size="54" font-weight="700" fill="#B4501A" text-anchor="middle" letter-spacing="-1">16 de 19</text>
+<text x="190.0" y="250.0" font-size="23" font-weight="400" fill="#4A4D5A" text-anchor="middle">lecturas sin solución,</text>
+<text x="190.0" y="278.0" font-size="23" font-weight="400" fill="#4A4D5A" text-anchor="middle">reparadas por el solver</text>
+<text x="570.0" y="216.0" font-size="54" font-weight="700" fill="#4B45C9" text-anchor="middle" letter-spacing="-1">0 de 22</text>
+<text x="570.0" y="250.0" font-size="23" font-weight="400" fill="#4A4D5A" text-anchor="middle">mal leídos que terminan</text>
+<text x="570.0" y="278.0" font-size="23" font-weight="400" fill="#4A4D5A" text-anchor="middle">en una solución errónea</text>
+</svg>
