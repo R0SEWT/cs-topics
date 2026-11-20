@@ -489,8 +489,11 @@ def gif(destino: Path, ancho: int = 300, fps: int = 12) -> None:
               f"tpad=stop_mode=clone:stop_duration=1.5,fps={fps},scale={ancho}:-2:flags=lanczos,"
               "split[s0][s1];[s0]palettegen=max_colors=96:stats_mode=diff[p];"
               "[s1][p]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle")
-    subprocess.run([ff, "-hide_banner", "-loglevel", "error", "-y", "-i", str(VIDEO),
-                    "-filter_complex", filtro, "-loop", "0", str(destino)], check=True)
+    orden = [ff, "-hide_banner", "-loglevel", "error", "-y", "-i", str(VIDEO),
+             "-filter_complex", filtro, "-loop", "0", str(destino)]
+    # Va en lista, sin shell, y no entra nada de afuera: el ffmpeg de imageio-ffmpeg, rutas del
+    # repo y un filtro armado con TRAMOS. Citar con shlex rompería los argumentos.
+    subprocess.run(orden, check=True)  # nosemgrep: python.lang.security.audit.dangerous-subprocess-use-audit
 
 
 def main() -> None:
