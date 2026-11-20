@@ -86,6 +86,11 @@ cual, y agrega una frase que declara la propia portada.
 Termina cuando todo puntúa 4 o más, el crítico no deja nada importante y una ronda entera no
 encuentra mejoras de fondo.
 
+Antes de fusionar, con la rama ya subida, una última mirada en github.com:
+`https://github.com/<dueño>/<repo>/blob/<rama>/README.md`, capturada con el mismo Firefox
+headless y las mismas preferencias de `vista-previa.sh`, en claro y oscuro. Es lo único que
+confirma lo que `post.py` imita: `<picture>`, las alertas y los SVG animados.
+
 ## 8. Rúbrica (1 a 5)
 
 | Criterio | Se cumple si… |
