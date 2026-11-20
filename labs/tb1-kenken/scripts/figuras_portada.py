@@ -6,7 +6,6 @@ Escribe en .github/portada/, cada SVG en variante clara y oscura para <picture>:
 * heroe-*.svg: la reparación de la foto real, animada. Las jaulas son las que leyó la
   Fase 1, con los dos 3+ que eran 3÷, y la solución es la que devolvió el solver
   (presentacion/datos/foto.json).
-* cifras-*.svg: las cuatro cifras de la portada (etiquetas.json, tableros.json).
 * tableros-*.svg: qué hizo el sistema con cada uno de los 70 tableros de KrazyDad
   (presentacion/datos/tableros.json).
 * arquitectura-*.svg: las dos fases, el contrato entre ellas y las cuatro salidas: la de la
@@ -14,7 +13,7 @@ Escribe en .github/portada/, cada SVG en variante clara y oscura para <picture>:
 * telefono.png: la captura del Pixel sin el marco del teléfono.
 * app-reparada.png y app-sin-tablero.png: las pantallas (c) y (d) de la app, sueltas.
 
-Con --gif, además, demo.gif: tres tramos de presentacion/video/demo.mp4 (pide
+Con --gif, además, demo.gif: dos tramos de presentacion/video/demo.mp4 (pide
 imageio-ffmpeg, que trae su propio ffmpeg).
 
 Los SVG no incrustan imágenes ni tipografías: GitHub los sirve con una CSP que solo deja
@@ -231,7 +230,7 @@ def heroe(t: dict, foto: dict) -> str:
     return svg(W, H, titulo, desc, cuadros, "\n".join(partes))
 
 
-# ------------------------------------------------------------------------ cifras
+# ------------------------------------------------------------------- 70 tableros
 
 def destino(f: dict) -> str:
     """Cómo termina un tablero de punta a punta: «bien» (leído sin error), «reparado» (el
@@ -245,38 +244,6 @@ def destino(f: dict) -> str:
         return {"bien": "reparado", "abstiene": "abstiene"}[reparacion]
     return {"bien": "bien", "rechazado": "rechazado", "varias": "varias"}[lectura]
 
-
-def cifras(t: dict, filas: list[dict], etiq: dict) -> str:
-    """Las cuatro cifras de la portada, de la etiqueta al tablero: cuánto se lee bien,
-    cuántos tableros salen enteros, cuántas lecturas repara el solver y cuántas terminan
-    en una solución errónea. En 2×2 para que el pie se lea en un celular."""
-    n = sum(g["n"] for g in etiq.values())
-    bien = sum(g["bien"] for g in etiq.values())
-    enteros = sum(destino(f) == "bien" for f in filas)
-    mal = [f for f in filas if destino(f) != "bien"]
-    sin_sol = [f for f in mal if f["lectura"] == "sin_solucion"]
-    reparadas = sum(destino(f) == "reparado" for f in sin_sol)
-    erroneas = sum(destino(f) == "erroneo" for f in mal)
-    celdas = [
-        (f"{100 * bien / n:.2f}%", t["indigo"], [f"de {n} etiquetas en PDF,", "leídas sin error"]),
-        (f"{enteros} de {len(filas)}", t["indigo"], ["tableros en PDF leídos", "sin un solo error"]),
-        (f"{reparadas} de {len(sin_sol)}", t["naranja_texto"], ["lecturas sin solución,", "reparadas por el solver"]),
-        (f"{erroneas} de {len(mal)}", t["indigo"], ["mal leídos que terminan", "en una solución errónea"]),
-    ]
-    W, H, cw, ch = 760, 300, 380, 150
-    p = [f'<rect width="{W}" height="{H}" rx="24" fill="{t["fondo"]}"/>',
-         f'<line x1="{cw}" y1="26" x2="{cw}" y2="{H - 26}" stroke="{t["borde"]}" stroke-width="2"/>',
-         f'<line x1="26" y1="{ch}" x2="{W - 26}" y2="{ch}" stroke="{t["borde"]}" stroke-width="2"/>']
-    for i, (cifra, color, pie) in enumerate(celdas):
-        cx, y = cw * (i % 2) + cw / 2, ch * (i // 2)
-        p.append(texto(cx, y + 66, cifra, 54, color, 700, "middle", ' letter-spacing="-1"'))
-        for k, linea in enumerate(pie):
-            p.append(texto(cx, y + 100 + k * 28, linea, 23, t["suave"], 400, "middle"))
-    desc = "; ".join(f"{c}: {' '.join(pie)}" for c, _, pie in celdas)
-    return svg(W, H, "El TB1 en cuatro cifras", desc, "", "\n".join(p))
-
-
-# ------------------------------------------------------------------- 70 tableros
 
 def tableros(t: dict, filas: list[dict]) -> str:
     """Cada tablero real es un cuadrado con su rejilla de n×n, agrupado por lo que hizo
@@ -485,9 +452,9 @@ def pantallas(destinos: dict[str, Path]) -> None:
 
 # ------------------------------------------------------------------------- GIF
 
-# Tramos de demo.mp4 (inicio, fin, velocidad): la foto en Modo Rápido y su solución,
-# el cambio a tablero limpio, y el Modo Asistencia revelando casillas.
-TRAMOS = ((7.5, 13.5, 1.0), (57.0, 61.8, 1.0), (68.0, 84.5, 3.0))
+# Tramos de demo.mp4 (inicio, fin, velocidad): la foto en Modo Rápido y su solución, y el
+# cambio a tablero limpio. El Modo Asistencia queda fuera: alargaba el GIF sin sumar.
+TRAMOS = ((7.5, 13.5, 1.0), (57.0, 61.8, 1.0))
 
 
 def gif(destino: Path, ancho: int = 300, fps: int = 12) -> None:
@@ -513,10 +480,9 @@ def main() -> None:
     SALIDA.mkdir(parents=True, exist_ok=True)
     foto = json.loads((DATOS / "foto.json").read_text())
     filas = json.loads((DATOS / "tableros.json").read_text())
-    etiq = json.loads((DATOS / "etiquetas.json").read_text())
     for nombre, t in TEMAS.items():
-        for base, contenido in (("heroe", heroe(t, foto)), ("cifras", cifras(t, filas, etiq)),
-                                ("tableros", tableros(t, filas)), ("arquitectura", arquitectura(t))):
+        for base, contenido in (("heroe", heroe(t, foto)), ("tableros", tableros(t, filas)),
+                                ("arquitectura", arquitectura(t))):
             ruta = SALIDA / f"{base}-{nombre}.svg"
             ruta.write_text(contenido)
             print(f"{ruta.relative_to(RAIZ)}  {len(contenido.encode()) / 1024:.1f} kB")
