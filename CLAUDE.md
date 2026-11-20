@@ -64,6 +64,8 @@ La CI (`.github/workflows/`) corre esas mismas puertas en cada push y PR que toq
   - `main` es lo entregado. Recibe una PR de release `develop` → `main` por entregable
     (TB1, …), y al fusionarla se marca el tag (`tb1`, …). `main` no se toca después de la
     fecha de entrega.
+  - En GitHub, la rama por defecto es `develop`: la página del repo muestra la portada al
+    día, y lo entregado se lee en `main` y en sus tags.
   - Un arreglo urgente sobre lo entregado va en `hotfix/<algo>` contra `main`, y luego la
     misma rama en otra PR contra `develop` para que no diverjan.
   - Título de la PR: `<Entregable> · <qué hace>` (`TB1 · Jurado de motores OCR`). Si no
