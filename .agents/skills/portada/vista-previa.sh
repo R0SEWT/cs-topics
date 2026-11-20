@@ -12,7 +12,10 @@
 #
 # Pide `gh` autenticado, Firefox y uv. Corre desde la raíz del repo.
 set -euo pipefail
-md=$1; out=$(realpath -m "$2"); tag=$3; alto=${ALTO:-9000}
+md=$1; out=$(realpath -m "$2"); tag=$3; alto=${ALTO:-9000}; quieto=${MOVIMIENTO_REDUCIDO:-1}
+# Entran en la aritmética de bash y en las preferencias de Firefox: solo números.
+[[ $alto =~ ^[1-9][0-9]*$ ]] || { echo "vista-previa.sh: ALTO tiene que ser un entero" >&2; exit 2; }
+[[ $quieto =~ ^[01]$ ]] || { echo "vista-previa.sh: MOVIMIENTO_REDUCIDO es 0 o 1" >&2; exit 2; }
 repo=$(git rev-parse --show-toplevel)
 aqui=$(cd "$(dirname "$0")" && pwd)
 
@@ -20,6 +23,8 @@ aqui=$(cd "$(dirname "$0")" && pwd)
 if [ -x /snap/bin/firefox ]; then W=$HOME/snap/firefox/common/vista-previa
 else W=${XDG_CACHE_HOME:-$HOME/.cache}/vista-previa; fi
 mkdir -p "$out" "$W"
+# Cada corrida en su carpeta: dos a la vez no se pisan y no quedan perfiles viejos.
+R=$(mktemp -d "$W/corrida.XXXXXX"); trap 'rm -rf "$R"' EXIT
 [ -s "$W/gh-md.css" ] || curl -sSfL -o "$W/gh-md.css" \
   https://cdn.jsdelivr.net/npm/github-markdown-css@5.8.1/github-markdown.css
 
@@ -40,27 +45,27 @@ $frag
 </article></body></html>
 EOF
 }
-pagina 880 > "$W/$tag-escritorio.html"
-pagina 380 > "$W/$tag-celular.html"
+pagina 880 > "$R/escritorio.html"
+pagina 380 > "$R/celular.html"
 
 captura() {  # $1 html, $2 png, $3 ancho de ventana, $4 alto, $5 tema (0 oscuro, 1 claro)
-  local perfil="$W/perfil-$5"
-  rm -rf "$perfil"; mkdir -p "$perfil"
+  local perfil="$R/perfil-$5-$3"
+  mkdir -p "$perfil"
   cat > "$perfil/user.js" <<EOF
 user_pref("layout.css.prefers-color-scheme.content-override", $5);
 user_pref("ui.systemUsesDarkTheme", $(( 1 - $5 )));
-user_pref("ui.prefersReducedMotion", ${MOVIMIENTO_REDUCIDO:-1});
+user_pref("ui.prefersReducedMotion", $quieto);
 user_pref("browser.shell.checkDefaultBrowser", false);
 user_pref("datareporting.policy.dataSubmissionEnabled", false);
 user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
 EOF
   timeout 120 firefox --headless --no-remote --profile "$perfil" \
-    --window-size="$3,$4" --screenshot "$W/captura.png" "file://$1" >/dev/null 2>&1 || true
-  mv "$W/captura.png" "$2"
+    --window-size="$3,$4" --screenshot "$R/captura.png" "file://$1" >/dev/null 2>&1 || true
+  mv "$R/captura.png" "$2"
 }
-captura "$W/$tag-escritorio.html" "$out/$tag-claro.png"   912 "$alto" 1
-captura "$W/$tag-escritorio.html" "$out/$tag-oscuro.png"  912 "$alto" 0
-captura "$W/$tag-celular.html"    "$out/$tag-celular.png" 412 $(( alto * 2 )) 1
+captura "$R/escritorio.html" "$out/$tag-claro.png"   912 "$alto" 1
+captura "$R/escritorio.html" "$out/$tag-oscuro.png"  912 "$alto" 0
+captura "$R/celular.html"    "$out/$tag-celular.png" 412 $(( alto * 2 )) 1
 
 uv run --quiet --with pillow python - "$out" "$tag" <<'PY'
 import sys
