@@ -26,15 +26,15 @@ que no aparece necesita una razón escrita para quedarse fuera.
 
 | Lector | Llega preguntando | Tiene que resolverlo en | Dónde |
 |---|---|---|---|
-| Visitante | ¿Qué es y funciona? | 10 s, sin scroll | figura principal, una frase, las cifras clave |
+| Visitante | ¿Qué es y funciona? | 10 s, sin scroll | título, la pregunta, una línea con la cifra clave y la animación justo debajo |
 | Docente o jurado | ¿Dónde está el entregable y se sostiene? | 1 min | botones a informe, diapositivas y release; resultados con fuente |
 | Quien quiere correrlo | ¿Cómo lo pruebo? | 5 min | «Probarlo», con comandos ejecutados |
 | Equipo, yo del futuro | ¿Dónde está cada cosa? | — | mapa, convenciones |
 
 ## 3. Un solo hilo
 
-Pregunta → evidencia → idea → cómo funciona → resultados con sus límites → probarlo → el resto
-del cuaderno → créditos. La pregunta es la del entregable estrella; para el TB1, la del informe:
+Pregunta → idea, con la animación y su foto real → en el celular → cómo funciona → resultados
+con sus límites → probarlo → entregables → mapa del repo → convenciones → equipo. La pregunta es la del entregable estrella; para el TB1, la del informe:
 **¿qué sobrevive a una lectura equivocada?** Cada sección responde a la anterior.
 
 ## 4. Libro de cifras
@@ -59,8 +59,11 @@ cual, y agrega una frase que declara la propia portada.
 - **Claro y oscuro** con `<picture>` y `prefers-color-scheme`; GitHub lo envuelve en
   `themed-picture` y respeta el tema elegido en la cuenta.
 - **Legible a 380 px**: el texto de una figura no baja de ~11 px a ancho de celular. Una figura
-  de 1000 de ancho no llega: la tarjeta de cifras es 2×2 de 760 (pie a 23) y el héroe mide 880
-  (estados a 28).
+  de 1000 de ancho no llega: el héroe mide 880 (estados a 28). La arquitectura y los tableros
+  todavía no cumplen (bead `cst-ukg`).
+- **El formato del repo hermano**, [R0SEWT/concurrente](https://github.com/R0SEWT/concurrente):
+  anclas propias (`<a id>`), «Contenido» plegable, «volver arriba» al final de cada sección,
+  badges de stack y de CI en la cabecera, y al final Convenciones y Equipo con avatares.
 - **El color nunca va solo**: siempre con texto o forma; `alt` que describe lo que se ve.
 - **Peso**: el GIF bajo 3 MB, cada SVG bajo 150 kB.
 
@@ -148,6 +151,12 @@ cd labs/tb1-kenken && uv run --with imageio-ffmpeg python scripts/figuras_portad
   cifras, no tres pantallas más abajo.
 - **Un comando que bloquea la terminal** (el nodo) deja sin correr al siguiente: va en otra
   terminal y se dice. Los requisitos van antes de los comandos, no después.
+- **La tarjeta de cifras 2×2, con aire de tablero de KPIs, no le gustó al equipo.** Las cifras
+  van en una línea bajo la pregunta y en la tabla de Resultados, con el estilo de GitHub.
+- **El héroe no abre la página.** Primero título, pregunta, badges e índice, para que la
+  animación tenga tiempo de cargar; ella abre «Qué es».
+- **El GIF muestra lo esencial**: la foto, su solución y el tablero limpio. El tramo de Modo
+  Asistencia lo alargaba sin sumar.
 - **Sin verificar en github.com:** que una imagen `data:` dentro de un SVG del repo se vea. La
   CSP con que GitHub sirve los SVG (`default-src 'none'; style-src 'unsafe-inline'`) haría
   pensar que no; por eso las figuras no la usan.

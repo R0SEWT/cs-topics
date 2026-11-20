@@ -1,16 +1,14 @@
 """Las figuras de la portada no pueden esconder una solución errónea.
 
 Hoy ningún tablero termina en una (es la cifra «0 de 22»), pero las figuras se regeneran
-desde los datos: si un día aparece una, tiene que contarse como tal o cortar la generación,
-nunca dibujarse como «pide otra foto».
+desde los datos: si un día aparece una, tiene que cortar la generación, nunca dibujarse
+como «pide otra foto».
 """
 from __future__ import annotations
 
 import pytest
 
-from scripts.figuras_portada import TEMAS, cifras, destino, tableros
-
-ETIQUETAS = {"desarrollo": {"n": 10, "bien": 9}}
+from scripts.figuras_portada import TEMAS, destino, tableros
 
 
 def fila(lectura: str, reparacion: str | None = None) -> dict:
@@ -36,12 +34,6 @@ def test_destino_de_cada_tablero(f, esperado):
 def test_un_estado_desconocido_no_se_adivina():
     with pytest.raises(KeyError):
         destino(fila("otro"))
-
-
-def test_la_tarjeta_cuenta_toda_solucion_erronea():
-    filas = [fila("bien"), fila("error_silencioso"), fila("sin_solucion", "error"),
-             fila("sin_solucion", "bien")]
-    assert "2 de 3" in cifras(TEMAS["claro"], filas, ETIQUETAS)
 
 
 @pytest.mark.parametrize("mala", [fila("error_silencioso"), fila("sin_solucion", "error")])
