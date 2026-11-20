@@ -1,10 +1,19 @@
-# TB1 — Fase 1: visión computacional sobre KenKen
+# TB1 · KenKen desde una foto
 
-Spike de viabilidad para el Trabajo 1 (`materials/week-05/Topicos_CC-4.pdf`).
-Responde a una sola pregunta: **¿es KenKen abordable, o conviene cambiar de
-acertijo?**
+Las dos fases del Trabajo 1 (`materials/week-05/Topicos_CC-4.pdf`): la visión, que lee el
+tablero de una imagen, y el modelo de Constraint Programming, que lo resuelve, verifica la
+lectura y la repara. Además, el nodo y la app que los llevan a un celular. Entregado con el
+tag [`tb1`](https://github.com/R0SEWT/cs-topics/releases/tag/tb1).
 
-## Veredicto: sí, seguimos con KenKen
+- **El resultado** está en la [portada del repo](../../README.md) y, con detalle, en el
+  [informe](https://github.com/R0SEWT/cs-topics/releases/download/tb1/TB1-KenKen-Grupo3.pdf).
+- **Esta página** es el manual del lab: qué hace cada módulo ([Estructura](#estructura)),
+  cómo correrlo ([Uso](#uso)) y el contrato entre las fases.
+- **Lo que sigue a continuación** es la bitácora del spike de septiembre, que decidió seguir
+  con KenKen. Sus cifras son de entonces, sobre 16 tableros; las finales, sobre 70, son las
+  del informe.
+
+## Veredicto del spike: sí, seguimos con KenKen
 
 Lo que se temía de KenKen —detectar las **jaulas**, que los otros tres acertijos
 no tienen— es la parte resuelta. El cuello de botella es el OCR de las
@@ -110,20 +119,30 @@ tienen (perspectiva, luz desigual, ruido). 80 tableros, n de 4 a 7:
 | limpio | no vista | 100% | 100% | 99.4% | 81.0% |
 | foto | no vista | 100% | 100% | 95.9% | 52.4% |
 
-## Lo que falta (en orden de rentabilidad)
+## Lo que faltaba al cierre del spike
 
 1. **Rehacer la comparación de motores con el recorte arreglado.** Las cifras de
    Tesseract y la CNN son de antes del arreglo y ya no valen.
    `scripts/comparar_ocr.py` lo hace en un comando.
+   *Hecho:* con el recorte arreglado, plantillas y Tesseract empatan (98.8% y 97.1% de
+   412 etiquetas, p = 0.065); RapidOCR y TrOCR no leen los operadores (informe, Tabla III).
 2. **Las etiquetas que desbordan su celda** (`2400×`): detectar que falta el
    operador y extender el recorte solo en ese caso, en vez de ensanchar siempre.
    Son 3 de 412, pero en un tablero 9x9 con 23 jaulas cuestan puntos.
+   *Sigue abierto:* son las 3 etiquetas ilegibles de 895, que se rechazan antes del solver.
 3. **Jurado de motores + reparación guiada por el solver.** Donde los motores
    coincidan, aceptar; donde discrepen, pasarle los candidatos al modelo CP y
    quedarse con el que deja el puzzle con solución única.
+   *Hecha la reparación* ([`kenken_cp/reparar.py`](kenken_cp/reparar.py)): prueba las
+   confusiones de glifo observadas con restricciones reificadas y repara 16 de las 19
+   lecturas sin solución. El jurado quedó como cota: al menos un motor acierta el 99.8%.
 4. **Dataset fotografiado.** Los PDF de KrazyDad son tinta real pero rasterizada
    de vectores: no tienen sombra, ni curvatura de papel, ni desenfoque de
    cámara. Eso hay que fotografiarlo.
+   *Empezado:* 8 fotos con un Pixel 9a, en
+   [Hugging Face](https://huggingface.co/datasets/rosewt/kenken-tb1-fotos) y en el release.
+
+Lo que sigue está en la sección «Limitaciones y trabajo futuro» del informe.
 
 ## Para seguir en la máquina con GPU
 
@@ -172,22 +191,38 @@ volver a medir.
 
 | Módulo | Responsabilidad |
 |---|---|
-| `schema.py` | **El contrato con la Fase 2.** `Instance`, su JSON y `validate()`. |
-| `render.py` | Generador sintético: tableros válidos con ground truth + degradación. |
-| `grid.py` | Localiza el tablero, corrige perspectiva, deduce `n` y las líneas. |
-| `cages.py` | Mide el grosor de cada arista y agrupa celdas en jaulas. |
-| `glyphs.py` | Lee la etiqueta de cada jaula por correlación con plantillas. |
-| `pipeline.py` | Une todo: imagen -> `Instance` validada. |
+| `kenken_cv/schema.py` | **El contrato con la Fase 2.** `Instance`, su JSON y `validate()`. |
+| `kenken_cv/render.py` | Generador sintético: tableros válidos con ground truth + degradación. |
+| `kenken_cv/grid.py` | Localiza el tablero, corrige perspectiva, deduce `n` y las líneas. |
+| `kenken_cv/cages.py` | Mide el grosor de cada arista y agrupa celdas en jaulas. |
+| `kenken_cv/glyphs.py` | Lee la etiqueta de cada jaula por correlación con plantillas. |
+| `kenken_cv/fuentes.py` | Encuentra las tipografías del banco de plantillas, o falla diciendo cuál falta. |
+| `kenken_cv/pipeline.py` | Une todo: imagen -> `Instance` validada. |
+| `kenken_cp/solver.py` | **Fase 2.** El modelo CP-SAT: resuelve y cuenta soluciones con tope de dos. |
+| `kenken_cp/reparar.py` | Repara una lectura sin solución con restricciones reificadas. |
+| `kenken_nodo/` | API HTTP (FastAPI): la app manda una foto y recibe lectura, solución y correcciones. |
+| `app/`, `movil/` | La app web y su envoltorio Android (Capacitor). |
+| `solve.py` | CLI: imagen -> solución dibujada, sin intervención. |
 
-Y en `scripts/`: `evaluar.py` y `generar_dataset.py` trabajan con tableros
-generados; `dataset_real.py` y `evaluar_real.py`, con tableros impresos reales.
+Y en `scripts/`, un script por cifra del informe (la tabla está en la
+[portada](../../README.md#probarlo)): `evaluar.py` y `generar_dataset.py` trabajan con
+tableros generados; `scrapear_kenken.py`, `extraer_dataset.py` y
+`punta_a_punta_scraped.py`, con los 70 tableros reales.
 
 ## Uso
+
+El banco de plantillas usa tipografías del sistema; sin ellas el lab no arranca y el error
+dice qué paquete instalar. En Debian o Ubuntu, las mismas que instala la CI:
+`sudo apt install fonts-dejavu-core fonts-freefont-ttf fonts-liberation fonts-liberation-sans-narrow`.
 
 ```bash
 cd labs/tb1-kenken
 uv sync
-uv run pytest                                               # 53 tests
+uv run pytest                                               # 107 tests
+
+# una foto de punta a punta, y el nodo para la app (http://127.0.0.1:8723)
+uv run python solve.py ../../presentacion/datos/img/f1_foto.jpg --out resuelto.png
+uv run python -m kenken_nodo
 
 # tableros generados: ground truth gratis, condiciones extremas
 PYTHONPATH=. uv run python scripts/evaluar.py 80
@@ -237,17 +272,17 @@ instancia = Instance.from_json(open("dataset/00_limpio_n4.png".replace(".png", "
 
 ## Sobre dónde vive esto
 
-`labs/tb1-kenken` es raíz de proyecto independiente, como el resto de labs. El
-enunciado pide un **repositorio GitHub propio** para el grupo, y `cs-topics` es el
-cuaderno personal del curso: cuando haya grupo, esta carpeta se extrae a su propio
-repo (`git subtree split`) sin tocar nada más.
+`labs/tb1-kenken` es raíz de proyecto independiente, como el resto de labs. El TB1 se
+entregó desde este repo, que es el que cita el informe. Si hiciera falta un repositorio
+propio para el grupo, `git subtree split` extrae esta carpeta sin tocar nada más.
 
 ## Procedencia de los datos
 
 | Fuente | Qué aporta | Licencia |
 |---|---|---|
 | `render.py` | tableros generados con ground truth | propio |
-| [KrazyDad Inkies](https://krazydad.com/inkies/) | 16 tableros reales + verdad exacta del PDF | © KrazyDad.com; su web autoriza uso escolar y prohíbe el comercial. Se descargan bajo demanda, **no se versionan**, y hay que citarlos en el informe. |
+| [KrazyDad Inkies](https://krazydad.com/inkies/) | 72 tableros reales de cinco cuadernillos (4x4, 6x6 y 9x9) + verdad exacta del PDF | © KrazyDad.com; su web autoriza uso escolar y prohíbe el comercial. Se descargan bajo demanda, **no se versionan**, y hay que citarlos en el informe. |
+| Fotos propias | 8 fotos de tableros tomadas con un Pixel 9a | propias; en [Hugging Face](https://huggingface.co/datasets/rosewt/kenken-tb1-fotos) y en el release `tb1` |
 
 Se descartó [`kennethjmyers/Metis-Projects`](https://github.com/kennethjmyers/Metis-Projects)
 (370 glifos reales etiquetados, el único precedente de KenKen por visión que se
@@ -260,6 +295,7 @@ informe: la sección de datos no es relleno, es trabajo propio.
 
 ## Nota de autoría
 
-El andamiaje de visión de esta carpeta se desarrolló con asistencia de IA
-(Claude Code). El modelo de Constraint Programming de la Fase 2 no: lo escribe
-el equipo. El enunciado y la política del curso obligan a declararlo.
+El andamiaje de visión de esta carpeta y los scripts de medición se desarrollaron con
+asistencia de IA (Claude Code). El modelo de Constraint Programming de la Fase 2 no: lo
+escribió el equipo. El enunciado y la política del curso obligan a declararlo; la
+declaración completa está en el informe.

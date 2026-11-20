@@ -27,5 +27,8 @@ labs/agents/MTPs-*.txt
 materials/*
 !materials/AULA-VIRTUAL-ESTADO.md
 
+# Fotos del dataset propio: viven en Hugging Face y en el release tb1, no en el repo.
+dataset_fotografico/fotos/
+
 # OS
 .DS_Store
