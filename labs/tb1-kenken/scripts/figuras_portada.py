@@ -233,17 +233,30 @@ def heroe(t: dict, foto: dict) -> str:
 
 # ------------------------------------------------------------------------ cifras
 
+def destino(f: dict) -> str:
+    """Cómo termina un tablero de punta a punta: «bien» (leído sin error), «reparado» (el
+    solver nota que lo leído no tiene solución y lo corrige), «abstiene» (lo nota y pide otra
+    foto), «rechazado» (sin lectura), «varias» (se rechaza por ambiguo) o «erroneo» (entrega
+    una solución equivocada). Un estado desconocido no se adivina: KeyError."""
+    lectura, reparacion = f["lectura"], f.get("reparacion")
+    if lectura == "error_silencioso" or reparacion == "error":
+        return "erroneo"
+    if lectura == "sin_solucion":
+        return {"bien": "reparado", "abstiene": "abstiene"}[reparacion]
+    return {"bien": "bien", "rechazado": "rechazado", "varias": "varias"}[lectura]
+
+
 def cifras(t: dict, filas: list[dict], etiq: dict) -> str:
     """Las cuatro cifras de la portada, de la etiqueta al tablero: cuánto se lee bien,
     cuántos tableros salen enteros, cuántas lecturas repara el solver y cuántas terminan
     en una solución errónea. En 2×2 para que el pie se lea en un celular."""
     n = sum(g["n"] for g in etiq.values())
     bien = sum(g["bien"] for g in etiq.values())
-    enteros = sum(f["lectura"] == "bien" for f in filas)
-    mal = [f for f in filas if f["lectura"] != "bien"]
+    enteros = sum(destino(f) == "bien" for f in filas)
+    mal = [f for f in filas if destino(f) != "bien"]
     sin_sol = [f for f in mal if f["lectura"] == "sin_solucion"]
-    reparadas = sum(f.get("reparacion") == "bien" for f in sin_sol)
-    erroneas = sum(f.get("reparacion") not in (None, "bien", "abstiene") for f in mal)
+    reparadas = sum(destino(f) == "reparado" for f in sin_sol)
+    erroneas = sum(destino(f) == "erroneo" for f in mal)
     celdas = [
         (f"{100 * bien / n:.2f}%", t["indigo"], [f"de {n} etiquetas en PDF,", "leídas sin error"]),
         (f"{enteros} de {len(filas)}", t["indigo"], ["tableros en PDF leídos", "sin un solo error"]),
@@ -267,17 +280,17 @@ def cifras(t: dict, filas: list[dict], etiq: dict) -> str:
 
 def tableros(t: dict, filas: list[dict]) -> str:
     """Cada tablero real es un cuadrado con su rejilla de n×n, agrupado por lo que hizo
-    el sistema con él."""
-    def clase(f: dict) -> str:
-        if f["lectura"] == "bien":
-            return "bien"
-        if f["lectura"] == "rechazado":
-            return "rechazado"
-        return "reparado" if f.get("reparacion") == "bien" else "abstiene"
-
+    el sistema con él. La figura y el texto de la portada dicen que ninguno termina en una
+    solución errónea: si los datos traen uno, o uno ambiguo, se corta aquí en vez de dibujarlo
+    en otro grupo."""
     grupos: dict[str, list[dict]] = {"bien": [], "reparado": [], "abstiene": [], "rechazado": []}
     for f in sorted(filas, key=lambda f: f["n"]):
-        grupos[clase(f)].append(f)
+        d = destino(f)
+        if d not in grupos:
+            raise SystemExit(f"{f['id']} termina como «{d}» y la figura no tiene grupo para eso. "
+                             "La portada afirma que ningún tablero termina en una solución "
+                             "errónea: hay que revisar el texto y la figura.")
+        grupos[d].append(f)
     total = len(filas)
     mal = total - len(grupos["bien"])
 
