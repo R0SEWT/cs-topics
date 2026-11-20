@@ -281,7 +281,7 @@ propio para el grupo, `git subtree split` extrae esta carpeta sin tocar nada má
 | Fuente | Qué aporta | Licencia |
 |---|---|---|
 | `render.py` | tableros generados con ground truth | propio |
-| [KrazyDad Inkies](https://krazydad.com/inkies/) | 72 tableros reales de cinco cuadernillos (4x4, 6x6 y 9x9) + verdad exacta del PDF | © KrazyDad.com; su web autoriza uso escolar y prohíbe el comercial. Se descargan bajo demanda, **no se versionan**, y hay que citarlos en el informe. |
+| [KrazyDad Inkies](https://krazydad.com/inkies/) | 72 tableros reales de cinco cuadernillos (4x4, 6x6 y 9x9) + verdad exacta del PDF. El extractor no la produjo en dos, así que las mediciones de punta a punta usan 70 | © KrazyDad.com; su web autoriza uso escolar y prohíbe el comercial. Se descargan bajo demanda, **no se versionan**, y hay que citarlos en el informe. |
 | Fotos propias | 8 fotos de tableros tomadas con un Pixel 9a | propias; en [Hugging Face](https://huggingface.co/datasets/rosewt/kenken-tb1-fotos) y en el release `tb1` |
 
 Se descartó [`kennethjmyers/Metis-Projects`](https://github.com/kennethjmyers/Metis-Projects)

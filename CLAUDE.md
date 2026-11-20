@@ -25,7 +25,7 @@ Estructura por tipo, no por semana — las unidades pueden reordenarse, los labs
 notes/         # apuntes .md por sesión (_template.md es la plantilla)
 materials/     # PDFs y slides del profe, carpeta por semana (week-NN/)
 labs/cp/         # Constraint Programming — Python + OR-Tools, gestionado con uv
-labs/tb1-kenken/ # TB1, fase 1: visión computacional sobre tableros KenKen — Python + OpenCV, uv
+labs/tb1-kenken/ # TB1: visión (OpenCV) y CP-SAT sobre tableros KenKen, el nodo y la app — Python, uv
 labs/agents/     # JADE / FIPA — Java 21 + javac + Makefile, sin Maven ni Gradle
 ```
 
