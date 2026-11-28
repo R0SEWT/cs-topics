@@ -211,6 +211,8 @@ FACTOR_SUBASTA = (
     1.8  # una zona se subasta si vale valor_min por este factor; si no, INFORM
 )
 PLAZO_SUBASTA = 5  # ticks que el iniciador espera propuestas de rovers
+# Bordes (ms) del histograma de tiempos por turno que devuelve estadisticas()
+BORDES_MS = (0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 40.0)
 PLAZO_RECARGA = 2  # idem entre drones de recarga, que actuan todos los ticks
 
 # Interruptores para los experimentos del informe: cada uno apaga una pieza
@@ -219,13 +221,15 @@ PLAZO_RECARGA = 2  # idem entre drones de recarga, que actuan todos los ticks
 #   EXP_EVITAR_TORMENTAS  S2: esperar, rodear y esquivar tormentas
 #   EXP_PESOS             S2: multiplicadores de w1..w4 para la calibracion
 #   EXP_FILTROS_MENSAJES  S3: deduplicacion, enfriamiento y umbral de valor
-#   EXP_SUBASTAS          S4: subasta implicita y CNP explicito
+#   EXP_SUBASTA_IMPLICITA S4: reparto sin mensajes entre rovers que se ven
+#   EXP_CNP               S4: Contract Net explicito (CFP/PROPOSE/ACCEPT)
 #   EXP_VOTACION          S5: eleccion periodica (en False queda la inicial)
 EXP_OLVIDO = True
 EXP_EVITAR_TORMENTAS = True
 EXP_PESOS = (1.0, 1.0, 1.0, 1.0)
 EXP_FILTROS_MENSAJES = True
-EXP_SUBASTAS = True
+EXP_SUBASTA_IMPLICITA = True
+EXP_CNP = True
 EXP_VOTACION = True
 
 VECINOS = [
@@ -275,8 +279,7 @@ class EquipoPermafrost(EquipoBase):
     def inicializar(
         self, letra: str, base_pos: Pos, grid_size: Pos = (GRID_W, GRID_H)
     ) -> None:
-        """Prepara el estado del equipo al iniciar (o reiniciar) una partida.
-        """
+        """Prepara el estado del equipo al iniciar o reiniciar una partida."""
         super().inicializar(letra, base_pos, grid_size)
         self.nombre = "Equipo %s - Permafrost" % letra
         self.w, self.h = grid_size
@@ -331,8 +334,7 @@ class EquipoPermafrost(EquipoBase):
         return accion
 
     def _accion_segura(self, u: UnidadVista) -> Accion:
-        """Lo minimo que respeta las mecanicas obligatorias si la logica falla.
-        """
+        """Accion minima que respeta las mecanicas si la logica falla."""
         if (
             u.tipo == "rover"
             and u.bateria <= UMBRAL_BATERIA_BAJA
@@ -354,6 +356,10 @@ class EquipoPermafrost(EquipoBase):
 
         return {
             "contadores": dict(self.contadores),
+            "histograma_ms": [
+                sum(1 for x in orden if lo <= x < hi)
+                for lo, hi in zip((0.0,) + BORDES_MS, BORDES_MS + (1e9,))
+            ],
             "politica_final": self.politica,
             "elecciones": len(self.historial_votos),
             "desempates": {
@@ -397,8 +403,7 @@ class EquipoPermafrost(EquipoBase):
     # S1 - Percepcion y memoria espacial (una por unidad)
     # =========================================================================
     def _memoria_de(self, u: UnidadVista) -> Memoria:
-        """Devuelve la memoria privada de la unidad, creandola la primera vez.
-        """
+        """Devuelve la memoria privada de la unidad; la crea si no existe."""
         m = self.memoria.get(u.id)
         if m is None:
             idx = indice_de(u.id)
@@ -833,7 +838,7 @@ class EquipoPermafrost(EquipoBase):
         podria ir. Limite conocido: el aliado mas cercano puede no conocer la
         veta o ir lleno, y entonces nadie la toma en esa ronda.
         """
-        if not EXP_SUBASTAS:
+        if not EXP_SUBASTA_IMPLICITA:
             return True
         mia = (cheb(u.pos, destino), u.id)
         for a in p.aliados_visible:
@@ -1590,8 +1595,11 @@ class EquipoPermafrost(EquipoBase):
             if m["rescate"] is None and u.carga_recarga > 0:
                 self._tomar_rescate(u, p, api, m, conv, contenido)
             else:
+                # Se responde en la conversacion del REQUEST original; el
+                # rover reintenta con otro recargador (ver _pedir_recarga).
+                pedido = contenido.get("pedido", conv)
                 fallo = self._acl(
-                    FAILURE, u.id, conv, ONT_RECARGA, {"motivo": "ocupado"}
+                    FAILURE, u.id, pedido, ONT_RECARGA, {"motivo": "ocupado"}
                 )
                 self._enviar(api, contenido["rover"], fallo)
             return
@@ -1654,6 +1662,7 @@ class EquipoPermafrost(EquipoBase):
         # para que la borre de su mapa y no la vuelva a anunciar.
         if (
             contrato["ont"] == ONT_HIELO
+            and pos not in m["hielo"]
             and cheb(u.pos, pos) <= VISION["rover"]
         ):
             aviso = self._acl(
@@ -1740,7 +1749,7 @@ class EquipoPermafrost(EquipoBase):
             ]
             cercanos = cercanos[: pol["k_cnp"]]
             if (
-                EXP_SUBASTAS
+                EXP_CNP
                 and len(cercanos) >= 2
                 and total >= pol["valor_min"] * FACTOR_SUBASTA
             ):
@@ -1791,7 +1800,7 @@ class EquipoPermafrost(EquipoBase):
                 for rid, rp in sorted(rovers, key=lambda x: cheb(x[1], pos))
             ]
             cercanos = cercanos[: pol["k_cnp"]]
-            if EXP_SUBASTAS and len(cercanos) >= 2:
+            if EXP_CNP and len(cercanos) >= 2:
                 if self._abrir_subasta(
                     u,
                     p,
@@ -1934,13 +1943,13 @@ class EquipoPermafrost(EquipoBase):
         ]
         otros = otros[: POLITICAS[self.politica]["k_cnp"]]
         if mi_puja is not None and (
-            cheb(u.pos, pos) <= 3 or not otros or not EXP_SUBASTAS
+            cheb(u.pos, pos) <= 3 or not otros or not EXP_CNP
         ):
             self._tomar_rescate(u, p, api, m, conv, tarea)
             return
         if (
             otros
-            and EXP_SUBASTAS
+            and EXP_CNP
             and self._abrir_subasta(
                 u, p, api, m, ONT_RECARGA, tarea, otros, PLAZO_RECARGA, mi_puja
             )

@@ -8,4 +8,5 @@ digraph fsm_explorador {
   PATRULLANDO -> PATRULLANDO [label="E3"];
   PATRULLANDO -> RETORNANDO_BASE [label="E4", color="#c0392b", fontcolor="#c0392b"];
   PATRULLANDO -> RETORNANDO_BASE [label="E5"];
+  PATRULLANDO -> RETORNANDO_BASE [label="F3", style=dashed, color="#1f77b4", fontcolor="#1f77b4"];
 }

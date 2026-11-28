@@ -113,7 +113,9 @@ def partida(tmp: Path, semilla: int, tormentas_extra: int = 0, cobertura_de: str
             vx=math.cos(ang) * 4.5, vy=math.sin(ang) * 4.5,
         ))
     visto = set()
+    visto_mapa = set()
     curva: List[List[float]] = []
+    curva_mapa: List[List[float]] = []
     if cobertura_de:
         bx, by = S.BASES_EQUIPO[cobertura_de]
         x0, x1 = (0, S.GRID_W // 2) if bx == 0 else (S.GRID_W // 2, S.GRID_W)
@@ -169,11 +171,14 @@ def partida(tmp: Path, semilla: int, tormentas_extra: int = 0, cobertura_de: str
             for u in sim.unidades:
                 if u.equipo == cobertura_de and u.estado != "muerto":
                     r = radios[u.tipo]
-                    for x in range(max(x0, u.pos[0] - r), min(x1, u.pos[0] + r + 1)):
-                        for y in range(max(y0, u.pos[1] - r), min(y1, u.pos[1] + r + 1)):
-                            visto.add((x, y))
+                    for x in range(max(0, u.pos[0] - r), min(S.GRID_W, u.pos[0] + r + 1)):
+                        for y in range(max(0, u.pos[1] - r), min(S.GRID_H, u.pos[1] + r + 1)):
+                            visto_mapa.add((x, y))
+                            if x0 <= x < x1 and y0 <= y < y1:
+                                visto.add((x, y))
             if sim.tick_count % 25 == 0:
                 curva.append([sim.tick_count, round(len(visto) / area, 4)])
+                curva_mapa.append([sim.tick_count, round(len(visto_mapa) / (S.GRID_W * S.GRID_H), 4)])
 
     sim._tick_logico = tick
 
@@ -213,6 +218,7 @@ def partida(tmp: Path, semilla: int, tormentas_extra: int = 0, cobertura_de: str
         "terminada": sim.simulacion_terminada,
         "hielo_inicial": sim.hielo_inicial,
         "cobertura": curva,
+        "cobertura_mapa": curva_mapa,
         "equipos": filas,
     }
 

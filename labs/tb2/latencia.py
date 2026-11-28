@@ -44,10 +44,12 @@ def main() -> None:
             corridas = []
             for _ in range(REPETICIONES):
                 r = arena.partida(tmp, s, flota_doble=args.flota_doble)   # medición interna del propio equipo (perf_counter)
-                corridas.append((r["equipos"]["A"]["interno"]["ms"], r["ticks"]))
+                corridas.append((r["equipos"]["A"]["interno"]["ms"], r["ticks"],
+                                 r["equipos"]["A"]["interno"].get("histograma_ms", [])))
             corridas.sort(key=lambda c: c[0]["max"])
-            ms, ticks = corridas[len(corridas) // 2]
+            ms, ticks, _ = corridas[len(corridas) // 2]
             ms = dict(ms, maximos=[c[0]["max"] for c in corridas])
+            ms["histograma_ms"] = corridas[len(corridas) // 2][2]
             turnos.append((s, ms, ticks))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)

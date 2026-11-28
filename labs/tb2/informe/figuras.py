@@ -430,6 +430,8 @@ ETIQUETAS = {
     "s2_w4_triple": ("S2", "$w_4 times 3$"),
     "s3_sin_filtros": ("S3", "Reportes sin filtros"),
     "s4_sin_subastas": ("S4", "Sin subasta implícita ni CNP"),
+    "s4_sin_implicita": ("S4", "Sin subasta implícita (queda el CNP)"),
+    "s4_sin_cnp": ("S4", "Sin CNP explícito (queda la implícita)"),
     "s5_tormenta_votando": ("S5", "Alta tormenta (+3), con votación"),
     "s5_tormenta_fija_ahorro": ("S5", "Alta tormenta (+3), `AHORRO` fija"),
     "s5_tormenta_fija_expansion": ("S5", "Alta tormenta (+3), `EXPANSION` fija"),
@@ -440,7 +442,7 @@ ETIQ_FIG = {
     "s2_sin_evasion": "S2 · sin evasión de tormentas", "s2_w2_mitad": "S2 · w2 × 0,5", "s2_w2_doble": "S2 · w2 × 2",
     "s2_w4_cero": "S2 · w4 × 0", "s2_w4_triple": "S2 · w4 × 3", "s2_w4_tercio": "S2 · w4 × 1/3",
     "s2_pesos_iniciales": "S2 · pesos antes de calibrar", "s3_sin_filtros": "S3 · sin filtros de mensajes",
-    "s4_sin_subastas": "S4 · sin subastas", "s5_normal_fija_ahorro": "S5 · AHORRO fija (normal)",
+    "s4_sin_subastas": "S4 · sin subastas", "s4_sin_implicita": "S4 · sin subasta implícita", "s4_sin_cnp": "S4 · sin CNP explícito", "s5_normal_fija_ahorro": "S5 · AHORRO fija (normal)",
     "s5_tormenta_fija_ahorro": "S5 · AHORRO fija (alta tormenta)", "s5_tormenta_fija_expansion": "S5 · EXPANSION fija (alta tormenta)",
 }
 REFERENCIA = {"s5_tormenta_fija_ahorro": "s5_tormenta_votando", "s5_tormenta_fija_expansion": "s5_tormenta_votando"}
@@ -537,13 +539,19 @@ if exp:
     tabla_typ("calibracion.typ", "(auto, auto, auto, 1fr, 1fr, 1fr, 1fr, 1fr)", "(left, left) + (right,) * 6",
               ["Pesos", "$(w_1; w_2; w_3; w_4)$ en `AHORRO`", "Ratio ± desv.", "Δ Ratio", "Peor en", "Hielo", "Bat.", "1.º"], filas_cal)
 
-    # S4 · Tabla con y sin subastas
-    if "s4_sin_subastas" in V["x"]:
-        a, b = V["x"]["completo"], V["x"]["s4_sin_subastas"]
-        tabla_typ("subastas.typ", "(1fr, auto, auto, auto, auto, auto, auto)", "(left,) + (right,) * 6",
-                  ["", "Viajes en vano", "Bat. en pasos", "Hielo", "Hielo / 100 bat.", "Mensajes", "Ratio ± desv."],
-                  [["Con subastas (entrega)", a["viajes"], a["bat_pasos"], a["hielo"], a["hielo_por_bat100"], a["msgs"], "%s ± %s" % (a["ratio"], a["sd"])],
-                   ["Sin subastas", b["viajes"], b["bat_pasos"], b["hielo"], b["hielo_por_bat100"], b["msgs"], "%s ± %s" % (b["ratio"], b["sd"])]])
+    # S4 · Tabla con y sin cada nivel de subasta
+    filas_s4 = []
+    for nombre, etiqueta in (("completo", "Ambos niveles (entrega)"), ("s4_sin_implicita", "Sin subasta implícita"),
+                             ("s4_sin_cnp", "Sin CNP explícito"), ("s4_sin_subastas", "Sin ninguno de los dos")):
+        if nombre in V["x"]:
+            a_ = V["x"][nombre]
+            filas_s4.append([etiqueta, a_["viajes"], a_["bat_pasos"], a_["hielo"], a_["bat"], a_["hielo_por_bat100"], a_["msgs"],
+                             "%s ± %s" % (a_["ratio"], a_["sd"]), a_["delta_tabla"]])
+    tabla_typ("subastas.typ", "(1fr, auto, auto, auto, auto, auto, auto, auto, auto)", "(left,) + (right,) * 8",
+              ["", "Viajes en vano", "Bat. pasos", "Hielo", "Bat.", "Hielo / 100 bat.", "Mensajes", "Ratio ± desv.", "Δ Ratio"], filas_s4)
+    ruido = [abs(st.mean(f_["ratio"] - {r_["semilla"]: r_ for r_ in por[REFERENCIA.get(n_, "completo")]}[f_["semilla"]]["ratio"] for f_ in fs_))
+             for n_, fs_ in por.items() if isinstance(V["x"].get(n_), dict) and V["x"][n_].get("efecto") == "dentro del ruido"]
+    V["x"]["max_ruido"] = es(max(ruido), 4) if ruido else "—"
 
     # S5 · Elecciones reales: conteo por método y una elección concreta
     con_voto = [r for r in exp if r.get("desempates") and sum(r["desempates"].values())]
@@ -629,8 +637,8 @@ if exp:
     # Figura: cobertura del cuadrante propio
     curvas = [(n, por[n]) for n in ("completo", "s1_un_solo_gajo") if n in por and any(f["cobertura"] for f in por[n])]
     if curvas:
-        fig, ax = plt.subplots(figsize=(3.3, 1.75))
-        nombres = {"completo": "Equipo entregado", "s1_un_solo_gajo": "Un solo gajo de patrulla"}
+        fig, ax = plt.subplots(figsize=(3.6, 2.0))
+        nombres = {"completo": "Equipo entregado: cuadrante propio", "s1_un_solo_gajo": "Un solo gajo: cuadrante propio"}
         V["x"]["cob"] = {}
         for i, (nombre, fs) in enumerate(curvas):
             tmax = min(max(t for t, _ in f["cobertura"]) for f in fs)
@@ -640,10 +648,15 @@ if exp:
             V["x"]["cob"][nombre] = {str(t): es(y, 0) for t, y in zip(ts, ys)}
             V["x"]["cob"][nombre]["t100"] = next((es(y, 0) for t, y in zip(ts, ys) if y >= 99.95), "—")
             V["x"]["cob"][nombre]["tick100"] = next((str(t) for t, y in zip(ts, ys) if y >= 99.95), "—")
+            if all(f.get("cobertura_mapa") for f in fs):
+                ym = [100 * st.mean(dict(map(tuple, f["cobertura_mapa"]))[t] for f in fs) for t in ts]
+                V["x"].setdefault("cobm", {})[nombre] = {str(t): es(y, 0) for t, y in zip(ts, ym)}
+                if nombre == "completo":
+                    ax.plot(ts, ym, lw=1.4, color=C[2], ls=":", label="Equipo entregado: mapa completo")
         ax.set_xlabel("Tick de la partida")
-        ax.set_ylabel("Cuadrante propio visto (%)")
-        ax.set_ylim(None, 101)
-        ax.legend(loc="lower right")
+        ax.set_ylabel("Celdas vistas (%)")
+        ax.set_ylim(0, 101)
+        ax.legend(loc="center right", bbox_to_anchor=(1.0, 0.66))
         sns.despine(ax=ax)
         guardar(fig, "cobertura.svg")
 
@@ -686,26 +699,38 @@ if flotas:
                       "*%s*" % v_["max"], "*%s*" % v_["max_bruto"]])
     tabla_typ("latencia.typ", "(auto, auto, 1fr, 1fr, 1fr, 1fr, 1fr, 1fr)", "(left,) + (right,) * 7",
               ["Flota", "Sem.", "Turnos", "Media", "p95", "p99", "Máx.", "Máx. rep."], filas)
-    fig, ax = plt.subplots(figsize=(3.3, 1.9))
-    for i, (clave, lat, brutos) in enumerate(flotas):
-        xs, ys = [], []
-        for j, s in enumerate(lat["por_semilla"]):
-            for m_ in s.get("maximos", [s["max"]]):
-                xs.append(j + (i - 0.5 * (len(flotas) - 1)) * 0.3)
-                ys.append(m_)
-        ax.plot(xs, ys, "os"[i], ms=4, color=C[i], mec="white", mew=0.6, ls="",
-                label="%s unidades en total" % V[clave]["total"])
-    ax.axhline(UMBRAL_MS, color="#333333", lw=0.9, ls="--")
-    n_sem = len(flotas[0][1]["por_semilla"])
-    ax.text(n_sem - 0.55, UMBRAL_MS - 1.2, "umbral: 40 ms", ha="right", va="top", fontsize=7.5, color="#333333")
-    ax.set_xticks(range(n_sem), [str(s["semilla"]) for s in flotas[0][1]["por_semilla"]])
-    ax.set_xlabel("Semilla")
-    ax.set_ylabel("Peor turno de cada repetición (ms)")
-    ax.set_ylim(0, max(UMBRAL_MS * 1.08, max(max(b_) for _, _, b_ in flotas) * 1.1))
-    ax.grid(axis="x", visible=False)
-    ax.legend(loc="upper left", bbox_to_anchor=(0.0, 0.9))
-    sns.despine(ax=ax)
-    guardar(fig, "latencia.svg")
+    bordes = list(getattr(E, "BORDES_MS", ()))
+    histos = []
+    for clave, lat, brutos in flotas:
+        hs = [s["histograma_ms"] for s in lat["por_semilla"] if s.get("histograma_ms")]
+        if hs and bordes:
+            tot = [sum(col) for col in zip(*hs)]
+            histos.append((clave, tot))
+            V[clave]["hist_turnos"] = str(sum(tot))
+            V[clave]["hist_sobre_40"] = str(tot[-1])
+            V[clave]["hist_pct_bajo_1"] = es(100 * sum(n_ for n_, hi in zip(tot, bordes) if hi <= 1.0) / sum(tot), 1)
+    if histos:
+        etiquetas = ["< %s" % es(bordes[0], 2)] + ["%s–%s" % (("%g" % lo).replace(".", ","), ("%g" % hi).replace(".", ","))
+                                                    for lo, hi in zip(bordes, bordes[1:])] + ["≥ %g" % bordes[-1]]
+        fig, ax = plt.subplots(figsize=(6.9, 1.85))
+        ancho = 0.8 / len(histos)
+        for i, (clave, tot) in enumerate(histos):
+            xs = [j + (i - 0.5 * (len(histos) - 1)) * ancho for j in range(len(tot))]
+            pct = [100 * n_ / sum(tot) for n_ in tot]
+            ax.bar(xs, pct, width=ancho * 0.92, color=C[i], label="%s unidades en total (%s turnos)" % (V[clave]["total"], sum(tot)))
+            for x_, p_, n_ in zip(xs, pct, tot):
+                if n_:
+                    ax.text(x_, p_ + 1.2, str(n_), ha="center", va="bottom", fontsize=5.8, color="#333333")
+        ax.axvline(len(etiquetas) - 1.5, color="#333333", lw=0.9, ls="--")
+        ax.text(len(etiquetas) - 1.58, ax.get_ylim()[1] * 0.55, "umbral: 40 ms", ha="right", va="top", fontsize=7.5, color="#333333")
+        ax.set_xticks(range(len(etiquetas)), etiquetas)
+        ax.set_xlabel("Tiempo de decisión del equipo en un turno (ms); sobre cada barra, número de turnos")
+        ax.set_ylabel("Turnos (%)")
+        ax.set_ylim(0, ax.get_ylim()[1] * 1.12)
+        ax.grid(axis="x", visible=False)
+        ax.legend(loc="upper right", bbox_to_anchor=(0.84, 1.0))
+        sns.despine(ax=ax)
+        guardar(fig, "latencia.svg")
 
 (AQUI / "valores.json").write_text(json.dumps(V, ensure_ascii=False, indent=1))
 for nombre, bloque in (("torneo", V.get("t")), ("experimentos", V.get("x"))):

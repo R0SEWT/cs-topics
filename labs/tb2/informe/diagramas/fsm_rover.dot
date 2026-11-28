@@ -16,4 +16,6 @@ digraph fsm_rover {
   OCIOSO -> ESPERANDO_RECARGA [label="R9"];
   RECOLECTANDO -> ESPERANDO_RECARGA [label="R10 (desde\ncualquier estado)", color="#c0392b", fontcolor="#c0392b"];
   ESPERANDO_RECARGA -> OCIOSO [label="R11"];
+  RECOLECTANDO -> RETORNANDO [label="F1", style=dashed, color="#1f77b4", fontcolor="#1f77b4"];
+  EXPLORANDO -> OCIOSO [label="F2", style=dashed, color="#1f77b4", fontcolor="#1f77b4"];
 }

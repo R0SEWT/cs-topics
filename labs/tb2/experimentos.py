@@ -36,7 +36,12 @@ VARIANTES: Dict[str, Tuple[str, str, Dict[str, str], int]] = {
     "s2_pesos_iniciales": ("S2", "Pesos antes de calibrar (w2 x2, w4 x1/3)",
                            {"EXP_PESOS": "(1.0, 2.0, 1.0, 0.3333)"}, 0),
     "s3_sin_filtros": ("S3", "Reportes sin deduplicar, sin enfriamiento ni umbral de valor", {"EXP_FILTROS_MENSAJES": "False"}, 0),
-    "s4_sin_subastas": ("S4", "Sin subasta implícita ni CNP: cada rover va a lo que ve", {"EXP_SUBASTAS": "False"}, 0),
+    "s4_sin_subastas": ("S4", "Sin subasta implícita ni CNP: cada rover va a lo que ve",
+                        {"EXP_SUBASTA_IMPLICITA": "False", "EXP_CNP": "False"}, 0),
+    "s4_sin_implicita": ("S4", "Sin subasta implícita (queda el CNP explícito)",
+                         {"EXP_SUBASTA_IMPLICITA": "False"}, 0),
+    "s4_sin_cnp": ("S4", "Sin CNP explícito (queda la subasta implícita; avisos por INFORM)",
+                   {"EXP_CNP": "False"}, 0),
     "s5_tormenta_votando": ("S5", "Alta tormenta (+3): con votación", {}, 3),
     "s5_tormenta_fija_ahorro": ("S5", "Alta tormenta (+3): política fija AHORRO", {"EXP_VOTACION": "False"}, 3),
     "s5_tormenta_fija_expansion": ("S5", "Alta tormenta (+3): política fija EXPANSION",
@@ -75,6 +80,8 @@ def _una(tarea: Tuple[str, int]) -> Dict[str, Any]:
         "votos": e["interno"].get("votos", []) if semilla <= 2 else [],
         "ms": e["interno"]["ms"],
         "cobertura": r["cobertura"],
+        "cobertura_mapa": r["cobertura_mapa"],
+        "histograma_ms": e["interno"].get("histograma_ms", []),
         "contadores": c,
     }
 
