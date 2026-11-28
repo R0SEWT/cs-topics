@@ -70,11 +70,15 @@ def preparar(asignacion: Dict[str, str], ajustes: Optional[Dict[str, str]] = Non
     return tmp
 
 
-def partida(tmp: Path, semilla: int, tormentas_extra: int = 0, cobertura_de: str = "") -> Dict[str, Any]:
+def partida(tmp: Path, semilla: int, tormentas_extra: int = 0, cobertura_de: str = "",
+            flota_doble: bool = False) -> Dict[str, Any]:
     """Una partida completa. Devuelve una fila de métricas por equipo.
 
     tormentas_extra  escenario de alta tormenta: suma N tormentas de movimiento libre desde el inicio.
     cobertura_de     letra del equipo al que se le mide qué fracción de su cuadrante ha visto.
+    flota_doble      100 unidades por equipo (60/30/10), como dice el enunciado: se suman a las 50
+                     que crea el simulador otras 50 con los mismos tipos, proporción y zona de
+                     aparición. Sirve para medir la latencia con 400 unidades.
     """
     os.environ["SDL_VIDEODRIVER"] = "dummy"
     for mod in [m for m in sys.modules if m.startswith("equipo") or m == "simulador"]:
@@ -85,6 +89,23 @@ def partida(tmp: Path, semilla: int, tormentas_extra: int = 0, cobertura_de: str
     import simulador as S  # noqa: PLC0415
 
     sim = S.SimuladorMarte()
+    if flota_doble:
+        for letra in LETRAS:
+            bx, by = S.BASES_EQUIPO[letra]
+            for tipo, prefijo, n, radio in (("rover", "rover", 30, 4), ("dron_explorador", "expl", 15, 3),
+                                            ("dron_recarga", "rec", 5, 1)):
+                for i in range(n, 2 * n):
+                    pos = (int(S.clamp(bx + random.randint(-radio, radio), 0, S.GRID_W - 1)),
+                           int(S.clamp(by + random.randint(-radio, radio), 0, S.GRID_H - 1)))
+                    paso = S.TICK_DT * (2.0 if tipo == "rover" else 1.0)
+                    u = S.UnidadSim(
+                        id=f"{letra}_{prefijo}_{i}", equipo=letra, tipo=tipo, pos=pos, prev_pos=pos,
+                        capacidad=S.CAPACIDAD_ROVER if tipo == "rover" else 0,
+                        carga_recarga=1 if tipo == "dron_recarga" else 0,
+                        move_interval=paso, interp_dur=paso,
+                    )
+                    sim.unidades.append(u)
+                    sim.unidades_por_id[u.id] = u
     for i in range(tormentas_extra):
         ang = random.uniform(0, math.tau)
         sim.tormentas.append(S.TormentaSim(

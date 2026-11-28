@@ -31,6 +31,9 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--semillas", default="1-5")
     ap.add_argument("--copias", type=int, default=1, help="cuántos de los 4 equipos son el nuestro (1 o 4)")
+    ap.add_argument("--flota-doble", action="store_true",
+                    help="100 unidades por equipo (400 en total), como dice el enunciado")
+    ap.add_argument("--salida", default="latencia.json")
     args = ap.parse_args()
 
     asignacion = {k: ("equipoA.py" if (i < args.copias) else "base") for i, k in enumerate(arena.LETRAS)}
@@ -40,7 +43,7 @@ def main() -> None:
         for s in arena._rango(args.semillas):
             corridas = []
             for _ in range(REPETICIONES):
-                r = arena.partida(tmp, s)   # medición interna del propio equipo (perf_counter)
+                r = arena.partida(tmp, s, flota_doble=args.flota_doble)   # medición interna del propio equipo (perf_counter)
                 corridas.append((r["equipos"]["A"]["interno"]["ms"], r["ticks"]))
             corridas.sort(key=lambda c: c[0]["max"])
             ms, ticks = corridas[len(corridas) // 2]
@@ -60,10 +63,11 @@ def main() -> None:
           f"({'cumple' if peor < UMBRAL_MS else 'NO cumple'} el umbral de {UMBRAL_MS:.0f} ms)")
     print(f"peor turno entre todas las repeticiones: {peor_bruto:.2f} ms; máximos por semilla: "
           + "; ".join(f"{s}: {ms['maximos']}" for s, ms, _ in turnos))
-    destino = arena.AQUI / "reports" / "latencia.json"
+    destino = arena.AQUI / "reports" / args.salida
     destino.parent.mkdir(exist_ok=True)
     destino.write_text(json.dumps({
         "carga_1min": carga, "copias": args.copias, "repeticiones": REPETICIONES,
+        "unidades_por_equipo": 100 if args.flota_doble else 50,
         "por_semilla": [{"semilla": s, "ticks": t, **ms} for s, ms, t in turnos],
         "resumen": {
             "media": st.mean(ms["media"] for _, ms, _ in turnos),
