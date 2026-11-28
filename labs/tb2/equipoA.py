@@ -242,7 +242,8 @@ VECINOS = [
 
 def cheb(a: Pos, b: Pos) -> int:
     """Distancia Chebyshev: los pasos reales, porque la diagonal cuesta lo
-    mismo."""
+    mismo.
+    """
     dx = a[0] - b[0]
     dy = a[1] - b[1]
     return max(dx if dx >= 0 else -dx, dy if dy >= 0 else -dy)
@@ -263,7 +264,8 @@ def a_pos(valor: Any) -> Pos:
 
 class EquipoPermafrost(EquipoBase):
     """Rovers, exploradores y recargadores coordinados por utilidad, CNP y
-    votacion."""
+    votacion.
+    """
 
     nombre = "Equipo - Permafrost"
 
@@ -273,8 +275,8 @@ class EquipoPermafrost(EquipoBase):
     def inicializar(
         self, letra: str, base_pos: Pos, grid_size: Pos = (GRID_W, GRID_H)
     ) -> None:
-        """Prepara el estado del equipo al iniciar (o reiniciar) una
-        partida."""
+        """Prepara el estado del equipo al iniciar (o reiniciar) una partida.
+        """
         super().inicializar(letra, base_pos, grid_size)
         self.nombre = "Equipo %s - Permafrost" % letra
         self.w, self.h = grid_size
@@ -297,7 +299,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _cuenta(self, clave: str, n: int = 1) -> None:
         """Suma a un contador de diagnostico (para los experimentos y el
-        informe)."""
+        informe).
+        """
         self.contadores[clave] = self.contadores.get(clave, 0) + n
 
     # =========================================================================
@@ -307,7 +310,8 @@ class EquipoPermafrost(EquipoBase):
         self, unidad: UnidadVista, percepcion: Percepcion, api: Any
     ) -> Accion:
         """Decide la accion de una unidad; mide el turno y nunca deja escapar
-        un error."""
+        un error.
+        """
         t0 = time.perf_counter()
         if percepcion.tick != self._tick:
             if self._tick >= 0:
@@ -327,8 +331,8 @@ class EquipoPermafrost(EquipoBase):
         return accion
 
     def _accion_segura(self, u: UnidadVista) -> Accion:
-        """Lo minimo que respeta las mecanicas obligatorias si la logica
-        falla."""
+        """Lo minimo que respeta las mecanicas obligatorias si la logica falla.
+        """
         if (
             u.tipo == "rover"
             and u.bateria <= UMBRAL_BATERIA_BAJA
@@ -339,7 +343,8 @@ class EquipoPermafrost(EquipoBase):
 
     def estadisticas(self) -> Dict[str, Any]:
         """Resumen para el arnes de pruebas y el informe. El simulador no lo
-        usa."""
+        usa.
+        """
         orden = sorted(self.ms_por_tick + [self._ms_tick])
         n = len(orden)
 
@@ -374,7 +379,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _decidir(self, u: UnidadVista, p: Percepcion, api: Any) -> Accion:
         """Ciclo de una unidad: percibir, leer mensajes, opinar y actuar segun
-        su rol."""
+        su rol.
+        """
         if u.estado == "muerto":
             return ("esperar",)
         m = self._memoria_de(u)
@@ -391,8 +397,8 @@ class EquipoPermafrost(EquipoBase):
     # S1 - Percepcion y memoria espacial (una por unidad)
     # =========================================================================
     def _memoria_de(self, u: UnidadVista) -> Memoria:
-        """Devuelve la memoria privada de la unidad, creandola la primera
-        vez."""
+        """Devuelve la memoria privada de la unidad, creandola la primera vez.
+        """
         m = self.memoria.get(u.id)
         if m is None:
             idx = indice_de(u.id)
@@ -449,7 +455,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _percibir(self, u: UnidadVista, p: Percepcion, m: Memoria) -> None:
         """Actualiza las creencias con lo visible y olvida lo que ya no es
-        cierto."""
+        cierto.
+        """
         tick = p.tick
         radio = VISION.get(u.tipo, 5)
         ux, uy = u.pos
@@ -480,10 +487,8 @@ class EquipoPermafrost(EquipoBase):
         for c in caducas:
             del hielo[c]
         if u.pos in hielo and u.pos not in visibles:
-            del hielo[
-                u.pos
-            # parado encima y sin hielo: agotada, valga lo que valga EXP_OLVIDO
-            ]
+            # Parado encima y sin hielo: agotada, diga lo que diga EXP_OLVIDO.
+            del hielo[u.pos]
 
         # Restos: por id, con su coordenada y combustible. Mismo olvido que el
         # hielo.
@@ -516,9 +521,8 @@ class EquipoPermafrost(EquipoBase):
         las recientes.
 
         La velocidad sale de comparar con la observacion anterior mas cercana.
-        Las tormentas que
-        dejan de verse se conservan MEMORIA_TORMENTA ticks, proyectadas con esa
-        velocidad.
+        Las tormentas que dejan de verse se conservan MEMORIA_TORMENTA ticks,
+        proyectadas con esa velocidad.
         """
         tick = p.tick
         previas: List[Tormenta] = m["tormentas"]
@@ -554,7 +558,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _confianza(self, tick: int, visto: int) -> float:
         """Decaimiento exponencial: una veta vista hace VIDA_MEDIA_HIELO ticks
-        vale la mitad."""
+        vale la mitad.
+        """
         return 0.5 ** ((tick - visto) / VIDA_MEDIA_HIELO)
 
     # =========================================================================
@@ -568,8 +573,8 @@ class EquipoPermafrost(EquipoBase):
         velocidad.
 
         Es el campo de riesgo de la unidad: se calcula una sola vez por
-        decision y lo reutilizan
-        el paso, el A*, el esquive y la utilidad de ese mismo turno.
+        decision y lo reutilizan el paso, el A*, el esquive y la utilidad de
+        ese mismo turno.
         """
         cache = self._cache_centros
         if cache[0] is tormentas and cache[1] == self._tick:
@@ -585,7 +590,8 @@ class EquipoPermafrost(EquipoBase):
         self, celda: Pos, centros: List[Tuple[float, float, float]]
     ) -> float:
         """0 fuera de toda tormenta; crece hacia el centro. El margen cubre el
-        error de estima."""
+        error de estima.
+        """
         peor = 0.0
         for tx, ty, radio in centros:
             d = math.hypot(celda[0] - tx, celda[1] - ty)
@@ -610,8 +616,8 @@ class EquipoPermafrost(EquipoBase):
         hallado.
 
         Pisar tormenta cuesta 5 (como en el simulador) mas la exposicion. Si el
-        tope se agota
-        antes de llegar, se toma el camino al nodo mas cercano al destino.
+        tope se agota antes de llegar, se toma el camino al nodo mas cercano al
+        destino.
         """
         abiertos: List[Tuple[float, int, Pos]] = [
             (float(cheb(origen, destino)), 0, origen)
@@ -657,11 +663,9 @@ class EquipoPermafrost(EquipoBase):
         """Un paso hacia el destino.
 
         Dentro o al borde de una tormenta conviene esperar: un paso ahi cuesta
-        5 %, y la tormenta
-        pasa (o empuja a la unidad hacia afuera) en pocos ticks. Solo si la
-        espera se agota se
-        busca un rodeo con A*. Asi la busqueda, que es lo caro, corre pocas
-        veces por turno (S6).
+        5 %, y la tormenta pasa (o empuja a la unidad hacia afuera) en pocos
+        ticks. Solo si la espera se agota se busca un rodeo con A*. Asi la
+        busqueda, que es lo caro, corre pocas veces por turno (S6).
         """
         if u.pos == destino:
             return ("esperar",)
@@ -685,7 +689,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _riesgo_de_ruta(self, origen: Pos, destino: Pos, m: Memoria) -> float:
         """Fraccion de la recta origen->destino que cruza tormentas
-        (muestreada, sin A*)."""
+        (muestreada, sin A*).
+        """
         if not m["tormentas"] or not EXP_EVITAR_TORMENTAS:
             return 0.0
         centros = self._centros(m["tormentas"])
@@ -706,8 +711,7 @@ class EquipoPermafrost(EquipoBase):
         encima.
 
         Un paso lateral (1 %) sale mas barato que el pulso (3 % y empuje). Ya
-        adentro no se
-        mueve: cada paso costaria 5 %.
+        adentro no se mueve: cada paso costaria 5 %.
         """
         if u.en_tormenta or not m["tormentas"] or not EXP_EVITAR_TORMENTAS:
             return None
@@ -737,7 +741,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _punto(self, angulo: float, radio: float) -> Pos:
         """Celda a `radio` de la base en la direccion `angulo` del abanico
-        hacia adentro."""
+        hacia adentro.
+        """
         x = self.base_pos[0] + self.sx * math.cos(angulo) * radio
         y = self.base_pos[1] + self.sy * math.sin(angulo) * radio
         return (
@@ -754,9 +759,8 @@ class EquipoPermafrost(EquipoBase):
         """U(s,a) con los pesos de la politica vigente. Todos los atributos van
         en [0, 1].
 
-        g: hielo que se ganaria / 5.  c: pasos extra / 40.  o: combustible
-        aprovechable / 20.
-        r: fraccion de la ruta bajo tormenta.
+        g: hielo que se ganaria / 5. c: pasos extra / 40. o: combustible
+        aprovechable / 20. r: fraccion de la ruta bajo tormenta.
         """
         w1, w2, w3, w4 = [w * k for w, k in zip(pol["w"], EXP_PESOS)]
         return w1 * g - w2 * c + w3 * o - w4 * r
@@ -771,7 +775,8 @@ class EquipoPermafrost(EquipoBase):
         pol: Dict[str, Any],
     ) -> float:
         """Utilidad de ir a extraer a `celda`: ganancia descontada por
-        antiguedad del dato."""
+        antiguedad del dato.
+        """
         libre = u.capacidad - u.carga
         g = min(libre, cantidad) * self._confianza(self._tick, visto) / 5.0
         # Costo marginal: cuanto alarga el viaje de vuelta a base pasar por la
@@ -795,7 +800,8 @@ class EquipoPermafrost(EquipoBase):
         hay_critico: bool,
     ) -> float:
         """Utilidad de ir a consumir un resto: lo que recargaria (a si mismo o
-        a un aliado)."""
+        a un aliado).
+        """
         aprovechable = (
             combustible if hay_critico else min(combustible, 100.0 - u.bateria)
         )
@@ -810,7 +816,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _alcanza_bateria(self, u: UnidadVista, destino: Pos) -> bool:
         """Dice si la unidad llega al destino y vuelve a la base sin caer al 25
-        %."""
+        %.
+        """
         pasos = cheb(u.pos, destino) + cheb(destino, self.base_pos)
         return u.bateria - 1.15 * pasos >= UMBRAL_BATERIA_BAJA + MARGEN_BATERIA
 
@@ -820,11 +827,11 @@ class EquipoPermafrost(EquipoBase):
         """S4 sin mensajes: entre los rovers que se ven, la tarea es del mas
         cercano.
 
-        Todos los que se ven conocen las mismas posiciones, asi que cada uno
-        calcula el mismo
-        ganador (empate: menor id) sin gastar bateria. No se cede a un aliado
-        detenido ni a
-        uno con bateria baja, que no podria ir.
+        Cada rover compara su distancia a la tarea con la de los aliados que ve
+        (empate: menor id) y cede si alguno esta mas cerca, sin gastar bateria.
+        No se cede a un aliado detenido ni a uno con bateria baja, que no
+        podria ir. Limite conocido: el aliado mas cercano puede no conocer la
+        veta o ir lleno, y entonces nadie la toma en esa ronda.
         """
         if not EXP_SUBASTAS:
             return True
@@ -844,7 +851,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _aliado_critico(self, u: UnidadVista, p: Percepcion) -> Optional[str]:
         """Un rover aliado visible detenido por bateria: candidato a recibir el
-        combustible."""
+        combustible.
+        """
         for a in p.aliados_visible:
             if (
                 a["id"] != u.id
@@ -861,10 +869,8 @@ class EquipoPermafrost(EquipoBase):
         devuelve el mejor.
 
         La alternativa "retornar a base" vale la utilidad de reserva de la
-        politica
-        (`umbral_u`): un objetivo solo se elige si la supera. Un contrato
-        ganado por CNP tiene
-        prioridad mientras siga siendo cumplible.
+        politica (`umbral_u`): un objetivo solo se elige si la supera. Un
+        contrato ganado por CNP tiene prioridad mientras siga siendo cumplible.
         """
         pol = POLITICAS[self.politica]
         por_contrato = self._objetivo_de_contrato(u, p, api, m)
@@ -924,7 +930,8 @@ class EquipoPermafrost(EquipoBase):
         self, u: UnidadVista, p: Percepcion, api: Any, m: Memoria
     ) -> Accion:
         """Un turno de rover: bateria baja, carrona en curso, retorno,
-        extraccion u objetivo."""
+        extraccion u objetivo.
+        """
         pol = POLITICAS[self.politica]
         tick = p.tick
 
@@ -1035,7 +1042,8 @@ class EquipoPermafrost(EquipoBase):
         self, u: UnidadVista, p: Percepcion, m: Memoria, rid: str, pos: Pos
     ) -> Accion:
         """CONSUMIENDO_CARRONA: acercarse al resto y consumirlo, para si o para
-        un aliado."""
+        un aliado.
+        """
         m["estado"] = CONSUMIENDO_CARRONA
         if cheb(u.pos, pos) > 1:
             return self._mover(u, pos, m)
@@ -1056,7 +1064,8 @@ class EquipoPermafrost(EquipoBase):
         self, u: UnidadVista, p: Percepcion, api: Any, m: Memoria
     ) -> Accion:
         """RETORNANDO: volver a la base y depositar. Al salir lleno avisa del
-        hielo que deja."""
+        hielo que deja.
+        """
         if (
             m["estado"] != RETORNANDO
             and u.carga >= u.capacidad
@@ -1078,12 +1087,10 @@ class EquipoPermafrost(EquipoBase):
         queda OCIOSO.
 
         Una ronda son TRAMOS_BUSQUEDA tramos en abanico, cada uno mas lejos y
-        en otra direccion
-        (segun el indice del rover, para que no vayan todos al mismo sitio). Si
-        encuentra hielo
-        o le llega un aviso, deja de buscar y recolecta. Tras la ronda descansa
-        DESCANSO_BUSQUEDA ticks, porque repetir el mismo recorrido no descubre
-        nada nuevo.
+        en otra direccion (segun el indice del rover, para que no vayan todos
+        al mismo sitio). Si encuentra hielo o le llega un aviso, deja de buscar
+        y recolecta. Tras la ronda descansa DESCANSO_BUSQUEDA ticks, porque
+        repetir el mismo recorrido no descubre nada nuevo.
         """
         tick = p.tick
         if u.bateria >= BATERIA_BUSQUEDA and tick >= m["busca_desde"]:
@@ -1138,7 +1145,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _enviar(self, api: Any, destino: str, msg: Dict[str, Any]) -> bool:
         """Envia un mensaje ACL a una unidad concreta (unicast) y lo
-        contabiliza."""
+        contabiliza.
+        """
         ok = bool(api.enviar_mensaje(destino, msg["performative"], msg))
         if ok:
             self._cuenta("msg_" + msg["performative"])
@@ -1155,7 +1163,8 @@ class EquipoPermafrost(EquipoBase):
         pos: Pos,
     ) -> bool:
         """INFORM dirigido al rover ocioso mas cercano a `pos` (lo elige el
-        simulador)."""
+        simulador).
+        """
         msg = self._acl(
             INFORM,
             u.id,
@@ -1173,7 +1182,8 @@ class EquipoPermafrost(EquipoBase):
         self, m: Memoria, clave: Any, tick: int, cooldown: int = 35
     ) -> bool:
         """Deduplicacion: una zona no se vuelve a reportar hasta que pase el
-        enfriamiento."""
+        enfriamiento.
+        """
         if not EXP_FILTROS_MENSAJES:
             return True
         ultimo = m["reportes"].get(clave, -(10**6))
@@ -1188,8 +1198,7 @@ class EquipoPermafrost(EquipoBase):
         reporta uno solo.
 
         Reporta el de menor id; los demas callan. Los drones estacionados en la
-        base no
-        reportan (ver `_reportar_hallazgos`), asi que no cuentan.
+        base no reportan (ver `_reportar_hallazgos`), asi que no cuentan.
         """
         if not EXP_FILTROS_MENSAJES:
             return False
@@ -1207,7 +1216,8 @@ class EquipoPermafrost(EquipoBase):
         self, u: UnidadVista, p: Percepcion, api: Any, m: Memoria
     ) -> None:
         """Un rover que se va lleno y deja hielo a la vista avisa a UN rover
-        ocioso (INFORM)."""
+        ocioso (INFORM).
+        """
         pol = POLITICAS[self.politica]
         celdas = [
             (hx, hy, c)
@@ -1246,10 +1256,9 @@ class EquipoPermafrost(EquipoBase):
         """REQUEST de recarga al recargador disponible mas cercano.
 
         El primer pedido sale de inmediato. Insistir cuesta 1 % por intento
-        entre emisor y
-        receptor, asi que tras n pedidos sin respuesta la espera es min(320, 20
-        * 2^n) ticks:
-        40, 80, 160... Un AGREE la fija en 60 y un FAILURE la devuelve a 40.
+        entre emisor y receptor, asi que tras n pedidos sin respuesta la espera
+        es min(320, 20 * 2^n) ticks: 40, 80, 160... Un AGREE la fija en 60 y un
+        FAILURE la devuelve a 40.
         """
         tick = p.tick
         espera = (
@@ -1282,7 +1291,8 @@ class EquipoPermafrost(EquipoBase):
         self, u: UnidadVista, p: Percepcion, api: Any, m: Memoria
     ) -> None:
         """Procesa la bandeja. Un mensaje mal formado se descarta sin afectar a
-        los demas."""
+        los demas.
+        """
         for sobre in p.mensajes:
             self._cuenta("recibidos")
             try:
@@ -1295,9 +1305,9 @@ class EquipoPermafrost(EquipoBase):
                     )
                 else:
                     self._cuenta("mensajes_descartados")
-            except (
-                Exception
-            ):  # un contenido inesperado no debe costar el resto de la bandeja
+            except Exception:
+                # Un contenido inesperado no debe costar el resto de la
+                # bandeja.
                 self._cuenta("mensajes_descartados")
 
     def _procesar_mensaje(
@@ -1388,7 +1398,8 @@ class EquipoPermafrost(EquipoBase):
         puja_propia: Optional[float] = None,
     ) -> bool:
         """Manda el CFP a los candidatos y deja la subasta abierta hasta
-        `plazo` ticks."""
+        `plazo` ticks.
+        """
         conv = self._nueva_conversacion(u.id, p.tick)
         tarea = dict(contenido)
         tarea["vence"] = p.tick + plazo
@@ -1413,9 +1424,8 @@ class EquipoPermafrost(EquipoBase):
         """Puja de un rover (menor es mejor).
 
         Hielo: pasos de ida y vuelta, bateria que falta, carga ocupada y
-        exposicion a tormentas.
-        Restos: pasos de ida y vuelta y cuanta bateria tiene (quien menos
-        tiene, mas lo necesita).
+        exposicion a tormentas. Restos: pasos de ida y vuelta y cuanta bateria
+        tiene (quien menos tiene, mas lo necesita).
         """
         riesgo = 25.0 * self._riesgo_de_ruta(u.pos, pos, m)
         if ontologia == ONT_RESTOS:
@@ -1427,7 +1437,8 @@ class EquipoPermafrost(EquipoBase):
         self, u: UnidadVista, pos: Pos, m: Memoria
     ) -> Optional[float]:
         """Puja de un dron de recarga por un rescate, o None si no puede
-        tomarlo."""
+        tomarlo.
+        """
         distancia = cheb(u.pos, pos)
         libre = (
             m["rescate"] is None
@@ -1448,7 +1459,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _oferta_viva(self, m: Memoria) -> bool:
         """Dice si la unidad tiene una propuesta enviada que aun no vence (la
-        compromete)."""
+        compromete).
+        """
         if m["oferta"] is not None and self._tick > m["oferta"][1]:
             m["oferta"] = None  # la propuesta expiro sin respuesta
         return m["oferta"] is not None
@@ -1465,7 +1477,8 @@ class EquipoPermafrost(EquipoBase):
         contenido: Dict[str, Any],
     ) -> None:
         """El candidato puja solo si puede cumplir y no esta comprometido con
-        otra subasta."""
+        otra subasta.
+        """
         pos = a_pos(contenido["pos"])
         puja = None
         if u.tipo == "dron_recarga" and ontologia == ONT_RECARGA:
@@ -1500,7 +1513,8 @@ class EquipoPermafrost(EquipoBase):
         self, u: UnidadVista, p: Percepcion, api: Any, m: Memoria
     ) -> None:
         """Al vencer el plazo: ACCEPT a la menor puja (empate: menor id) y
-        REJECT al resto."""
+        REJECT al resto.
+        """
         vencidas = [
             c for c, s in m["subastas"].items() if p.tick >= s["vence"]
         ]
@@ -1540,7 +1554,8 @@ class EquipoPermafrost(EquipoBase):
         tarea: Dict[str, Any],
     ) -> None:
         """Sin adjudicatario: se avisa por la via barata (INFORM) o se informa
-        el fallo."""
+        el fallo.
+        """
         if ontologia == ONT_RECARGA:
             conv = tarea.get("pedido", conv)
             fallo = self._acl(
@@ -1614,7 +1629,8 @@ class EquipoPermafrost(EquipoBase):
         self, u: UnidadVista, p: Percepcion, api: Any, m: Memoria
     ) -> Optional[Tuple[Any, ...]]:
         """Convierte el contrato vigente en objetivo, o lo cierra si ya no se
-        puede cumplir."""
+        puede cumplir.
+        """
         contrato = m["contrato"]
         if contrato is None:
             return None
@@ -1658,11 +1674,9 @@ class EquipoPermafrost(EquipoBase):
         por turno.
 
         Filtros anti-saturacion: los drones estacionados en la base no
-        reportan; si varios
-        drones ven lo mismo reporta uno; una zona no se repite hasta su
-        enfriamiento; solo se
-        avisa de lo que supera el valor minimo y que ningun rover tiene ya a la
-        vista.
+        reportan; si varios drones ven lo mismo reporta uno; una zona no se
+        repite hasta su enfriamiento; solo se avisa de lo que supera el valor
+        minimo y que ningun rover tiene ya a la vista.
         """
         if p.fase_final or u.bateria <= UMBRAL_BATERIA_BAJA + 5:
             return
@@ -1688,7 +1702,8 @@ class EquipoPermafrost(EquipoBase):
         rovers: List[Tuple[str, Pos]],
     ) -> bool:
         """Avisa de la zona de hielo mas rica que pase los filtros. True si
-        envio algo."""
+        envio algo.
+        """
         pol = POLITICAS[self.politica]
         zonas: Dict[Pos, List[Tuple[int, int, int]]] = {}
         for hx, hy, cant in p.hielo_visible:
@@ -1747,7 +1762,8 @@ class EquipoPermafrost(EquipoBase):
         rovers: List[Tuple[str, Pos]],
     ) -> bool:
         """Avisa de un resto caido que ningun rover tiene a la vista. True si
-        envio algo."""
+        envio algo.
+        """
         pol = POLITICAS[self.politica]
         for r in sorted(
             p.restos_visible, key=lambda r: -int(r.get("combustible", 10))
@@ -1800,14 +1816,12 @@ class EquipoPermafrost(EquipoBase):
         turno.
 
         El 15 es el tamano del grupo de relevo, no el de la flota: con 30
-        exploradores habria
-        dos por turno de cada grupo, es decir, la misma proporcion.
+        exploradores habria dos por turno de cada grupo, es decir, la misma
+        proporcion.
 
         El turno rota cada TURNO_PATRULLA ticks, de modo que todos los drones
-        patrullan a lo
-        largo de la partida y siempre hay cobertura en el aire. Los demas
-        esperan en la base,
-        donde ademas se recargan gratis.
+        patrullan a lo largo de la partida y siempre hay cobertura en el aire.
+        Los demas esperan en la base, donde ademas se recargan gratis.
         """
         return (m["idx"] - tick // TURNO_PATRULLA) % 15 < pol["exploradores"]
 
@@ -1817,9 +1831,8 @@ class EquipoPermafrost(EquipoBase):
         """Dos puntos del gajo que toca: cada salida toma el gajo siguiente.
 
         El abanico de 90 grados hacia adentro se parte en GAJOS sectores. Como
-        cada dron
-        empieza en un gajo distinto (por su indice), los que estan de turno no
-        repiten franja.
+        cada dron empieza en un gajo distinto (por su indice), los que estan de
+        turno no repiten franja.
         """
         gajo = (m["idx"] + m["salidas"]) % GAJOS
         m["salidas"] += 1
@@ -1837,7 +1850,8 @@ class EquipoPermafrost(EquipoBase):
         self, u: UnidadVista, p: Percepcion, api: Any, m: Memoria
     ) -> Accion:
         """Un turno de explorador: cerrar subastas, reportar, y patrullar o
-        volver a base."""
+        volver a base.
+        """
         pol = POLITICAS[self.politica]
         tick = p.tick
         self._cerrar_subastas(u, p, api, m)
@@ -1895,12 +1909,10 @@ class EquipoPermafrost(EquipoBase):
         demas (CNP).
 
         Evaluacion perezosa: si esta libre y el rover esta al lado (recarga
-        preventiva en la
-        base) lo toma sin mas. Si no, abre una subasta entre los recargadores
-        que ve, en la que
-        el tambien puja; asi varios pedidos simultaneos se reparten sin
-        duplicar viajes. Si
-        nadie puede, responde FAILURE y el rover reintenta.
+        preventiva en la base) lo toma sin mas. Si no, abre una subasta entre
+        los recargadores que ve, en la que el tambien puja; asi varios pedidos
+        simultaneos se reparten sin duplicar viajes. Si nadie puede, responde
+        FAILURE y el rover reintenta.
         """
         rover = contenido["rover"]
         pos = a_pos(contenido["pos"])
@@ -1948,8 +1960,8 @@ class EquipoPermafrost(EquipoBase):
         """Compromete al dron con el rescate y lo confirma al rover con AGREE.
 
         El AGREE se omite solo en la recarga preventiva con el rover a la vista
-        del dron, donde
-        el rover ya ve venir la ayuda y el mensaje seria bateria gastada.
+        del dron, donde el rover ya ve venir la ayuda y el mensaje seria
+        bateria gastada.
         """
         pos = a_pos(tarea["pos"])
         m["rescate"] = {
@@ -2036,8 +2048,8 @@ class EquipoPermafrost(EquipoBase):
         """Cada unidad ordena las cuatro politicas segun su estado LOCAL.
 
         La papeleta es solo un orden de preferencias: no lleva posiciones ni
-        hallazgos.
-        Evaluacion perezosa: solo se opina cuando la eleccion esta cerca.
+        hallazgos. Evaluacion perezosa: solo se opina cuando la eleccion esta
+        cerca.
         """
         if p.tick - self.ultima_eleccion < PERIODO_VOTACION - 4:
             return
@@ -2070,7 +2082,8 @@ class EquipoPermafrost(EquipoBase):
 
     def _votar_si_toca(self, tick: int) -> None:
         """Cada PERIODO_VOTACION ticks cuenta las papeletas y fija la politica
-        del equipo."""
+        del equipo.
+        """
         if (
             not EXP_VOTACION
             or tick - self.ultima_eleccion < PERIODO_VOTACION
@@ -2114,11 +2127,9 @@ class EquipoPermafrost(EquipoBase):
         punto por empate).
 
         Si hay empate en el puntaje de Copeland -lo que incluye los ciclos de
-        Condorcet- se
-        desempata por conteo de Borda y, si persiste, por el orden fijo
-        ORDEN_POLITICAS.
-        Devuelve la ganadora, la matriz de pares, los puntajes y el metodo que
-        decidio.
+        Condorcet- se desempata por conteo de Borda y, si persiste, por el
+        orden fijo ORDEN_POLITICAS. Devuelve la ganadora, la matriz de pares,
+        los puntajes y el metodo que decidio.
         """
         cands = ORDEN_POLITICAS
         matriz = {a: {b: 0 for b in cands if b != a} for a in cands}

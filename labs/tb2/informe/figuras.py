@@ -270,6 +270,7 @@ if torneo:
         "sub_abiertas": es(cm.get("subastas_abiertas", 0), 1), "sub_adj": es(cm.get("subastas_adjudicadas", 0), 1),
         "sub_desiertas": es(cm.get("subastas_desiertas", 0), 1),
         "msg_por_subasta": es(msgs_cnp / cm["subastas_abiertas"], 1) if cm.get("subastas_abiertas") else "—",
+        "pct_desiertas": es(100 * cm.get("subastas_desiertas", 0) / cm["subastas_abiertas"], 0) if cm.get("subastas_abiertas") else "—",
         "cfp_sin_puja": es(cm.get("cfp_sin_puja", 0), 1),
         "cedidas": es(cm.get("cedidas_sin_mensaje", 0), 0), "filtrados": es(cm.get("reportes_filtrados", 0), 0),
         "esperas": es(cm.get("esperas_por_tormenta", 0), 0), "esquives": es(cm.get("esquives", 0), 0),
