@@ -62,6 +62,8 @@ def es(x: float, d: int = 4) -> str:
 
 
 def sg(x: float, d: int = 4) -> str:
+    if round(x, d) == 0:
+        return ("%.*f" % (d, 0.0)).replace(".", ",")
     return ("%+.*f" % (d, x)).replace(".", ",").replace("-", "−")
 
 
@@ -83,7 +85,7 @@ def tabla_typ(nombre: str, columnas: str, alineacion: str, cabecera: list, filas
         "  align: %s," % alineacion,
         "  stroke: none, inset: (x: 3pt, y: 2.6pt),",
         "  table.hline(stroke: 0.6pt),",
-        "  table.header(%s)," % ", ".join("[*%s*]" % c for c in cabecera),
+        "  table.header(%s)," % ", ".join(("[*%s*]" % c) if c else "[]" for c in cabecera),
         "  table.hline(stroke: 0.4pt),",
     ]
     for fila in filas:
@@ -173,23 +175,8 @@ for n, bat, torm, ricas, restos, desc in PERFILES:
     orden = yo.urna["x"]
     papeletas += [orden] * n
     filas.append([str(n), desc, " ≻ ".join("`%s`" % o[:3] for o in orden)])
-tabla_typ("papeletas.typ", "(auto, 1fr, auto)", "(right, left, left)", ["$n$", "Estado local del votante", "Papeleta"], filas)
+tabla_typ("papeletas.typ", "(1fr, auto)", "(left, left)", ["Estado local del votante", "Papeleta que produce"], [f_[1:] for f_ in filas])
 
-ganadora, matriz, copeland, metodo = Clase._copeland(None, papeletas)
-cands = E.ORDEN_POLITICAS
-filas = []
-for a in cands:
-    filas.append(["`%s`" % a] + ["—" if a == b else str(matriz[a][b]) for b in cands] + [es(copeland[a], 1)])
-tabla_typ("copeland.typ", "(auto, 1fr, 1fr, 1fr, 1fr, auto)", "(left,) + (right,) * 5",
-          ["$a$ vence a $b$"] + ["`%s`" % c[:3] for c in cands] + ["Copeland"], filas)
-vigente = "EXPANSION"
-ventaja = matriz[ganadora][vigente] - matriz[vigente][ganadora] if ganadora != vigente else 0
-V["cop"] = {
-    "n": str(len(papeletas)), "ganadora": ganadora, "metodo": metodo, "vigente": vigente,
-    "a_favor": str(matriz[ganadora].get(vigente, 0)), "en_contra": str(matriz[vigente].get(ganadora, 0)),
-    "ventaja": str(ventaja), "umbral": es(E.MARGEN_INERCIA * len(papeletas), 1),
-    "cambia": "sí" if ventaja > E.MARGEN_INERCIA * len(papeletas) else "no",
-}
 
 # ----------------------------------------------------------------------------------------------
 # Torneo (afinado-v2.json)
@@ -209,6 +196,21 @@ if _ant.exists():
     if _c:
         V["ant"] = {"n": str(len(_c)), "ratio": es(st.mean(r["ratio"] for r in _c)),
                     "hielo": es(st.mean(r["recursos"] for r in _c), 0), "bat": es(st.mean(r["bateria"] for r in _c), 0)}
+_ens = AQUI / "datos" / "ensayo-calibracion.json"
+_bar = AQUI / "datos" / "barrido-previo.json"
+if _ens.exists() and _bar.exists():
+    _e = json.loads(_ens.read_text())
+    _c = {r["semilla"]: r for r in _e if r["variante"] == "completo"}
+    _t = [r for r in _e if r["variante"] == "s2_w2_mitad_w4_triple"]
+    _b = json.loads(_bar.read_text())["x"]
+    V["cal"] = {
+        "previo_ratio": _b["completo"]["ratio"], "previo_w2_mitad": _b["s2_w2_mitad"]["delta"], "previo_w2_doble": _b["s2_w2_doble"]["delta"],
+        "previo_w4_triple": _b["s2_w4_triple"]["delta"], "previo_w4_cero": _b["s2_w4_cero"]["delta"],
+        "ens_n": str(len(_t)), "ens_antes": es(st.mean(r["ratio"] for r in _c.values())), "ens_despues": es(st.mean(r["ratio"] for r in _t)),
+        "ens_delta": sg(st.mean(r["ratio"] - _c[r["semilla"]]["ratio"] for r in _t)),
+        "ens_mejor_en": "%d de %d" % (sum(1 for r in _t if r["ratio"] > _c[r["semilla"]]["ratio"]), len(_t)),
+        "ens_primeros": "%d de %d" % (sum(1 for r in _t if r["puesto"] == 1), len(_t)),
+    }
 if torneo:
     N, B, filas_n = [], [], []
     for r in torneo:
@@ -334,6 +336,10 @@ if torneo:
     V["t"]["msg_por_ont"] = ("Por ontología: " + ", ".join("%s de %s" % (es(n, 1), o) for o, n in onts if n is not None) + ".") if any(n is not None for _, n in onts) else ""
     subs = [(o, cm.get("subastas_" + o)) for o in ("hielo", "restos", "recarga")]
     V["t"]["sub_por_ont"] = (" (" + ", ".join("%s de %s" % (es(n, 1), o) for o, n in subs if n is not None) + ")") if any(n is not None for _, n in subs) else ""
+    tp = Counter()
+    for f in N:
+        tp.update(f["interno"].get("ticks_por_politica", {}))
+    V["t"]["pct_politicas"] = ", ".join("`%s` %s %%" % (k, es(100 * tp[k] / sum(tp.values()), 0)) for k in E.POLITICAS) if tp else ""
     veces_pol = Counter()
     for f in N:
         veces_pol.update({E.POLITICA_INICIAL} | {c[1] for c in f["interno"]["cambios_de_politica"]})
@@ -418,6 +424,8 @@ ETIQUETAS = {
     "s2_w2_mitad": ("S2", "$w_2 times 0,5$"),
     "s2_w2_doble": ("S2", "$w_2 times 2$"),
     "s2_w4_cero": ("S2", "$w_4 times 0$"),
+    "s2_w4_tercio": ("S2", "$w_4 times 1\\/3$"),
+    "s2_pesos_iniciales": ("S2", "Pesos antes de calibrar ($w_2 times 2$, $w_4 times 1\\/3$)"),
     "s2_w4_triple": ("S2", "$w_4 times 3$"),
     "s3_sin_filtros": ("S3", "Reportes sin filtros"),
     "s4_sin_subastas": ("S4", "Sin subasta implícita ni CNP"),
@@ -429,7 +437,8 @@ ETIQUETAS = {
 ETIQ_FIG = {
     "s1_un_solo_gajo": "S1 · un solo gajo", "s1_sin_olvido": "S1 · sin olvido por revisita",
     "s2_sin_evasion": "S2 · sin evasión de tormentas", "s2_w2_mitad": "S2 · w2 × 0,5", "s2_w2_doble": "S2 · w2 × 2",
-    "s2_w4_cero": "S2 · w4 × 0", "s2_w4_triple": "S2 · w4 × 3", "s3_sin_filtros": "S3 · sin filtros de mensajes",
+    "s2_w4_cero": "S2 · w4 × 0", "s2_w4_triple": "S2 · w4 × 3", "s2_w4_tercio": "S2 · w4 × 1/3",
+    "s2_pesos_iniciales": "S2 · pesos antes de calibrar", "s3_sin_filtros": "S3 · sin filtros de mensajes",
     "s4_sin_subastas": "S4 · sin subastas", "s5_normal_fija_ahorro": "S5 · AHORRO fija (normal)",
     "s5_tormenta_fija_ahorro": "S5 · AHORRO fija (alta tormenta)", "s5_tormenta_fija_expansion": "S5 · EXPANSION fija (alta tormenta)",
 }
@@ -442,17 +451,18 @@ if exp:
     for r in exp:
         por.setdefault(r["variante"], []).append(r)
     n_min = min(len(v) for v in por.values())
-    exp_ok = all(k in por for k in ETIQUETAS) and n_min >= 10
+    exp_ok = n_min >= 10
+    for k in por:   # variantes nuevas que este script aún no conoce
+        ETIQUETAS.setdefault(k, (k[:2].upper() if k[0] == "s" else "—", "`%s`" % k))
+        ETIQ_FIG.setdefault(k, k)
     V["x"] = {"version_actual": all(_es_version_actual(r["contadores"]) for r in exp),
               "n_variantes": str(len(por)), "n_min": str(n_min), "partidas": str(len(exp)),
               "cortadas": str(sum(1 for r in exp if not r["terminada"])),
               "errores": str(sum(r["errores"] for r in exp)), "semillas": str(len({r["semilla"] for r in exp}))}
     filas = []
     deltas_fig = []
-    for nombre, (sesion, que) in ETIQUETAS.items():
-        fs = por.get(nombre)
-        if not fs:
-            continue
+    for nombre, fs in por.items():
+        sesion, que = ETIQUETAS[nombre]
         ref = {r["semilla"]: r for r in por.get(REFERENCIA.get(nombre, "completo"), [])}
         ds = [f["ratio"] - ref[f["semilla"]]["ratio"] for f in fs if f["semilla"] in ref]
         es_ref = nombre in ("completo", "s5_tormenta_votando")
@@ -478,6 +488,8 @@ if exp:
             "cambios": es(st.mean(len(f["cambios_de_politica"]) for f in fs), 1),
             "filtrados": es(st.mean(f["reportes_filtrados"] for f in fs), 0),
             "cedidas": es(st.mean(f["cedidas_sin_mensaje"] for f in fs), 0),
+            "primeros": "%d de %d" % (sum(1 for f in fs if f["puesto"] == 1), len(fs)),
+            "reasignados": es(st.mean(f["contadores"].get("contratos_reasignados", 0) for f in fs), 1),
             "subastas": es(st.mean(f["subastas"] for f in fs), 1),
         }
         V["x"][nombre] = v
@@ -506,6 +518,96 @@ if exp:
     V["x"]["claros"] = ", ".join("`%s` (%s)" % (k, v["delta"]) for k, v in V["x"].items() if isinstance(v, dict) and v.get("claro")) or "ninguna"
     V["x"]["sd_min"] = es(min(st.pstdev(f["ratio"] for f in fs) for fs in por.values()), 3)
     V["x"]["sd_max"] = es(max(st.pstdev(f["ratio"] for f in fs) for fs in por.values()), 3)
+
+    # S2 · Tabla de calibración: pesos efectivos de AHORRO en cada variante del barrido
+    MULT = {"s2_pesos_iniciales": (1, 2, 1, 1 / 3), "s2_w2_doble": (1, 2, 1, 1), "s2_w2_mitad": (1, 0.5, 1, 1),
+            "s2_w4_cero": (1, 1, 1, 0), "s2_w4_tercio": (1, 1, 1, 1 / 3), "s2_w4_triple": (1, 1, 1, 3), "completo": (1, 1, 1, 1)}
+    NOMBRE_CAL = {"s2_pesos_iniciales": "Antes de calibrar", "s2_w2_doble": "$w_2 times 2$", "s2_w2_mitad": "$w_2 times 0,5$",
+                  "s2_w4_cero": "$w_4 times 0$", "s2_w4_tercio": "$w_4 times 1\\/3$", "s2_w4_triple": "$w_4 times 3$",
+                  "completo": "*Adoptados*"}
+    w_ref = E.POLITICAS["AHORRO"]["w"]
+    filas_cal = []
+    for nombre, mult in MULT.items():
+        if nombre not in V["x"]:
+            continue
+        v = V["x"][nombre]
+        filas_cal.append([NOMBRE_CAL[nombre], "(%s)" % "; ".join(es(w * k, 1) for w, k in zip(w_ref, mult)),
+                          "%s ± %s" % (v["ratio"], v["sd"]), v["delta_tabla"], v["peor_en"], v["hielo"], v["bat"], v["primeros"]])
+    tabla_typ("calibracion.typ", "(auto, auto, auto, 1fr, 1fr, 1fr, 1fr, 1fr)", "(left, left) + (right,) * 6",
+              ["Pesos", "$(w_1; w_2; w_3; w_4)$ en `AHORRO`", "Ratio ± desv.", "Δ Ratio", "Peor en", "Hielo", "Bat.", "1.º"], filas_cal)
+
+    # S4 · Tabla con y sin subastas
+    if "s4_sin_subastas" in V["x"]:
+        a, b = V["x"]["completo"], V["x"]["s4_sin_subastas"]
+        tabla_typ("subastas.typ", "(1fr, auto, auto, auto, auto, auto, auto)", "(left,) + (right,) * 6",
+                  ["", "Viajes en vano", "Bat. en pasos", "Hielo", "Hielo / 100 bat.", "Mensajes", "Ratio ± desv."],
+                  [["Con subastas (entrega)", a["viajes"], a["bat_pasos"], a["hielo"], a["hielo_por_bat100"], a["msgs"], "%s ± %s" % (a["ratio"], a["sd"])],
+                   ["Sin subastas", b["viajes"], b["bat_pasos"], b["hielo"], b["hielo_por_bat100"], b["msgs"], "%s ± %s" % (b["ratio"], b["sd"])]])
+
+    # S5 · Elecciones reales: conteo por método y una elección concreta
+    con_voto = [r for r in exp if r.get("desempates") and sum(r["desempates"].values())]
+    metodos = Counter()
+    for r in con_voto:
+        metodos.update(r["desempates"])
+    if torneo:
+        for f_ in N:
+            metodos.update(f_["interno"].get("desempates", {}))
+    total_el = sum(metodos.values())
+    cands = E.ORDEN_POLITICAS
+
+    def condorcet(mat):
+        for a_ in cands:
+            if all(mat[a_][b_] > mat[b_][a_] for b_ in cands if b_ != a_):
+                return a_
+        return None
+
+    todas = []   # (variante, semilla, vigente antes, voto)
+    for r in exp:
+        vigente = E.POLITICA_INICIAL if "expansion" not in r["variante"] else "EXPANSION"
+        for voto in r.get("votos") or []:
+            todas.append((r["variante"], r["semilla"], vigente, voto))
+            vigente = voto["ganadora"]
+    sin_cw = [t_ for t_ in todas if condorcet(t_[3]["matriz"]) is None]
+    V["x"]["votos"] = {
+        "total": str(total_el), "copeland": str(metodos.get("copeland", 0)), "borda": str(metodos.get("borda", 0)),
+        "orden_fijo": str(metodos.get("orden_fijo", 0)), "inercia": str(metodos.get("inercia", 0)),
+        "exportadas": str(len(todas)), "sin_condorcet": str(len(sin_cw)),
+    }
+    if todas:
+        def interes(t_):
+            var, _, vig, voto = t_
+            return (var == "completo", voto["desempate"] in ("borda", "orden_fijo"), condorcet(voto["matriz"]) is None,
+                    voto["desempate"] == "inercia", voto["cambio"] and voto["ganadora"] != "REPLIEGUE", voto["cambio"])
+        var, sem, vig, voto = max(todas, key=interes)
+        mat = voto["matriz"]
+        filas_v = [["`%s`" % a_] + ["—" if a_ == b_ else str(mat[a_][b_]) for b_ in cands] + [es(voto["copeland"][a_], 1)] for a_ in cands]
+        tabla_typ("copeland.typ", "(auto, 1fr, 1fr, 1fr, 1fr, auto)", "(left,) + (right,) * 5",
+                  ["$a$ frente a $b$"] + ["`%s`" % c_[:3] for c_ in cands] + ["Copeland"], filas_v)
+        cw = condorcet(mat)
+        gan = voto["ganadora"]
+        # Se rehace el recuento desde la matriz: el conteo de Borda de a es la suma de su fila.
+        tope = max(voto["copeland"].values())
+        finalistas = [c_ for c_ in cands if voto["copeland"][c_] == tope]
+        borda = {c_: sum(mat[c_].values()) for c_ in cands}
+        if len(finalistas) > 1:
+            mejor_b = max(borda[c_] for c_ in finalistas)
+            por_borda = [c_ for c_ in finalistas if borda[c_] == mejor_b]
+            top = por_borda[0]
+            como = "Borda (%s)" % ", ".join("%s %d" % (c_, borda[c_]) for c_ in finalistas) if len(por_borda) == 1 else "el orden fijo"
+            frase = "Empatan en el puntaje de Copeland %s; el desempate por %s da %s" % (" y ".join(finalistas), como, top)
+        else:
+            top = finalistas[0]
+            frase = "El mayor puntaje de Copeland es el de %s" % top
+        if top != vig and top != "REPLIEGUE":
+            ventaja = mat[top][vig] - mat[vig][top]
+            umbral = E.MARGEN_INERCIA * voto["votantes"]
+            frase += ". Frente a la vigente %s, su duelo directo queda %d a %d: la ventaja de %d %s el margen de inercia de %s votos" % (
+                vig, mat[top][vig], mat[vig][top], ventaja, "supera" if ventaja > umbral else "no supera", es(umbral, 1))
+        V["x"]["voto"] = {
+            "variante": var, "semilla": str(sem), "tick": str(voto["tick"]), "votantes": str(voto["votantes"]),
+            "vigente": vig, "ganadora": gan, "metodo": voto["desempate"], "cambio": "cambia" if voto["cambio"] else "no cambia",
+            "condorcet": ("El ganador de Condorcet es %s" % cw) if cw else "No hay ganador de Condorcet", "frase": frase,
+        }
 
     # Figura: Δ Ratio por variante (pareado por semilla)
     if deltas_fig:
@@ -547,35 +649,60 @@ if exp:
 # ----------------------------------------------------------------------------------------------
 # Latencia (latencia.json)
 # ----------------------------------------------------------------------------------------------
-lat = cargar("latencia.json")
-lat_ok = bool(lat)
-if lat and (REPORTS / "latencia.json").stat().st_mtime < (TB2 / "equipoA.py").stat().st_mtime:
-    print("AVISO: latencia.json es ANTERIOR a equipoA.py; hay que repetir latencia.py.")
-if lat:
+import platform  # noqa: E402
+
+_cpu = next((l.split(":", 1)[1].strip() for l in open("/proc/cpuinfo") if l.startswith("model name")), "desconocida")
+V["maq"] = {"cpu": _cpu, "python": platform.python_version()}
+lat_ok = False
+flotas = []
+for archivo, clave in (("latencia.json", "l"), ("latencia-400.json", "l4")):
+    lat = cargar(archivo)
+    if not lat:
+        continue
+    if (REPORTS / archivo).stat().st_mtime < (TB2 / "equipoA.py").stat().st_mtime:
+        print("AVISO: %s es ANTERIOR a equipoA.py; hay que repetir latencia.py." % archivo)
+    lat_ok = True
     res = lat["resumen"]
-    V["l"] = {
+    brutos = [m_ for s in lat["por_semilla"] for m_ in s.get("maximos", [s["max"]])]
+    V[clave] = {
         "media": es(res["media"], 2), "p95": es(res["p95"], 2), "p99": es(res["p99"], 2), "max": es(res["max"], 2),
-        "carga": es(lat.get("carga_1min", 0.0), 1), "copias": str(lat.get("copias", 1)), "semillas": str(len(lat["por_semilla"])),
+        "max_bruto": es(max(brutos), 2), "carga": es(lat.get("carga_1min", 0.0), 1),
+        "unidades": str(lat.get("unidades_por_equipo", 50)), "total": str(4 * lat.get("unidades_por_equipo", 50)),
+        "repeticiones": str(lat.get("repeticiones", 1)), "semillas": str(len(lat["por_semilla"])),
         "ticks": str(sum(s["ticks"] for s in lat["por_semilla"])),
-        "reps": str(lat.get("repeticiones", 1)), "max_bruto": es(res.get("max_bruto", res["max"]), 2),
-        "cumple": "sí" if res["max"] < UMBRAL_MS else "no", "margen": es(UMBRAL_MS / res["max"], 1) if res["max"] else "—",
+        "cumple": "sí" if max(brutos) < UMBRAL_MS else "no", "sobre_umbral": str(sum(1 for m_ in brutos if m_ >= UMBRAL_MS)),
+        "n_brutos": str(len(brutos)),
     }
-    filas = [[str(s["semilla"]), str(s["ticks"]), es(s["media"], 2), es(s["p95"], 2), es(s["p99"], 2), es(s["max"], 2)] for s in lat["por_semilla"]]
-    filas.append(["*Peor caso*", V["l"]["ticks"], "*%s*" % V["l"]["media"], "*%s*" % V["l"]["p95"], "*%s*" % V["l"]["p99"], "*%s*" % V["l"]["max"]])
-    tabla_typ("latencia.typ", "(auto,) + (1fr,) * 5", "(left,) + (right,) * 5",
-              ["Semilla", "Turnos", "Media (ms)", "p95 (ms)", "p99 (ms)", "Máximo (ms)"], filas)
-    fig, ax = plt.subplots(figsize=(3.3, 1.75))
-    xs = range(len(lat["por_semilla"]))
-    for i, (k, nombre, marca) in enumerate((("media", "Media", "o"), ("p95", "p95", "s"), ("p99", "p99", "^"), ("max", "Máximo", "D"))):
-        ax.plot(xs, [s[k] for s in lat["por_semilla"]], marca, ms=4.5, color=C[i], label=nombre, mec="white", mew=0.6)
+    flotas.append((clave, lat, brutos))
+if flotas:
+    filas = []
+    for clave, lat, brutos in flotas:
+        v_ = V[clave]
+        for s in lat["por_semilla"]:
+            filas.append(["%s × 4" % v_["unidades"], str(s["semilla"]), str(s["ticks"]), es(s["media"], 2), es(s["p95"], 2),
+                          es(s["p99"], 2), es(s["max"], 2), es(max(s.get("maximos", [s["max"]])), 2)])
+        filas.append(["*%s × 4*" % v_["unidades"], "*peor*", v_["ticks"], "*%s*" % v_["media"], "*%s*" % v_["p95"], "*%s*" % v_["p99"],
+                      "*%s*" % v_["max"], "*%s*" % v_["max_bruto"]])
+    tabla_typ("latencia.typ", "(auto, auto, 1fr, 1fr, 1fr, 1fr, 1fr, 1fr)", "(left,) + (right,) * 7",
+              ["Flota", "Sem.", "Turnos", "Media", "p95", "p99", "Máx.", "Máx. rep."], filas)
+    fig, ax = plt.subplots(figsize=(3.3, 1.9))
+    for i, (clave, lat, brutos) in enumerate(flotas):
+        xs, ys = [], []
+        for j, s in enumerate(lat["por_semilla"]):
+            for m_ in s.get("maximos", [s["max"]]):
+                xs.append(j + (i - 0.5 * (len(flotas) - 1)) * 0.3)
+                ys.append(m_)
+        ax.plot(xs, ys, "os"[i], ms=4, color=C[i], mec="white", mew=0.6, ls="",
+                label="%s unidades en total" % V[clave]["total"])
     ax.axhline(UMBRAL_MS, color="#333333", lw=0.9, ls="--")
-    ax.text(len(lat["por_semilla"]) - 0.55, UMBRAL_MS - 1.2, "umbral: 40 ms", ha="right", va="top", fontsize=7.5, color="#333333")
-    ax.set_xticks(list(xs), [str(s["semilla"]) for s in lat["por_semilla"]])
+    n_sem = len(flotas[0][1]["por_semilla"])
+    ax.text(n_sem - 0.55, UMBRAL_MS - 1.2, "umbral: 40 ms", ha="right", va="top", fontsize=7.5, color="#333333")
+    ax.set_xticks(range(n_sem), [str(s["semilla"]) for s in flotas[0][1]["por_semilla"]])
     ax.set_xlabel("Semilla")
-    ax.set_ylabel("Tiempo de decisión por turno (ms)")
-    ax.set_ylim(0, max(UMBRAL_MS * 1.08, res["max"] * 1.1))
+    ax.set_ylabel("Peor turno de cada repetición (ms)")
+    ax.set_ylim(0, max(UMBRAL_MS * 1.08, max(max(b_) for _, _, b_ in flotas) * 1.1))
     ax.grid(axis="x", visible=False)
-    ax.legend(loc="center left", bbox_to_anchor=(1.0, 0.5))
+    ax.legend(loc="upper left", bbox_to_anchor=(0.0, 0.9))
     sns.despine(ax=ax)
     guardar(fig, "latencia.svg")
 
