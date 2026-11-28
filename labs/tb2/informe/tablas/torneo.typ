@@ -1,0 +1,17 @@
+#table(
+  columns: (auto, 1fr, 1fr, 1fr, 1fr, 1fr, auto, 1fr, 1fr, 1fr, 1fr, 1fr),
+  align: (left,) + (right,) * 11,
+  stroke: none, inset: (x: 4pt, y: 2.6pt),
+  table.hline(stroke: 0.6pt),
+  table.header(table.cell(colspan: 3)[], table.cell(colspan: 6, align: center)[*Nuestro equipo*], table.cell(colspan: 3, align: center)[*Equipos base (media)*],
+    table.hline(start: 3, end: 9, stroke: 0.3pt), table.hline(start: 9, end: 12, stroke: 0.3pt),
+    [*Esquina*], [*$n$*], [*cort.*], [*Ratio*], [*mín.*], [*máx.*], [*puestos 1–4*], [*hielo*], [*batería*], [*Ratio*], [*hielo*], [*batería*]),
+  table.hline(stroke: 0.4pt),
+  [A], [6], [0], [0,0362], [0,0228], [0,0466], [6 / 0 / 0 / 0], [128], [3676], [0,0155], [182], [11608],
+  [B], [6], [2], [0,0309], [0,0152], [0,0506], [5 / 1 / 0 / 0], [178], [6774], [0,0183], [164], [10535],
+  [C], [6], [0], [0,0332], [0,0207], [0,0396], [2 / 4 / 0 / 0], [170], [5383], [0,0213], [173], [9984],
+  [D], [6], [2], [0,0321], [0,0123], [0,0446], [2 / 3 / 1 / 0], [150], [6014], [0,0215], [175], [9976],
+  table.hline(stroke: 0.3pt),
+  [*Total*], [24], [4], [*0,0331*], [0,0123], [0,0506], [15 / 8 / 1 / 0], [157], [5462], [*0,0192*], [173], [10526],
+  table.hline(stroke: 0.6pt),
+)

@@ -1,0 +1,7605 @@
+[
+ {
+  "semilla": 1,
+  "sim_s": 95.4,
+  "ticks": 795,
+  "terminada": true,
+  "hielo_inicial": 729,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 101,
+    "bateria": 1703.0,
+    "ratio": 0.05931,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 138,
+    "gasto": {
+     "explorador:mensajes": 55,
+     "explorador:paso": 349,
+     "explorador:paso_tormenta": 45,
+     "explorador:pulso_tormenta": 60,
+     "recarga:mensajes": 8,
+     "recarga:paso": 3,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 74,
+     "rover:paso": 907,
+     "rover:pulso_tormenta": 180
+    },
+    "ms_media": 0.786,
+    "ms_p95": 2.537,
+    "ms_p99": 5.152,
+    "ms_max": 12.038,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 195,
+      "pasos_RETORNANDO_BASE": 100,
+      "msg_INFORM": 46,
+      "msg_CFP": 40,
+      "subastas_abiertas": 17,
+      "cedidas_sin_mensaje": 12398,
+      "pasos_EXPLORANDO": 99,
+      "recibidos": 138,
+      "pasos_RECOLECTANDO": 354,
+      "msg_PROPOSE": 18,
+      "reportes_filtrados": 703,
+      "extracciones": 101,
+      "msg_ACCEPT_PROPOSAL": 13,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 13,
+      "contratos_ganados": 13,
+      "cfp_sin_puja": 22,
+      "patrullas": 8,
+      "esquives": 129,
+      "esperas_por_tormenta": 108,
+      "pasos_RETORNANDO": 362,
+      "avisos_de_sobrante": 12,
+      "depositos": 24,
+      "hielo_depositado": 101,
+      "elecciones": 15,
+      "subastas_desiertas": 4,
+      "carronas": 2,
+      "msg_REQUEST": 16,
+      "rescates_aceptados": 15,
+      "pasos_EN_RESCATE": 3,
+      "recargas": 15,
+      "rescates_reenviados": 1,
+      "astar": 28,
+      "pasos_CONSUMIENDO_CARRONA": 1,
+      "pasos_OCIOSO": 25
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 15,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.754,
+      "p95": 2.467,
+      "p99": 5.115,
+      "max": 12.006
+     }
+    }
+   },
+   "C": {
+    "puesto": 2,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 265,
+    "bateria": 12342.0,
+    "ratio": 0.02147,
+    "vivas": 24,
+    "unidades": 50,
+    "mensajes": 1509,
+    "gasto": {
+     "explorador:mensajes": 374,
+     "explorador:paso": 1138,
+     "explorador:paso_tormenta": 75,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 309,
+     "recarga:paso": 2508,
+     "recarga:paso_tormenta": 260,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 826,
+     "rover:paso": 4618,
+     "rover:paso_tormenta": 1310,
+     "rover:pulso_tormenta": 893
+    },
+    "ms_media": 0.574,
+    "ms_p95": 1.752,
+    "ms_p99": 4.229,
+    "ms_max": 15.701
+   },
+   "B": {
+    "puesto": 3,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 248,
+    "bateria": 13694.0,
+    "ratio": 0.01811,
+    "vivas": 34,
+    "unidades": 50,
+    "mensajes": 1786,
+    "gasto": {
+     "explorador:mensajes": 568,
+     "explorador:paso": 2089,
+     "explorador:paso_tormenta": 95,
+     "explorador:pulso_tormenta": 15,
+     "recarga:mensajes": 258,
+     "recarga:paso": 3066,
+     "recarga:paso_tormenta": 120,
+     "recarga:pulso_tormenta": 15,
+     "rover:mensajes": 960,
+     "rover:paso": 4514,
+     "rover:paso_tormenta": 1380,
+     "rover:pulso_tormenta": 614
+    },
+    "ms_media": 0.751,
+    "ms_p95": 1.963,
+    "ms_p99": 5.27,
+    "ms_max": 12.111
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 103,
+    "bateria": 10757.0,
+    "ratio": 0.00958,
+    "vivas": 30,
+    "unidades": 50,
+    "mensajes": 1722,
+    "gasto": {
+     "explorador:mensajes": 567,
+     "explorador:paso": 2012,
+     "explorador:paso_tormenta": 14,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 188,
+     "recarga:paso": 1478,
+     "recarga:paso_tormenta": 232,
+     "recarga:pulso_tormenta": 15,
+     "rover:mensajes": 968,
+     "rover:paso": 2080,
+     "rover:paso_tormenta": 2240,
+     "rover:pulso_tormenta": 954
+    },
+    "ms_media": 0.758,
+    "ms_p95": 2.089,
+    "ms_p99": 6.053,
+    "ms_max": 16.448
+   }
+  },
+  "asignacion": {
+   "A": "equipoA.py",
+   "B": "base",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 2,
+  "sim_s": 116.5,
+  "ticks": 971,
+  "terminada": true,
+  "hielo_inicial": 737,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 95,
+    "bateria": 1852.0,
+    "ratio": 0.0513,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 99,
+    "gasto": {
+     "explorador:mensajes": 34,
+     "explorador:paso": 313,
+     "explorador:paso_tormenta": 5,
+     "explorador:pulso_tormenta": 54,
+     "recarga:mensajes": 12,
+     "recarga:paso": 62,
+     "recarga:paso_tormenta": 5,
+     "recarga:pulso_tormenta": 30,
+     "rover:mensajes": 52,
+     "rover:paso": 874,
+     "rover:paso_tormenta": 65,
+     "rover:pulso_tormenta": 345
+    },
+    "ms_media": 0.932,
+    "ms_p95": 2.567,
+    "ms_p99": 5.931,
+    "ms_max": 23.573,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 39,
+      "pasos_PATRULLANDO": 201,
+      "msg_CFP": 14,
+      "subastas_abiertas": 7,
+      "pasos_RETORNANDO_BASE": 80,
+      "cedidas_sin_mensaje": 17126,
+      "pasos_EXPLORANDO": 137,
+      "recibidos": 99,
+      "msg_PROPOSE": 11,
+      "pasos_RECOLECTANDO": 322,
+      "reportes_filtrados": 442,
+      "msg_ACCEPT_PROPOSAL": 6,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 6,
+      "contratos_ganados": 6,
+      "extracciones": 95,
+      "patrullas": 9,
+      "esquives": 138,
+      "esperas_por_tormenta": 368,
+      "pasos_RETORNANDO": 337,
+      "depositos": 22,
+      "hielo_depositado": 95,
+      "elecciones": 19,
+      "avisos_de_sobrante": 7,
+      "astar": 36,
+      "cfp_sin_puja": 3,
+      "subastas_desiertas": 1,
+      "msg_REQUEST": 20,
+      "rescates_aceptados": 18,
+      "pasos_EN_RESCATE": 36,
+      "recargas": 18,
+      "msg_AGREE": 3,
+      "rescates_reenviados": 1,
+      "msg_FAILURE": 1,
+      "pasos_CONSUMIENDO_CARRONA": 2,
+      "carronas": 2,
+      "pasos_OCIOSO": 11
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 19,
+     "cambios_de_politica": [
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       750,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.912,
+      "p95": 2.532,
+      "p99": 5.903,
+      "max": 23.544
+     }
+    }
+   },
+   "B": {
+    "puesto": 2,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 260,
+    "bateria": 14259.0,
+    "ratio": 0.01823,
+    "vivas": 30,
+    "unidades": 50,
+    "mensajes": 1808,
+    "gasto": {
+     "explorador:mensajes": 452,
+     "explorador:paso": 1396,
+     "explorador:paso_tormenta": 30,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 364,
+     "recarga:paso": 3252,
+     "recarga:paso_tormenta": 139,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 992,
+     "rover:paso": 5345,
+     "rover:paso_tormenta": 1520,
+     "rover:pulso_tormenta": 746
+    },
+    "ms_media": 0.538,
+    "ms_p95": 1.542,
+    "ms_p99": 3.518,
+    "ms_max": 8.818
+   },
+   "D": {
+    "puesto": 3,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 113,
+    "bateria": 8417.5,
+    "ratio": 0.01342,
+    "vivas": 20,
+    "unidades": 50,
+    "mensajes": 1772,
+    "gasto": {
+     "explorador:mensajes": 552,
+     "explorador:paso": 2404,
+     "explorador:paso_tormenta": 50,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 273,
+     "recarga:paso": 752,
+     "recarga:paso_tormenta": 103,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 948,
+     "rover:paso": 2282,
+     "rover:paso_tormenta": 460,
+     "rover:pulso_tormenta": 586
+    },
+    "ms_media": 0.278,
+    "ms_p95": 1.194,
+    "ms_p99": 3.635,
+    "ms_max": 8.775
+   },
+   "C": {
+    "puesto": 4,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 145,
+    "bateria": 11018.0,
+    "ratio": 0.01316,
+    "vivas": 20,
+    "unidades": 50,
+    "mensajes": 2018,
+    "gasto": {
+     "explorador:mensajes": 662,
+     "explorador:paso": 2202,
+     "explorador:paso_tormenta": 70,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 281,
+     "recarga:paso": 1452,
+     "recarga:paso_tormenta": 142,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 1076,
+     "rover:paso": 3519,
+     "rover:paso_tormenta": 930,
+     "rover:pulso_tormenta": 676
+    },
+    "ms_media": 0.356,
+    "ms_p95": 1.293,
+    "ms_p99": 3.672,
+    "ms_max": 8.527
+   }
+  },
+  "asignacion": {
+   "A": "equipoA.py",
+   "B": "base",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 3,
+  "sim_s": 141.2,
+  "ticks": 1177,
+  "terminada": true,
+  "hielo_inicial": 744,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 117,
+    "bateria": 2130.0,
+    "ratio": 0.05493,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 159,
+    "gasto": {
+     "explorador:mensajes": 66,
+     "explorador:paso": 531,
+     "explorador:paso_tormenta": 10,
+     "explorador:pulso_tormenta": 93,
+     "recarga:mensajes": 9,
+     "recarga:paso": 4,
+     "recarga:pulso_tormenta": 33,
+     "rover:mensajes": 84,
+     "rover:paso": 983,
+     "rover:paso_tormenta": 5,
+     "rover:pulso_tormenta": 312
+    },
+    "ms_media": 0.638,
+    "ms_p95": 1.638,
+    "ms_p99": 2.896,
+    "ms_max": 7.343,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 289,
+      "msg_INFORM": 33,
+      "pasos_RETORNANDO_BASE": 150,
+      "recibidos": 159,
+      "cedidas_sin_mensaje": 14324,
+      "pasos_RECOLECTANDO": 383,
+      "pasos_EXPLORANDO": 96,
+      "msg_CFP": 51,
+      "subastas_abiertas": 23,
+      "msg_PROPOSE": 29,
+      "reportes_filtrados": 772,
+      "extracciones": 117,
+      "pasos_RETORNANDO": 379,
+      "msg_ACCEPT_PROPOSAL": 18,
+      "msg_REJECT_PROPOSAL": 11,
+      "subastas_adjudicadas": 18,
+      "contratos_ganados": 18,
+      "cfp_sin_puja": 22,
+      "patrullas": 13,
+      "depositos": 26,
+      "hielo_depositado": 117,
+      "esquives": 188,
+      "subastas_desiertas": 5,
+      "esperas_por_tormenta": 156,
+      "elecciones": 23,
+      "astar": 7,
+      "avisos_de_sobrante": 9,
+      "carronas": 5,
+      "msg_REQUEST": 17,
+      "rescates_aceptados": 16,
+      "pasos_EN_RESCATE": 4,
+      "recargas": 16,
+      "pasos_CONSUMIENDO_CARRONA": 8,
+      "pasos_OCIOSO": 24,
+      "rescates_reenviados": 1
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 23,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       950,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.618,
+      "p95": 1.611,
+      "p99": 2.862,
+      "max": 7.33
+     }
+    }
+   },
+   "B": {
+    "puesto": 2,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 219,
+    "bateria": 13913.5,
+    "ratio": 0.01574,
+    "vivas": 17,
+    "unidades": 50,
+    "mensajes": 2551,
+    "gasto": {
+     "explorador:mensajes": 570,
+     "explorador:paso": 2487,
+     "explorador:paso_tormenta": 50,
+     "explorador:pulso_tormenta": 6,
+     "recarga:mensajes": 610,
+     "recarga:paso": 2350,
+     "recarga:paso_tormenta": 240,
+     "recarga:pulso_tormenta": 12,
+     "rover:mensajes": 1370,
+     "rover:paso": 4277,
+     "rover:paso_tormenta": 1125,
+     "rover:pulso_tormenta": 816
+    },
+    "ms_media": 0.346,
+    "ms_p95": 1.002,
+    "ms_p99": 2.308,
+    "ms_max": 8.268
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 163,
+    "bateria": 10880.5,
+    "ratio": 0.01498,
+    "vivas": 11,
+    "unidades": 50,
+    "mensajes": 2077,
+    "gasto": {
+     "explorador:mensajes": 462,
+     "explorador:paso": 1376,
+     "explorador:paso_tormenta": 35,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 520,
+     "recarga:paso": 1478,
+     "recarga:paso_tormenta": 86,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 1094,
+     "rover:paso": 3348,
+     "rover:paso_tormenta": 1640,
+     "rover:pulso_tormenta": 833
+    },
+    "ms_media": 0.3,
+    "ms_p95": 0.992,
+    "ms_p99": 2.39,
+    "ms_max": 32.936
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 147,
+    "bateria": 10579.5,
+    "ratio": 0.01389,
+    "vivas": 30,
+    "unidades": 50,
+    "mensajes": 1831,
+    "gasto": {
+     "explorador:mensajes": 532,
+     "explorador:paso": 1760,
+     "explorador:paso_tormenta": 15,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 260,
+     "recarga:paso": 1875,
+     "recarga:paso_tormenta": 75,
+     "recarga:pulso_tormenta": 3,
+     "rover:mensajes": 1040,
+     "rover:paso": 3495,
+     "rover:paso_tormenta": 815,
+     "rover:pulso_tormenta": 708
+    },
+    "ms_media": 0.494,
+    "ms_p95": 1.309,
+    "ms_p99": 2.899,
+    "ms_max": 16.888
+   }
+  },
+  "asignacion": {
+   "A": "equipoA.py",
+   "B": "base",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 4,
+  "sim_s": 142.7,
+  "ticks": 1189,
+  "terminada": true,
+  "hielo_inicial": 746,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 105,
+    "bateria": 2049.0,
+    "ratio": 0.05124,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 150,
+    "gasto": {
+     "explorador:mensajes": 59,
+     "explorador:paso": 381,
+     "explorador:paso_tormenta": 10,
+     "explorador:pulso_tormenta": 84,
+     "recarga:mensajes": 14,
+     "recarga:paso": 13,
+     "recarga:pulso_tormenta": 36,
+     "rover:mensajes": 78,
+     "rover:paso": 1003,
+     "rover:pulso_tormenta": 372
+    },
+    "ms_media": 0.681,
+    "ms_p95": 1.731,
+    "ms_p99": 2.243,
+    "ms_max": 4.31,
+    "interno": {
+     "contadores": {
+      "msg_CFP": 42,
+      "subastas_abiertas": 17,
+      "pasos_RETORNANDO_BASE": 70,
+      "msg_INFORM": 51,
+      "pasos_PATRULLANDO": 255,
+      "cedidas_sin_mensaje": 31379,
+      "pasos_EXPLORANDO": 93,
+      "pasos_RECOLECTANDO": 414,
+      "recibidos": 150,
+      "msg_PROPOSE": 17,
+      "reportes_filtrados": 755,
+      "extracciones": 105,
+      "msg_ACCEPT_PROPOSAL": 10,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 10,
+      "contratos_ganados": 10,
+      "cfp_sin_puja": 25,
+      "pasos_RETORNANDO": 329,
+      "patrullas": 11,
+      "esquives": 157,
+      "depositos": 25,
+      "hielo_depositado": 105,
+      "esperas_por_tormenta": 188,
+      "subastas_desiertas": 7,
+      "avisos_de_sobrante": 9,
+      "elecciones": 23,
+      "pasos_CONSUMIENDO_CARRONA": 3,
+      "carronas": 4,
+      "msg_REQUEST": 22,
+      "rescates_aceptados": 17,
+      "rescates_reenviados": 4,
+      "pasos_EN_RESCATE": 10,
+      "recargas": 17,
+      "pasos_OCIOSO": 68,
+      "msg_FAILURE": 1,
+      "astar": 3
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 23,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "AHORRO"
+      ],
+      [
+       700,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       950,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.663,
+      "p95": 1.706,
+      "p99": 2.213,
+      "max": 4.283
+     }
+    }
+   },
+   "C": {
+    "puesto": 2,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 284,
+    "bateria": 13610.0,
+    "ratio": 0.02087,
+    "vivas": 20,
+    "unidades": 50,
+    "mensajes": 1859,
+    "gasto": {
+     "explorador:mensajes": 498,
+     "explorador:paso": 1818,
+     "explorador:paso_tormenta": 49,
+     "explorador:pulso_tormenta": 6,
+     "recarga:mensajes": 356,
+     "recarga:paso": 2362,
+     "recarga:paso_tormenta": 210,
+     "recarga:pulso_tormenta": 9,
+     "rover:mensajes": 1005,
+     "rover:paso": 5014,
+     "rover:paso_tormenta": 1410,
+     "rover:pulso_tormenta": 872
+    },
+    "ms_media": 0.353,
+    "ms_p95": 0.881,
+    "ms_p99": 1.334,
+    "ms_max": 7.162
+   },
+   "B": {
+    "puesto": 3,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 221,
+    "bateria": 11782.5,
+    "ratio": 0.01876,
+    "vivas": 20,
+    "unidades": 50,
+    "mensajes": 1950,
+    "gasto": {
+     "explorador:mensajes": 508,
+     "explorador:paso": 1530,
+     "explorador:paso_tormenta": 27,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 339,
+     "recarga:paso": 1518,
+     "recarga:paso_tormenta": 141,
+     "recarga:pulso_tormenta": 8,
+     "rover:mensajes": 1103,
+     "rover:paso": 4387,
+     "rover:paso_tormenta": 1210,
+     "rover:pulso_tormenta": 1009
+    },
+    "ms_media": 0.382,
+    "ms_p95": 1.0,
+    "ms_p99": 1.548,
+    "ms_max": 4.894
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 83,
+    "bateria": 9287.0,
+    "ratio": 0.00894,
+    "vivas": 16,
+    "unidades": 50,
+    "mensajes": 1506,
+    "gasto": {
+     "explorador:mensajes": 427,
+     "explorador:paso": 2188,
+     "explorador:paso_tormenta": 55,
+     "explorador:pulso_tormenta": 6,
+     "recarga:mensajes": 257,
+     "recarga:paso": 1084,
+     "recarga:paso_tormenta": 112,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 822,
+     "rover:paso": 2963,
+     "rover:paso_tormenta": 650,
+     "rover:pulso_tormenta": 716
+    },
+    "ms_media": 0.191,
+    "ms_p95": 0.69,
+    "ms_p99": 1.18,
+    "ms_max": 1.617
+   }
+  },
+  "asignacion": {
+   "A": "equipoA.py",
+   "B": "base",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 5,
+  "sim_s": 228.8,
+  "ticks": 1907,
+  "terminada": true,
+  "hielo_inicial": 736,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 103,
+    "bateria": 2561.0,
+    "ratio": 0.04022,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 94,
+    "gasto": {
+     "explorador:mensajes": 38,
+     "explorador:paso": 686,
+     "explorador:paso_tormenta": 60,
+     "explorador:pulso_tormenta": 189,
+     "recarga:mensajes": 9,
+     "recarga:paso": 16,
+     "recarga:pulso_tormenta": 69,
+     "rover:mensajes": 48,
+     "rover:paso": 924,
+     "rover:paso_tormenta": 10,
+     "rover:pulso_tormenta": 513
+    },
+    "ms_media": 0.566,
+    "ms_p95": 1.303,
+    "ms_p99": 3.31,
+    "ms_max": 16.287,
+    "interno": {
+     "contadores": {
+      "msg_CFP": 32,
+      "subastas_abiertas": 14,
+      "pasos_RETORNANDO_BASE": 205,
+      "msg_INFORM": 15,
+      "pasos_EXPLORANDO": 85,
+      "recibidos": 94,
+      "pasos_RECOLECTANDO": 403,
+      "cedidas_sin_mensaje": 28549,
+      "msg_PROPOSE": 15,
+      "reportes_filtrados": 332,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 6,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "extracciones": 103,
+      "esperas_por_tormenta": 236,
+      "pasos_RETORNANDO": 337,
+      "esquives": 167,
+      "avisos_de_sobrante": 2,
+      "elecciones": 38,
+      "astar": 38,
+      "depositos": 23,
+      "hielo_depositado": 103,
+      "carronas": 3,
+      "pasos_PATRULLANDO": 403,
+      "cfp_sin_puja": 17,
+      "patrullas": 19,
+      "msg_REQUEST": 16,
+      "rescates_aceptados": 15,
+      "pasos_EN_RESCATE": 12,
+      "recargas": 15,
+      "subastas_desiertas": 5,
+      "rescates_reenviados": 1,
+      "pasos_CONSUMIENDO_CARRONA": 2,
+      "pasos_OCIOSO": 26,
+      "msg_AGREE": 1
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 38,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1700,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.544,
+      "p95": 1.265,
+      "p99": 3.261,
+      "max": 16.262
+     }
+    }
+   },
+   "B": {
+    "puesto": 2,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 181,
+    "bateria": 11337.0,
+    "ratio": 0.01597,
+    "vivas": 30,
+    "unidades": 50,
+    "mensajes": 1492,
+    "gasto": {
+     "explorador:mensajes": 450,
+     "explorador:paso": 1367,
+     "explorador:paso_tormenta": 35,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 210,
+     "recarga:paso": 3116,
+     "recarga:paso_tormenta": 105,
+     "recarga:pulso_tormenta": 18,
+     "rover:mensajes": 832,
+     "rover:paso": 3853,
+     "rover:paso_tormenta": 700,
+     "rover:pulso_tormenta": 642
+    },
+    "ms_media": 0.626,
+    "ms_p95": 1.48,
+    "ms_p99": 4.158,
+    "ms_max": 10.555
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 244,
+    "bateria": 16269.5,
+    "ratio": 0.015,
+    "vivas": 26,
+    "unidades": 50,
+    "mensajes": 1965,
+    "gasto": {
+     "explorador:mensajes": 684,
+     "explorador:paso": 2605,
+     "explorador:paso_tormenta": 212,
+     "explorador:pulso_tormenta": 24,
+     "recarga:mensajes": 252,
+     "recarga:paso": 3424,
+     "recarga:paso_tormenta": 97,
+     "recarga:pulso_tormenta": 3,
+     "rover:mensajes": 1029,
+     "rover:paso": 4732,
+     "rover:paso_tormenta": 1925,
+     "rover:pulso_tormenta": 1282
+    },
+    "ms_media": 0.569,
+    "ms_p95": 1.353,
+    "ms_p99": 3.838,
+    "ms_max": 13.364
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 176,
+    "bateria": 13475.0,
+    "ratio": 0.01306,
+    "vivas": 8,
+    "unidades": 50,
+    "mensajes": 1704,
+    "gasto": {
+     "explorador:mensajes": 502,
+     "explorador:paso": 3606,
+     "explorador:paso_tormenta": 95,
+     "explorador:pulso_tormenta": 15,
+     "recarga:mensajes": 266,
+     "recarga:paso": 1686,
+     "recarga:paso_tormenta": 309,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 937,
+     "rover:paso": 3535,
+     "rover:paso_tormenta": 1300,
+     "rover:pulso_tormenta": 1204
+    },
+    "ms_media": 0.211,
+    "ms_p95": 0.727,
+    "ms_p99": 1.331,
+    "ms_max": 5.819
+   }
+  },
+  "asignacion": {
+   "A": "equipoA.py",
+   "B": "base",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 6,
+  "sim_s": 193.3,
+  "ticks": 1611,
+  "terminada": true,
+  "hielo_inicial": 736,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 104,
+    "bateria": 2783.0,
+    "ratio": 0.03737,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 136,
+    "gasto": {
+     "explorador:mensajes": 54,
+     "explorador:paso": 554,
+     "explorador:paso_tormenta": 85,
+     "explorador:pulso_tormenta": 255,
+     "recarga:mensajes": 9,
+     "recarga:paso": 13,
+     "recarga:pulso_tormenta": 87,
+     "rover:mensajes": 74,
+     "rover:paso": 954,
+     "rover:pulso_tormenta": 699
+    },
+    "ms_media": 0.713,
+    "ms_p95": 1.904,
+    "ms_p99": 4.328,
+    "ms_max": 15.772,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 322,
+      "msg_INFORM": 38,
+      "pasos_RETORNANDO_BASE": 160,
+      "pasos_EXPLORANDO": 80,
+      "cedidas_sin_mensaje": 21183,
+      "recibidos": 136,
+      "pasos_RECOLECTANDO": 372,
+      "reportes_filtrados": 533,
+      "extracciones": 104,
+      "pasos_RETORNANDO": 352,
+      "msg_CFP": 44,
+      "subastas_abiertas": 16,
+      "msg_PROPOSE": 18,
+      "msg_ACCEPT_PROPOSAL": 11,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 11,
+      "contratos_ganados": 11,
+      "depositos": 26,
+      "hielo_depositado": 104,
+      "patrullas": 16,
+      "esperas_por_tormenta": 223,
+      "esquives": 191,
+      "elecciones": 32,
+      "avisos_de_sobrante": 11,
+      "carronas": 16,
+      "cfp_sin_puja": 26,
+      "subastas_desiertas": 5,
+      "msg_REQUEST": 17,
+      "rescates_aceptados": 17,
+      "pasos_EN_RESCATE": 9,
+      "recargas": 17,
+      "astar": 62,
+      "pasos_CONSUMIENDO_CARRONA": 25,
+      "pasos_OCIOSO": 27,
+      "msg_AGREE": 1
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 32,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1050,
+       "AHORRO"
+      ],
+      [
+       1100,
+       "EXPANSION"
+      ],
+      [
+       1400,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.69,
+      "p95": 1.867,
+      "p99": 4.302,
+      "max": 15.737
+     }
+    }
+   },
+   "C": {
+    "puesto": 2,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 241,
+    "bateria": 15507.0,
+    "ratio": 0.01554,
+    "vivas": 20,
+    "unidades": 50,
+    "mensajes": 1982,
+    "gasto": {
+     "explorador:mensajes": 544,
+     "explorador:paso": 1826,
+     "explorador:paso_tormenta": 70,
+     "explorador:pulso_tormenta": 12,
+     "recarga:mensajes": 356,
+     "recarga:paso": 3092,
+     "recarga:paso_tormenta": 204,
+     "recarga:pulso_tormenta": 18,
+     "rover:mensajes": 1082,
+     "rover:paso": 5267,
+     "rover:paso_tormenta": 1705,
+     "rover:pulso_tormenta": 1330
+    },
+    "ms_media": 0.514,
+    "ms_p95": 1.341,
+    "ms_p99": 2.963,
+    "ms_max": 15.893
+   },
+   "D": {
+    "puesto": 3,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 160,
+    "bateria": 12407.5,
+    "ratio": 0.0129,
+    "vivas": 8,
+    "unidades": 50,
+    "mensajes": 2520,
+    "gasto": {
+     "explorador:mensajes": 672,
+     "explorador:paso": 3148,
+     "explorador:paso_tormenta": 84,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 486,
+     "recarga:paso": 1510,
+     "recarga:paso_tormenta": 130,
+     "recarga:pulso_tormenta": 15,
+     "rover:mensajes": 1362,
+     "rover:paso": 3574,
+     "rover:paso_tormenta": 720,
+     "rover:pulso_tormenta": 698
+    },
+    "ms_media": 0.293,
+    "ms_p95": 0.865,
+    "ms_p99": 2.513,
+    "ms_max": 17.901
+   },
+   "B": {
+    "puesto": 4,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 157,
+    "bateria": 16907.0,
+    "ratio": 0.00929,
+    "vivas": 35,
+    "unidades": 50,
+    "mensajes": 2007,
+    "gasto": {
+     "explorador:mensajes": 631,
+     "explorador:paso": 3051,
+     "explorador:paso_tormenta": 97,
+     "explorador:pulso_tormenta": 15,
+     "recarga:mensajes": 298,
+     "recarga:paso": 3944,
+     "recarga:paso_tormenta": 175,
+     "recarga:pulso_tormenta": 33,
+     "rover:mensajes": 1078,
+     "rover:paso": 3132,
+     "rover:paso_tormenta": 3010,
+     "rover:pulso_tormenta": 1443
+    },
+    "ms_media": 0.717,
+    "ms_p95": 1.79,
+    "ms_p99": 4.343,
+    "ms_max": 9.123
+   }
+  },
+  "asignacion": {
+   "A": "equipoA.py",
+   "B": "base",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 1,
+  "sim_s": 175.6,
+  "ticks": 1463,
+  "terminada": true,
+  "hielo_inicial": 729,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 105,
+    "bateria": 2078.0,
+    "ratio": 0.05053,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 146,
+    "gasto": {
+     "explorador:mensajes": 58,
+     "explorador:paso": 524,
+     "explorador:paso_tormenta": 40,
+     "explorador:pulso_tormenta": 102,
+     "recarga:mensajes": 10,
+     "recarga:paso": 3,
+     "recarga:pulso_tormenta": 36,
+     "rover:mensajes": 78,
+     "rover:paso": 954,
+     "rover:pulso_tormenta": 273
+    },
+    "ms_media": 0.832,
+    "ms_p95": 2.414,
+    "ms_p99": 4.897,
+    "ms_max": 14.18,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 315,
+      "pasos_RETORNANDO_BASE": 142,
+      "msg_INFORM": 56,
+      "msg_CFP": 37,
+      "subastas_abiertas": 16,
+      "cedidas_sin_mensaje": 28078,
+      "pasos_EXPLORANDO": 99,
+      "recibidos": 146,
+      "pasos_RECOLECTANDO": 379,
+      "msg_PROPOSE": 17,
+      "reportes_filtrados": 1032,
+      "extracciones": 105,
+      "msg_ACCEPT_PROPOSAL": 12,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 12,
+      "contratos_ganados": 12,
+      "cfp_sin_puja": 20,
+      "patrullas": 14,
+      "esquives": 141,
+      "esperas_por_tormenta": 116,
+      "pasos_RETORNANDO": 385,
+      "avisos_de_sobrante": 11,
+      "depositos": 25,
+      "hielo_depositado": 105,
+      "elecciones": 29,
+      "subastas_desiertas": 4,
+      "carronas": 1,
+      "msg_REQUEST": 19,
+      "rescates_aceptados": 17,
+      "pasos_EN_RESCATE": 3,
+      "recargas": 17,
+      "rescates_reenviados": 2,
+      "astar": 27,
+      "pasos_OCIOSO": 25
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 29,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1250,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.805,
+      "p95": 2.366,
+      "p99": 4.811,
+      "max": 14.15
+     }
+    }
+   },
+   "B": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 120,
+    "bateria": 2553.0,
+    "ratio": 0.047,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 176,
+    "gasto": {
+     "explorador:mensajes": 67,
+     "explorador:paso": 376,
+     "explorador:paso_tormenta": 15,
+     "explorador:pulso_tormenta": 141,
+     "recarga:mensajes": 18,
+     "recarga:paso": 38,
+     "recarga:pulso_tormenta": 66,
+     "rover:mensajes": 91,
+     "rover:paso": 1232,
+     "rover:paso_tormenta": 20,
+     "rover:pulso_tormenta": 489
+    },
+    "ms_media": 0.756,
+    "ms_p95": 2.376,
+    "ms_p99": 4.72,
+    "ms_max": 10.526,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 230,
+      "msg_INFORM": 38,
+      "pasos_RETORNANDO_BASE": 106,
+      "msg_CFP": 76,
+      "subastas_abiertas": 30,
+      "pasos_EXPLORANDO": 134,
+      "recibidos": 176,
+      "pasos_RECOLECTANDO": 456,
+      "cedidas_sin_mensaje": 28368,
+      "msg_PROPOSE": 15,
+      "reportes_filtrados": 651,
+      "msg_ACCEPT_PROPOSAL": 12,
+      "msg_REJECT_PROPOSAL": 3,
+      "subastas_adjudicadas": 12,
+      "contratos_ganados": 12,
+      "extracciones": 120,
+      "cfp_sin_puja": 61,
+      "pasos_RETORNANDO": 417,
+      "patrullas": 12,
+      "subastas_desiertas": 18,
+      "depositos": 27,
+      "hielo_depositado": 120,
+      "avisos_de_sobrante": 10,
+      "elecciones": 29,
+      "esperas_por_tormenta": 189,
+      "astar": 11,
+      "esquives": 220,
+      "msg_REQUEST": 28,
+      "rescates_aceptados": 22,
+      "recargas": 22,
+      "rescates_reenviados": 4,
+      "pasos_EN_RESCATE": 24,
+      "msg_FAILURE": 2,
+      "pasos_OCIOSO": 66,
+      "msg_AGREE": 2
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 29,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       100,
+       "AHORRO"
+      ],
+      [
+       150,
+       "EXPANSION"
+      ],
+      [
+       350,
+       "AHORRO"
+      ],
+      [
+       400,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       650,
+       "EXPANSION"
+      ],
+      [
+       850,
+       "AHORRO"
+      ],
+      [
+       1050,
+       "EXPANSION"
+      ],
+      [
+       1100,
+       "AHORRO"
+      ],
+      [
+       1150,
+       "EXPANSION"
+      ],
+      [
+       1250,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.731,
+      "p95": 2.302,
+      "p99": 4.672,
+      "max": 10.474
+     }
+    }
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 283,
+    "bateria": 14230.0,
+    "ratio": 0.01989,
+    "vivas": 19,
+    "unidades": 50,
+    "mensajes": 1639,
+    "gasto": {
+     "explorador:mensajes": 374,
+     "explorador:paso": 1138,
+     "explorador:paso_tormenta": 75,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 350,
+     "recarga:paso": 3107,
+     "recarga:paso_tormenta": 421,
+     "recarga:pulso_tormenta": 18,
+     "rover:mensajes": 914,
+     "rover:paso": 5193,
+     "rover:paso_tormenta": 1595,
+     "rover:pulso_tormenta": 1034
+    },
+    "ms_media": 0.536,
+    "ms_p95": 1.509,
+    "ms_p99": 4.04,
+    "ms_max": 10.08
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 164,
+    "bateria": 10775.0,
+    "ratio": 0.01522,
+    "vivas": 16,
+    "unidades": 50,
+    "mensajes": 1865,
+    "gasto": {
+     "explorador:mensajes": 546,
+     "explorador:paso": 2110,
+     "explorador:paso_tormenta": 10,
+     "explorador:pulso_tormenta": 6,
+     "recarga:mensajes": 308,
+     "recarga:paso": 1712,
+     "recarga:paso_tormenta": 37,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 1011,
+     "rover:paso": 3201,
+     "rover:paso_tormenta": 815,
+     "rover:pulso_tormenta": 1014
+    },
+    "ms_media": 0.268,
+    "ms_p95": 0.934,
+    "ms_p99": 2.167,
+    "ms_max": 5.528
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "equipoA.py",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 2,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 737,
+  "equipos": {
+   "B": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 126,
+    "bateria": 2921.0,
+    "ratio": 0.04314,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 240,
+    "gasto": {
+     "explorador:mensajes": 102,
+     "explorador:paso": 751,
+     "explorador:paso_tormenta": 55,
+     "explorador:pulso_tormenta": 135,
+     "recarga:mensajes": 15,
+     "recarga:paso": 27,
+     "recarga:pulso_tormenta": 63,
+     "rover:mensajes": 123,
+     "rover:paso": 1175,
+     "rover:paso_tormenta": 10,
+     "rover:pulso_tormenta": 465
+    },
+    "ms_media": 0.64,
+    "ms_p95": 1.487,
+    "ms_p99": 4.221,
+    "ms_max": 9.545,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 438,
+      "pasos_RETORNANDO_BASE": 224,
+      "msg_INFORM": 136,
+      "pasos_EXPLORANDO": 87,
+      "cedidas_sin_mensaje": 36417,
+      "recibidos": 240,
+      "pasos_RECOLECTANDO": 465,
+      "reportes_filtrados": 4432,
+      "extracciones": 126,
+      "msg_CFP": 51,
+      "subastas_abiertas": 20,
+      "msg_PROPOSE": 13,
+      "msg_ACCEPT_PROPOSAL": 11,
+      "msg_REJECT_PROPOSAL": 2,
+      "subastas_adjudicadas": 11,
+      "pasos_RETORNANDO": 426,
+      "contratos_ganados": 11,
+      "cfp_sin_puja": 38,
+      "patrullas": 23,
+      "depositos": 29,
+      "hielo_depositado": 126,
+      "subastas_desiertas": 9,
+      "avisos_de_sobrante": 9,
+      "elecciones": 60,
+      "esquives": 231,
+      "esperas_por_tormenta": 181,
+      "msg_REQUEST": 26,
+      "rescates_aceptados": 23,
+      "recargas": 23,
+      "pasos_EN_RESCATE": 19,
+      "rescates_reenviados": 3,
+      "pasos_OCIOSO": 76,
+      "astar": 27,
+      "msg_AGREE": 1
+     },
+     "politica_final": "EXPANSION",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       350,
+       "AHORRO"
+      ],
+      [
+       400,
+       "EXPANSION"
+      ],
+      [
+       600,
+       "AHORRO"
+      ],
+      [
+       700,
+       "EXPANSION"
+      ],
+      [
+       850,
+       "AHORRO"
+      ],
+      [
+       900,
+       "EXPANSION"
+      ],
+      [
+       1100,
+       "AHORRO"
+      ],
+      [
+       1150,
+       "EXPANSION"
+      ],
+      [
+       1350,
+       "AHORRO"
+      ],
+      [
+       1400,
+       "EXPANSION"
+      ],
+      [
+       1600,
+       "AHORRO"
+      ],
+      [
+       1650,
+       "EXPANSION"
+      ],
+      [
+       1850,
+       "AHORRO"
+      ],
+      [
+       1900,
+       "EXPANSION"
+      ],
+      [
+       2300,
+       "AHORRO"
+      ],
+      [
+       2350,
+       "EXPANSION"
+      ],
+      [
+       2550,
+       "AHORRO"
+      ],
+      [
+       2600,
+       "EXPANSION"
+      ],
+      [
+       2800,
+       "AHORRO"
+      ],
+      [
+       2850,
+       "EXPANSION"
+      ]
+     ],
+     "ms": {
+      "media": 0.619,
+      "p95": 1.461,
+      "p99": 4.187,
+      "max": 9.517
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 110,
+    "bateria": 3152.5,
+    "ratio": 0.03489,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 174,
+    "gasto": {
+     "explorador:mensajes": 68,
+     "explorador:paso": 602,
+     "explorador:paso_tormenta": 54,
+     "explorador:pulso_tormenta": 261,
+     "recarga:mensajes": 14,
+     "recarga:paso": 55,
+     "recarga:paso_tormenta": 5,
+     "recarga:pulso_tormenta": 105,
+     "rover:mensajes": 91,
+     "rover:paso": 1034,
+     "rover:paso_tormenta": 65,
+     "rover:pulso_tormenta": 798
+    },
+    "ms_media": 0.86,
+    "ms_p95": 2.297,
+    "ms_p99": 5.309,
+    "ms_max": 20.605,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 80,
+      "pasos_PATRULLANDO": 371,
+      "msg_CFP": 36,
+      "subastas_abiertas": 16,
+      "pasos_RETORNANDO_BASE": 152,
+      "cedidas_sin_mensaje": 30743,
+      "pasos_EXPLORANDO": 133,
+      "recibidos": 174,
+      "msg_PROPOSE": 15,
+      "pasos_RECOLECTANDO": 395,
+      "reportes_filtrados": 1481,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 6,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "extracciones": 110,
+      "patrullas": 17,
+      "esquives": 202,
+      "esperas_por_tormenta": 469,
+      "pasos_RETORNANDO": 412,
+      "depositos": 25,
+      "hielo_depositado": 110,
+      "elecciones": 60,
+      "avisos_de_sobrante": 9,
+      "astar": 60,
+      "cfp_sin_puja": 21,
+      "subastas_desiertas": 7,
+      "msg_REQUEST": 25,
+      "rescates_aceptados": 23,
+      "pasos_EN_RESCATE": 33,
+      "recargas": 23,
+      "msg_AGREE": 2,
+      "rescates_reenviados": 1,
+      "msg_FAILURE": 1,
+      "pasos_OCIOSO": 18
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.835,
+      "p95": 2.229,
+      "p99": 5.236,
+      "max": 20.574
+     }
+    }
+   },
+   "D": {
+    "puesto": 3,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 120,
+    "bateria": 8853.0,
+    "ratio": 0.01355,
+    "vivas": 1,
+    "unidades": 50,
+    "mensajes": 1781,
+    "gasto": {
+     "explorador:mensajes": 554,
+     "explorador:paso": 2616,
+     "explorador:paso_tormenta": 54,
+     "explorador:pulso_tormenta": 6,
+     "recarga:mensajes": 278,
+     "recarga:paso": 756,
+     "recarga:paso_tormenta": 92,
+     "recarga:pulso_tormenta": 8,
+     "rover:mensajes": 950,
+     "rover:paso": 2326,
+     "rover:paso_tormenta": 425,
+     "rover:pulso_tormenta": 789
+    },
+    "ms_media": 0.094,
+    "ms_p95": 0.39,
+    "ms_p99": 1.273,
+    "ms_max": 15.3
+   },
+   "C": {
+    "puesto": 4,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 182,
+    "bateria": 14456.5,
+    "ratio": 0.01259,
+    "vivas": 9,
+    "unidades": 50,
+    "mensajes": 2414,
+    "gasto": {
+     "explorador:mensajes": 705,
+     "explorador:paso": 2457,
+     "explorador:paso_tormenta": 50,
+     "explorador:pulso_tormenta": 6,
+     "recarga:mensajes": 386,
+     "recarga:paso": 2108,
+     "recarga:paso_tormenta": 240,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 1323,
+     "rover:paso": 4575,
+     "rover:paso_tormenta": 1405,
+     "rover:pulso_tormenta": 1180
+    },
+    "ms_media": 0.285,
+    "ms_p95": 0.755,
+    "ms_p99": 2.2,
+    "ms_max": 11.627
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "equipoA.py",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 3,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 744,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 122,
+    "bateria": 3084.0,
+    "ratio": 0.03956,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 199,
+    "gasto": {
+     "explorador:mensajes": 85,
+     "explorador:paso": 990,
+     "explorador:paso_tormenta": 15,
+     "explorador:pulso_tormenta": 177,
+     "recarga:mensajes": 10,
+     "recarga:paso": 6,
+     "recarga:pulso_tormenta": 63,
+     "rover:mensajes": 104,
+     "rover:paso": 1078,
+     "rover:paso_tormenta": 25,
+     "rover:pulso_tormenta": 531
+    },
+    "ms_media": 0.412,
+    "ms_p95": 1.164,
+    "ms_p99": 1.749,
+    "ms_max": 7.653,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 535,
+      "msg_INFORM": 74,
+      "pasos_RETORNANDO_BASE": 251,
+      "recibidos": 199,
+      "cedidas_sin_mensaje": 17496,
+      "pasos_RECOLECTANDO": 409,
+      "pasos_EXPLORANDO": 96,
+      "msg_CFP": 51,
+      "subastas_abiertas": 23,
+      "msg_PROPOSE": 27,
+      "reportes_filtrados": 1690,
+      "extracciones": 122,
+      "pasos_RETORNANDO": 412,
+      "msg_ACCEPT_PROPOSAL": 17,
+      "msg_REJECT_PROPOSAL": 10,
+      "subastas_adjudicadas": 17,
+      "contratos_ganados": 17,
+      "cfp_sin_puja": 24,
+      "patrullas": 26,
+      "depositos": 27,
+      "hielo_depositado": 122,
+      "esquives": 322,
+      "subastas_desiertas": 6,
+      "esperas_por_tormenta": 242,
+      "elecciones": 60,
+      "astar": 19,
+      "avisos_de_sobrante": 9,
+      "carronas": 19,
+      "msg_REQUEST": 20,
+      "rescates_aceptados": 20,
+      "pasos_EN_RESCATE": 6,
+      "recargas": 20,
+      "pasos_OCIOSO": 37,
+      "pasos_CONSUMIENDO_CARRONA": 14
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1400,
+       "AHORRO"
+      ],
+      [
+       1450,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2300,
+       "EXPANSION"
+      ],
+      [
+       2500,
+       "AHORRO"
+      ],
+      [
+       2550,
+       "EXPANSION"
+      ],
+      [
+       2750,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       2900,
+       "AHORRO"
+      ],
+      [
+       2950,
+       "EXPANSION"
+      ],
+      [
+       3000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.396,
+      "p95": 1.137,
+      "p99": 1.717,
+      "max": 7.639
+     }
+    }
+   },
+   "B": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 112,
+    "bateria": 3201.0,
+    "ratio": 0.03499,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 276,
+    "gasto": {
+     "explorador:mensajes": 116,
+     "explorador:paso": 767,
+     "explorador:paso_tormenta": 35,
+     "explorador:pulso_tormenta": 186,
+     "recarga:mensajes": 18,
+     "recarga:paso": 19,
+     "recarga:pulso_tormenta": 84,
+     "rover:mensajes": 141,
+     "rover:paso": 1156,
+     "rover:pulso_tormenta": 678
+    },
+    "ms_media": 0.505,
+    "ms_p95": 1.289,
+    "ms_p99": 1.814,
+    "ms_max": 10.822,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 143,
+      "pasos_RETORNANDO_BASE": 211,
+      "pasos_PATRULLANDO": 462,
+      "cedidas_sin_mensaje": 38191,
+      "pasos_RECOLECTANDO": 397,
+      "pasos_EXPLORANDO": 73,
+      "recibidos": 276,
+      "msg_CFP": 67,
+      "subastas_abiertas": 25,
+      "msg_PROPOSE": 17,
+      "reportes_filtrados": 3834,
+      "extracciones": 112,
+      "pasos_RETORNANDO": 367,
+      "msg_ACCEPT_PROPOSAL": 11,
+      "msg_REJECT_PROPOSAL": 6,
+      "subastas_adjudicadas": 11,
+      "contratos_ganados": 11,
+      "patrullas": 24,
+      "cfp_sin_puja": 50,
+      "depositos": 29,
+      "hielo_depositado": 112,
+      "avisos_de_sobrante": 11,
+      "elecciones": 60,
+      "subastas_desiertas": 14,
+      "esperas_por_tormenta": 171,
+      "astar": 28,
+      "esquives": 303,
+      "msg_REQUEST": 31,
+      "rescates_aceptados": 25,
+      "pasos_EN_RESCATE": 15,
+      "recargas": 25,
+      "pasos_OCIOSO": 121,
+      "rescates_reenviados": 5,
+      "msg_FAILURE": 1
+     },
+     "politica_final": "EXPANSION",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       350,
+       "AHORRO"
+      ],
+      [
+       400,
+       "EXPANSION"
+      ],
+      [
+       600,
+       "AHORRO"
+      ],
+      [
+       650,
+       "EXPANSION"
+      ],
+      [
+       850,
+       "AHORRO"
+      ],
+      [
+       900,
+       "EXPANSION"
+      ],
+      [
+       1100,
+       "AHORRO"
+      ],
+      [
+       1150,
+       "EXPANSION"
+      ],
+      [
+       1350,
+       "AHORRO"
+      ],
+      [
+       1400,
+       "EXPANSION"
+      ],
+      [
+       1550,
+       "AHORRO"
+      ],
+      [
+       1650,
+       "EXPANSION"
+      ],
+      [
+       1850,
+       "AHORRO"
+      ],
+      [
+       2150,
+       "EXPANSION"
+      ],
+      [
+       2550,
+       "AHORRO"
+      ],
+      [
+       2600,
+       "EXPANSION"
+      ],
+      [
+       2800,
+       "AHORRO"
+      ],
+      [
+       2850,
+       "EXPANSION"
+      ]
+     ],
+     "ms": {
+      "media": 0.489,
+      "p95": 1.264,
+      "p99": 1.785,
+      "max": 10.785
+     }
+    }
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 177,
+    "bateria": 10742.0,
+    "ratio": 0.01648,
+    "vivas": 4,
+    "unidades": 50,
+    "mensajes": 2159,
+    "gasto": {
+     "explorador:mensajes": 465,
+     "explorador:paso": 1374,
+     "explorador:paso_tormenta": 35,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 560,
+     "recarga:paso": 1528,
+     "recarga:paso_tormenta": 112,
+     "recarga:pulso_tormenta": 3,
+     "rover:mensajes": 1134,
+     "rover:paso": 3313,
+     "rover:paso_tormenta": 1355,
+     "rover:pulso_tormenta": 860
+    },
+    "ms_media": 0.137,
+    "ms_p95": 0.429,
+    "ms_p99": 1.246,
+    "ms_max": 15.37
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 89,
+    "bateria": 7942.0,
+    "ratio": 0.01121,
+    "vivas": 5,
+    "unidades": 50,
+    "mensajes": 1563,
+    "gasto": {
+     "explorador:mensajes": 524,
+     "explorador:paso": 1761,
+     "explorador:paso_tormenta": 70,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 146,
+     "recarga:paso": 708,
+     "recarga:paso_tormenta": 156,
+     "recarga:pulso_tormenta": 11,
+     "rover:mensajes": 893,
+     "rover:paso": 2762,
+     "rover:paso_tormenta": 180,
+     "rover:pulso_tormenta": 722
+    },
+    "ms_media": 0.083,
+    "ms_p95": 0.4,
+    "ms_p99": 1.227,
+    "ms_max": 8.689
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "equipoA.py",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 4,
+  "sim_s": 153.2,
+  "ticks": 1277,
+  "terminada": true,
+  "hielo_inicial": 746,
+  "equipos": {
+   "B": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 135,
+    "bateria": 2487.0,
+    "ratio": 0.05428,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 133,
+    "gasto": {
+     "explorador:mensajes": 52,
+     "explorador:paso": 514,
+     "explorador:paso_tormenta": 30,
+     "explorador:pulso_tormenta": 132,
+     "recarga:mensajes": 11,
+     "recarga:paso": 8,
+     "recarga:pulso_tormenta": 63,
+     "rover:mensajes": 70,
+     "rover:paso": 1104,
+     "rover:paso_tormenta": 5,
+     "rover:pulso_tormenta": 498
+    },
+    "ms_media": 0.802,
+    "ms_p95": 2.305,
+    "ms_p99": 5.387,
+    "ms_max": 12.958,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 284,
+      "msg_INFORM": 49,
+      "pasos_RETORNANDO_BASE": 138,
+      "cedidas_sin_mensaje": 33420,
+      "pasos_EXPLORANDO": 119,
+      "recibidos": 133,
+      "pasos_RECOLECTANDO": 418,
+      "reportes_filtrados": 1172,
+      "msg_CFP": 36,
+      "subastas_abiertas": 16,
+      "msg_PROPOSE": 14,
+      "extracciones": 135,
+      "pasos_RETORNANDO": 414,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "depositos": 29,
+      "hielo_depositado": 135,
+      "patrullas": 14,
+      "cfp_sin_puja": 22,
+      "subastas_desiertas": 7,
+      "esquives": 207,
+      "avisos_de_sobrante": 10,
+      "elecciones": 25,
+      "esperas_por_tormenta": 206,
+      "astar": 40,
+      "msg_REQUEST": 20,
+      "rescates_aceptados": 18,
+      "pasos_EN_RESCATE": 8,
+      "recargas": 18,
+      "rescates_reenviados": 2,
+      "pasos_OCIOSO": 45
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 25,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       100,
+       "AHORRO"
+      ],
+      [
+       150,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       400,
+       "EXPANSION"
+      ],
+      [
+       600,
+       "AHORRO"
+      ],
+      [
+       650,
+       "EXPANSION"
+      ],
+      [
+       850,
+       "AHORRO"
+      ],
+      [
+       900,
+       "EXPANSION"
+      ],
+      [
+       1050,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.783,
+      "p95": 2.259,
+      "p99": 5.328,
+      "max": 12.927
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 105,
+    "bateria": 2211.0,
+    "ratio": 0.04749,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 147,
+    "gasto": {
+     "explorador:mensajes": 57,
+     "explorador:paso": 414,
+     "explorador:paso_tormenta": 20,
+     "explorador:pulso_tormenta": 96,
+     "recarga:mensajes": 14,
+     "recarga:paso": 36,
+     "recarga:pulso_tormenta": 36,
+     "rover:mensajes": 76,
+     "rover:paso": 1051,
+     "rover:pulso_tormenta": 411
+    },
+    "ms_media": 0.844,
+    "ms_p95": 3.015,
+    "ms_p99": 6.091,
+    "ms_max": 11.005,
+    "interno": {
+     "contadores": {
+      "msg_CFP": 42,
+      "subastas_abiertas": 17,
+      "pasos_RETORNANDO_BASE": 105,
+      "msg_INFORM": 47,
+      "pasos_PATRULLANDO": 266,
+      "cedidas_sin_mensaje": 32782,
+      "pasos_EXPLORANDO": 89,
+      "pasos_RECOLECTANDO": 412,
+      "recibidos": 147,
+      "msg_PROPOSE": 17,
+      "reportes_filtrados": 503,
+      "extracciones": 105,
+      "msg_ACCEPT_PROPOSAL": 10,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 10,
+      "contratos_ganados": 10,
+      "cfp_sin_puja": 25,
+      "pasos_RETORNANDO": 329,
+      "patrullas": 12,
+      "esquives": 195,
+      "depositos": 25,
+      "hielo_depositado": 105,
+      "esperas_por_tormenta": 225,
+      "subastas_desiertas": 7,
+      "avisos_de_sobrante": 9,
+      "elecciones": 25,
+      "pasos_CONSUMIENDO_CARRONA": 19,
+      "carronas": 13,
+      "msg_REQUEST": 22,
+      "rescates_aceptados": 16,
+      "rescates_reenviados": 5,
+      "pasos_EN_RESCATE": 22,
+      "recargas": 16,
+      "pasos_OCIOSO": 68,
+      "msg_FAILURE": 1,
+      "astar": 9,
+      "msg_AGREE": 1
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 25,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "AHORRO"
+      ],
+      [
+       700,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       900,
+       "AHORRO"
+      ],
+      [
+       1000,
+       "EXPANSION"
+      ],
+      [
+       1050,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.826,
+      "p95": 2.967,
+      "p99": 6.056,
+      "max": 10.967
+     }
+    }
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 328,
+    "bateria": 14827.5,
+    "ratio": 0.02212,
+    "vivas": 17,
+    "unidades": 50,
+    "mensajes": 1869,
+    "gasto": {
+     "explorador:mensajes": 500,
+     "explorador:paso": 1820,
+     "explorador:paso_tormenta": 49,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 352,
+     "recarga:paso": 2544,
+     "recarga:paso_tormenta": 260,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 1017,
+     "rover:paso": 5922,
+     "rover:paso_tormenta": 1435,
+     "rover:pulso_tormenta": 918
+    },
+    "ms_media": 0.388,
+    "ms_p95": 0.983,
+    "ms_p99": 2.934,
+    "ms_max": 12.307
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 125,
+    "bateria": 9832.5,
+    "ratio": 0.01271,
+    "vivas": 14,
+    "unidades": 50,
+    "mensajes": 1649,
+    "gasto": {
+     "explorador:mensajes": 452,
+     "explorador:paso": 2041,
+     "explorador:paso_tormenta": 55,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 292,
+     "recarga:paso": 1326,
+     "recarga:paso_tormenta": 100,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 904,
+     "rover:paso": 3259,
+     "rover:paso_tormenta": 750,
+     "rover:pulso_tormenta": 642
+    },
+    "ms_media": 0.221,
+    "ms_p95": 0.673,
+    "ms_p99": 1.03,
+    "ms_max": 6.514
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "equipoA.py",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 5,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 736,
+  "equipos": {
+   "B": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 123,
+    "bateria": 2770.0,
+    "ratio": 0.0444,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 210,
+    "gasto": {
+     "explorador:mensajes": 86,
+     "explorador:paso": 832,
+     "explorador:paso_tormenta": 5,
+     "explorador:pulso_tormenta": 126,
+     "recarga:mensajes": 14,
+     "recarga:paso": 7,
+     "recarga:pulso_tormenta": 63,
+     "rover:mensajes": 110,
+     "rover:paso": 1054,
+     "rover:paso_tormenta": 20,
+     "rover:pulso_tormenta": 453
+    },
+    "ms_media": 0.597,
+    "ms_p95": 1.436,
+    "ms_p99": 4.141,
+    "ms_max": 9.733,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 495,
+      "msg_CFP": 53,
+      "subastas_abiertas": 19,
+      "pasos_RETORNANDO_BASE": 174,
+      "msg_INFORM": 107,
+      "pasos_EXPLORANDO": 97,
+      "recibidos": 210,
+      "msg_PROPOSE": 13,
+      "cedidas_sin_mensaje": 26824,
+      "pasos_RECOLECTANDO": 409,
+      "reportes_filtrados": 2427,
+      "extracciones": 123,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 4,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "pasos_RETORNANDO": 378,
+      "depositos": 28,
+      "hielo_depositado": 123,
+      "patrullas": 24,
+      "avisos_de_sobrante": 13,
+      "elecciones": 60,
+      "cfp_sin_puja": 40,
+      "esquives": 282,
+      "subastas_desiertas": 10,
+      "esperas_por_tormenta": 169,
+      "msg_REQUEST": 24,
+      "rescates_aceptados": 21,
+      "recargas": 21,
+      "pasos_EN_RESCATE": 6,
+      "rescates_reenviados": 3,
+      "pasos_OCIOSO": 57,
+      "astar": 7
+     },
+     "politica_final": "EXPANSION",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       350,
+       "AHORRO"
+      ],
+      [
+       400,
+       "EXPANSION"
+      ],
+      [
+       600,
+       "AHORRO"
+      ],
+      [
+       650,
+       "EXPANSION"
+      ],
+      [
+       850,
+       "AHORRO"
+      ],
+      [
+       900,
+       "EXPANSION"
+      ],
+      [
+       1100,
+       "AHORRO"
+      ],
+      [
+       1150,
+       "EXPANSION"
+      ],
+      [
+       1350,
+       "AHORRO"
+      ],
+      [
+       1400,
+       "EXPANSION"
+      ],
+      [
+       1450,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1600,
+       "AHORRO"
+      ],
+      [
+       1650,
+       "EXPANSION"
+      ],
+      [
+       1850,
+       "AHORRO"
+      ],
+      [
+       1900,
+       "EXPANSION"
+      ],
+      [
+       2550,
+       "AHORRO"
+      ],
+      [
+       2600,
+       "EXPANSION"
+      ],
+      [
+       2800,
+       "AHORRO"
+      ],
+      [
+       2850,
+       "EXPANSION"
+      ]
+     ],
+     "ms": {
+      "media": 0.577,
+      "p95": 1.406,
+      "p99": 4.087,
+      "max": 9.703
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 117,
+    "bateria": 2868.0,
+    "ratio": 0.04079,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 150,
+    "gasto": {
+     "explorador:mensajes": 62,
+     "explorador:paso": 885,
+     "explorador:paso_tormenta": 45,
+     "explorador:pulso_tormenta": 180,
+     "recarga:mensajes": 10,
+     "recarga:paso": 7,
+     "recarga:pulso_tormenta": 69,
+     "rover:mensajes": 78,
+     "rover:paso": 1028,
+     "rover:paso_tormenta": 15,
+     "rover:pulso_tormenta": 489
+    },
+    "ms_media": 0.715,
+    "ms_p95": 1.899,
+    "ms_p99": 4.846,
+    "ms_max": 26.369,
+    "interno": {
+     "contadores": {
+      "msg_CFP": 34,
+      "subastas_abiertas": 15,
+      "pasos_RETORNANDO_BASE": 251,
+      "msg_INFORM": 65,
+      "pasos_EXPLORANDO": 79,
+      "recibidos": 150,
+      "pasos_RECOLECTANDO": 438,
+      "cedidas_sin_mensaje": 31774,
+      "msg_PROPOSE": 16,
+      "reportes_filtrados": 2086,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "extracciones": 117,
+      "esperas_por_tormenta": 246,
+      "pasos_RETORNANDO": 385,
+      "esquives": 198,
+      "avisos_de_sobrante": 6,
+      "elecciones": 60,
+      "astar": 44,
+      "depositos": 25,
+      "hielo_depositado": 117,
+      "carronas": 17,
+      "pasos_PATRULLANDO": 536,
+      "cfp_sin_puja": 18,
+      "patrullas": 26,
+      "msg_REQUEST": 19,
+      "rescates_aceptados": 18,
+      "pasos_EN_RESCATE": 7,
+      "recargas": 18,
+      "subastas_desiertas": 6,
+      "rescates_reenviados": 1,
+      "pasos_CONSUMIENDO_CARRONA": 16,
+      "pasos_OCIOSO": 22
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2300,
+       "EXPANSION"
+      ],
+      [
+       2500,
+       "AHORRO"
+      ],
+      [
+       2600,
+       "EXPANSION"
+      ],
+      [
+       2750,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       3000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.691,
+      "p95": 1.794,
+      "p99": 4.72,
+      "max": 26.335
+     }
+    }
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 185,
+    "bateria": 11354.0,
+    "ratio": 0.01629,
+    "vivas": 2,
+    "unidades": 50,
+    "mensajes": 1867,
+    "gasto": {
+     "explorador:mensajes": 677,
+     "explorador:paso": 3174,
+     "explorador:paso_tormenta": 107,
+     "explorador:pulso_tormenta": 18,
+     "recarga:mensajes": 239,
+     "recarga:paso": 1318,
+     "recarga:paso_tormenta": 146,
+     "rover:mensajes": 951,
+     "rover:paso": 3324,
+     "rover:paso_tormenta": 585,
+     "rover:pulso_tormenta": 816
+    },
+    "ms_media": 0.184,
+    "ms_p95": 0.782,
+    "ms_p99": 2.182,
+    "ms_max": 18.978
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 170,
+    "bateria": 11407.0,
+    "ratio": 0.0149,
+    "vivas": 8,
+    "unidades": 50,
+    "mensajes": 1739,
+    "gasto": {
+     "explorador:mensajes": 542,
+     "explorador:paso": 2152,
+     "explorador:paso_tormenta": 58,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 244,
+     "recarga:paso": 1416,
+     "recarga:paso_tormenta": 258,
+     "recarga:pulso_tormenta": 9,
+     "rover:mensajes": 954,
+     "rover:paso": 3105,
+     "rover:paso_tormenta": 1435,
+     "rover:pulso_tormenta": 1227
+    },
+    "ms_media": 0.315,
+    "ms_p95": 1.184,
+    "ms_p99": 3.786,
+    "ms_max": 8.603
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "equipoA.py",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 6,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 736,
+  "equipos": {
+   "B": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 111,
+    "bateria": 2756.0,
+    "ratio": 0.04028,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 245,
+    "gasto": {
+     "explorador:mensajes": 108,
+     "explorador:paso": 851,
+     "explorador:paso_tormenta": 65,
+     "explorador:pulso_tormenta": 126,
+     "recarga:mensajes": 11,
+     "recarga:paso": 6,
+     "recarga:pulso_tormenta": 57,
+     "rover:mensajes": 126,
+     "rover:paso": 991,
+     "rover:paso_tormenta": 10,
+     "rover:pulso_tormenta": 405
+    },
+    "ms_media": 0.776,
+    "ms_p95": 2.014,
+    "ms_p99": 5.013,
+    "ms_max": 11.889,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 505,
+      "msg_INFORM": 156,
+      "pasos_RETORNANDO_BASE": 249,
+      "cedidas_sin_mensaje": 42566,
+      "pasos_EXPLORANDO": 82,
+      "pasos_RECOLECTANDO": 438,
+      "recibidos": 245,
+      "reportes_filtrados": 5204,
+      "msg_CFP": 40,
+      "subastas_abiertas": 17,
+      "msg_PROPOSE": 14,
+      "extracciones": 111,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "cfp_sin_puja": 26,
+      "patrullas": 24,
+      "pasos_RETORNANDO": 368,
+      "depositos": 28,
+      "hielo_depositado": 111,
+      "avisos_de_sobrante": 8,
+      "elecciones": 60,
+      "esquives": 170,
+      "esperas_por_tormenta": 210,
+      "msg_REQUEST": 21,
+      "rescates_aceptados": 20,
+      "recargas": 20,
+      "subastas_desiertas": 8,
+      "pasos_EN_RESCATE": 6,
+      "astar": 54,
+      "pasos_OCIOSO": 45,
+      "rescates_reenviados": 1
+     },
+     "politica_final": "EXPANSION",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       150,
+       "AHORRO"
+      ],
+      [
+       200,
+       "EXPANSION"
+      ],
+      [
+       350,
+       "AHORRO"
+      ],
+      [
+       400,
+       "EXPANSION"
+      ],
+      [
+       600,
+       "AHORRO"
+      ],
+      [
+       650,
+       "EXPANSION"
+      ],
+      [
+       850,
+       "AHORRO"
+      ],
+      [
+       900,
+       "EXPANSION"
+      ],
+      [
+       1100,
+       "AHORRO"
+      ],
+      [
+       1150,
+       "EXPANSION"
+      ],
+      [
+       1350,
+       "AHORRO"
+      ],
+      [
+       1400,
+       "EXPANSION"
+      ],
+      [
+       1600,
+       "AHORRO"
+      ],
+      [
+       1650,
+       "EXPANSION"
+      ],
+      [
+       1850,
+       "AHORRO"
+      ],
+      [
+       1900,
+       "EXPANSION"
+      ],
+      [
+       2550,
+       "AHORRO"
+      ],
+      [
+       2600,
+       "EXPANSION"
+      ],
+      [
+       2800,
+       "AHORRO"
+      ],
+      [
+       2850,
+       "EXPANSION"
+      ]
+     ],
+     "ms": {
+      "media": 0.75,
+      "p95": 1.957,
+      "p99": 4.985,
+      "max": 11.851
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 103,
+    "bateria": 2882.0,
+    "ratio": 0.03574,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 143,
+    "gasto": {
+     "explorador:mensajes": 56,
+     "explorador:paso": 848,
+     "explorador:paso_tormenta": 95,
+     "explorador:pulso_tormenta": 216,
+     "recarga:mensajes": 11,
+     "recarga:paso": 16,
+     "recarga:pulso_tormenta": 69,
+     "rover:mensajes": 76,
+     "rover:paso": 925,
+     "rover:pulso_tormenta": 570
+    },
+    "ms_media": 0.662,
+    "ms_p95": 1.819,
+    "ms_p99": 4.533,
+    "ms_max": 12.92,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 523,
+      "msg_INFORM": 43,
+      "pasos_RETORNANDO_BASE": 212,
+      "pasos_EXPLORANDO": 80,
+      "cedidas_sin_mensaje": 21413,
+      "recibidos": 143,
+      "pasos_RECOLECTANDO": 362,
+      "reportes_filtrados": 832,
+      "extracciones": 103,
+      "pasos_RETORNANDO": 352,
+      "msg_CFP": 43,
+      "subastas_abiertas": 16,
+      "msg_PROPOSE": 18,
+      "msg_ACCEPT_PROPOSAL": 11,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 11,
+      "contratos_ganados": 11,
+      "depositos": 26,
+      "hielo_depositado": 103,
+      "patrullas": 25,
+      "esperas_por_tormenta": 257,
+      "esquives": 247,
+      "elecciones": 60,
+      "avisos_de_sobrante": 10,
+      "carronas": 43,
+      "cfp_sin_puja": 25,
+      "subastas_desiertas": 5,
+      "msg_REQUEST": 20,
+      "rescates_aceptados": 19,
+      "pasos_EN_RESCATE": 12,
+      "recargas": 19,
+      "astar": 64,
+      "pasos_OCIOSO": 20,
+      "msg_AGREE": 1,
+      "rescates_reenviados": 1
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1050,
+       "AHORRO"
+      ],
+      [
+       1100,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2300,
+       "EXPANSION"
+      ],
+      [
+       2500,
+       "AHORRO"
+      ],
+      [
+       2550,
+       "EXPANSION"
+      ],
+      [
+       2700,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       3000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.634,
+      "p95": 1.783,
+      "p99": 4.428,
+      "max": 12.659
+     }
+    }
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 220,
+    "bateria": 12667.5,
+    "ratio": 0.01737,
+    "vivas": 5,
+    "unidades": 50,
+    "mensajes": 1941,
+    "gasto": {
+     "explorador:mensajes": 538,
+     "explorador:paso": 1645,
+     "explorador:paso_tormenta": 70,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 365,
+     "recarga:paso": 1750,
+     "recarga:paso_tormenta": 210,
+     "recarga:pulso_tormenta": 9,
+     "rover:mensajes": 1038,
+     "rover:paso": 4535,
+     "rover:paso_tormenta": 1300,
+     "rover:pulso_tormenta": 1198
+    },
+    "ms_media": 0.318,
+    "ms_p95": 0.917,
+    "ms_p99": 3.366,
+    "ms_max": 7.864
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 100,
+    "bateria": 10099.0,
+    "ratio": 0.0099,
+    "vivas": 2,
+    "unidades": 50,
+    "mensajes": 2329,
+    "gasto": {
+     "explorador:mensajes": 728,
+     "explorador:paso": 2976,
+     "explorador:paso_tormenta": 40,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 338,
+     "recarga:paso": 986,
+     "recarga:paso_tormenta": 82,
+     "recarga:pulso_tormenta": 10,
+     "rover:mensajes": 1263,
+     "rover:paso": 2516,
+     "rover:paso_tormenta": 450,
+     "rover:pulso_tormenta": 708
+    },
+    "ms_media": 0.142,
+    "ms_p95": 0.455,
+    "ms_p99": 2.532,
+    "ms_max": 12.757
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "equipoA.py",
+   "C": "base",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 1,
+  "sim_s": 320.5,
+  "ticks": 2671,
+  "terminada": true,
+  "hielo_inicial": 729,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 107,
+    "bateria": 2730.0,
+    "ratio": 0.03919,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 178,
+    "gasto": {
+     "explorador:mensajes": 70,
+     "explorador:paso": 815,
+     "explorador:paso_tormenta": 60,
+     "explorador:pulso_tormenta": 195,
+     "recarga:mensajes": 14,
+     "recarga:paso": 4,
+     "recarga:pulso_tormenta": 66,
+     "rover:mensajes": 94,
+     "rover:paso": 950,
+     "rover:pulso_tormenta": 462
+    },
+    "ms_media": 0.636,
+    "ms_p95": 1.774,
+    "ms_p99": 4.721,
+    "ms_max": 8.616,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 511,
+      "pasos_RETORNANDO_BASE": 185,
+      "msg_INFORM": 64,
+      "msg_CFP": 48,
+      "subastas_abiertas": 20,
+      "cedidas_sin_mensaje": 39987,
+      "pasos_EXPLORANDO": 99,
+      "recibidos": 178,
+      "pasos_RECOLECTANDO": 377,
+      "msg_PROPOSE": 21,
+      "reportes_filtrados": 1061,
+      "extracciones": 107,
+      "msg_ACCEPT_PROPOSAL": 15,
+      "msg_REJECT_PROPOSAL": 6,
+      "subastas_adjudicadas": 15,
+      "contratos_ganados": 15,
+      "cfp_sin_puja": 27,
+      "patrullas": 22,
+      "esquives": 197,
+      "esperas_por_tormenta": 165,
+      "pasos_RETORNANDO": 383,
+      "avisos_de_sobrante": 15,
+      "depositos": 25,
+      "hielo_depositado": 107,
+      "elecciones": 53,
+      "subastas_desiertas": 5,
+      "msg_REQUEST": 24,
+      "rescates_aceptados": 19,
+      "pasos_EN_RESCATE": 4,
+      "recargas": 19,
+      "rescates_reenviados": 5,
+      "astar": 32,
+      "pasos_OCIOSO": 25
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 53,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2450,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.612,
+      "p95": 1.722,
+      "p99": 4.631,
+      "max": 8.582
+     }
+    }
+   },
+   "C": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 113,
+    "bateria": 2959.0,
+    "ratio": 0.03819,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 155,
+    "gasto": {
+     "explorador:mensajes": 60,
+     "explorador:paso": 745,
+     "explorador:paso_tormenta": 160,
+     "explorador:pulso_tormenta": 213,
+     "recarga:mensajes": 14,
+     "recarga:paso": 25,
+     "recarga:pulso_tormenta": 66,
+     "rover:mensajes": 82,
+     "rover:paso": 1022,
+     "rover:paso_tormenta": 75,
+     "rover:pulso_tormenta": 498
+    },
+    "ms_media": 0.623,
+    "ms_p95": 1.668,
+    "ms_p99": 4.099,
+    "ms_max": 14.496,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 77,
+      "pasos_RETORNANDO_BASE": 242,
+      "pasos_PATRULLANDO": 436,
+      "cedidas_sin_mensaje": 41361,
+      "pasos_EXPLORANDO": 123,
+      "pasos_RECOLECTANDO": 358,
+      "recibidos": 155,
+      "reportes_filtrados": 2133,
+      "extracciones": 113,
+      "msg_CFP": 23,
+      "subastas_abiertas": 9,
+      "msg_PROPOSE": 15,
+      "pasos_RETORNANDO": 383,
+      "msg_ACCEPT_PROPOSAL": 8,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 8,
+      "contratos_ganados": 8,
+      "cfp_sin_puja": 8,
+      "patrullas": 21,
+      "depositos": 29,
+      "hielo_depositado": 113,
+      "esquives": 215,
+      "esperas_por_tormenta": 347,
+      "elecciones": 53,
+      "astar": 94,
+      "avisos_de_sobrante": 10,
+      "msg_REQUEST": 23,
+      "rescates_aceptados": 21,
+      "pasos_EN_RESCATE": 18,
+      "recargas": 21,
+      "subastas_desiertas": 1,
+      "rescates_reenviados": 2,
+      "pasos_OCIOSO": 64,
+      "msg_AGREE": 2
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 53,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       100,
+       "AHORRO"
+      ],
+      [
+       150,
+       "EXPANSION"
+      ],
+      [
+       250,
+       "AHORRO"
+      ],
+      [
+       300,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       550,
+       "EXPANSION"
+      ],
+      [
+       750,
+       "AHORRO"
+      ],
+      [
+       800,
+       "EXPANSION"
+      ],
+      [
+       1450,
+       "AHORRO"
+      ],
+      [
+       1500,
+       "EXPANSION"
+      ],
+      [
+       1700,
+       "AHORRO"
+      ],
+      [
+       1750,
+       "EXPANSION"
+      ],
+      [
+       1950,
+       "AHORRO"
+      ],
+      [
+       2000,
+       "EXPANSION"
+      ],
+      [
+       2050,
+       "AHORRO"
+      ],
+      [
+       2100,
+       "EXPANSION"
+      ],
+      [
+       2200,
+       "AHORRO"
+      ],
+      [
+       2250,
+       "EXPANSION"
+      ],
+      [
+       2450,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.601,
+      "p95": 1.635,
+      "p99": 4.07,
+      "max": 14.467
+     }
+    }
+   },
+   "B": {
+    "puesto": 3,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 312,
+    "bateria": 17046.5,
+    "ratio": 0.0183,
+    "vivas": 19,
+    "unidades": 50,
+    "mensajes": 2005,
+    "gasto": {
+     "explorador:mensajes": 578,
+     "explorador:paso": 1840,
+     "explorador:paso_tormenta": 45,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 350,
+     "recarga:paso": 3974,
+     "recarga:paso_tormenta": 248,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 1076,
+     "rover:paso": 5844,
+     "rover:paso_tormenta": 1900,
+     "rover:pulso_tormenta": 1160
+    },
+    "ms_media": 0.558,
+    "ms_p95": 1.514,
+    "ms_p99": 4.344,
+    "ms_max": 7.901
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 188,
+    "bateria": 19239.5,
+    "ratio": 0.00977,
+    "vivas": 30,
+    "unidades": 50,
+    "mensajes": 1982,
+    "gasto": {
+     "explorador:mensajes": 588,
+     "explorador:paso": 2088,
+     "explorador:paso_tormenta": 18,
+     "explorador:pulso_tormenta": 6,
+     "recarga:mensajes": 294,
+     "recarga:paso": 4341,
+     "recarga:paso_tormenta": 747,
+     "recarga:pulso_tormenta": 81,
+     "rover:mensajes": 1100,
+     "rover:paso": 4130,
+     "rover:paso_tormenta": 3395,
+     "rover:pulso_tormenta": 2450
+    },
+    "ms_media": 0.75,
+    "ms_p95": 2.134,
+    "ms_p99": 5.398,
+    "ms_max": 11.113
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "equipoA.py",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 2,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 737,
+  "equipos": {
+   "C": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 137,
+    "bateria": 3036.0,
+    "ratio": 0.04513,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 141,
+    "gasto": {
+     "explorador:mensajes": 53,
+     "explorador:paso": 745,
+     "explorador:paso_tormenta": 100,
+     "explorador:pulso_tormenta": 210,
+     "recarga:mensajes": 12,
+     "recarga:paso": 2,
+     "recarga:pulso_tormenta": 63,
+     "rover:mensajes": 76,
+     "rover:paso": 1280,
+     "rover:pulso_tormenta": 495
+    },
+    "ms_media": 0.773,
+    "ms_p95": 2.802,
+    "ms_p99": 5.735,
+    "ms_max": 16.37,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 461,
+      "msg_INFORM": 49,
+      "pasos_RETORNANDO_BASE": 192,
+      "pasos_EXPLORANDO": 103,
+      "recibidos": 141,
+      "pasos_RECOLECTANDO": 556,
+      "cedidas_sin_mensaje": 34663,
+      "reportes_filtrados": 1142,
+      "extracciones": 137,
+      "msg_CFP": 38,
+      "subastas_abiertas": 15,
+      "msg_PROPOSE": 15,
+      "msg_ACCEPT_PROPOSAL": 10,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 10,
+      "pasos_RETORNANDO": 464,
+      "contratos_ganados": 10,
+      "patrullas": 23,
+      "depositos": 29,
+      "hielo_depositado": 137,
+      "avisos_de_sobrante": 11,
+      "elecciones": 60,
+      "cfp_sin_puja": 23,
+      "esperas_por_tormenta": 233,
+      "subastas_desiertas": 5,
+      "astar": 46,
+      "esquives": 214,
+      "msg_REQUEST": 24,
+      "rescates_aceptados": 24,
+      "recargas": 24,
+      "pasos_OCIOSO": 55,
+      "pasos_EN_RESCATE": 2
+     },
+     "politica_final": "EXPANSION",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       250,
+       "AHORRO"
+      ],
+      [
+       400,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       550,
+       "EXPANSION"
+      ],
+      [
+       750,
+       "AHORRO"
+      ],
+      [
+       800,
+       "EXPANSION"
+      ],
+      [
+       900,
+       "AHORRO"
+      ],
+      [
+       950,
+       "EXPANSION"
+      ],
+      [
+       1400,
+       "AHORRO"
+      ],
+      [
+       1500,
+       "EXPANSION"
+      ],
+      [
+       1700,
+       "AHORRO"
+      ],
+      [
+       1750,
+       "EXPANSION"
+      ],
+      [
+       1950,
+       "AHORRO"
+      ],
+      [
+       2000,
+       "EXPANSION"
+      ],
+      [
+       2200,
+       "AHORRO"
+      ],
+      [
+       2250,
+       "EXPANSION"
+      ],
+      [
+       2450,
+       "AHORRO"
+      ],
+      [
+       2500,
+       "EXPANSION"
+      ],
+      [
+       2700,
+       "AHORRO"
+      ],
+      [
+       2750,
+       "EXPANSION"
+      ],
+      [
+       2950,
+       "AHORRO"
+      ],
+      [
+       3000,
+       "EXPANSION"
+      ]
+     ],
+     "ms": {
+      "media": 0.743,
+      "p95": 2.742,
+      "p99": 5.597,
+      "max": 16.339
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 110,
+    "bateria": 2986.5,
+    "ratio": 0.03683,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 125,
+    "gasto": {
+     "explorador:mensajes": 42,
+     "explorador:paso": 688,
+     "explorador:paso_tormenta": 30,
+     "explorador:pulso_tormenta": 198,
+     "recarga:mensajes": 17,
+     "recarga:paso": 76,
+     "recarga:paso_tormenta": 5,
+     "recarga:pulso_tormenta": 81,
+     "rover:mensajes": 66,
+     "rover:paso": 1039,
+     "rover:paso_tormenta": 75,
+     "rover:pulso_tormenta": 669
+    },
+    "ms_media": 0.733,
+    "ms_p95": 2.435,
+    "ms_p99": 5.623,
+    "ms_max": 24.909,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 42,
+      "pasos_PATRULLANDO": 412,
+      "msg_CFP": 22,
+      "subastas_abiertas": 11,
+      "pasos_RETORNANDO_BASE": 203,
+      "cedidas_sin_mensaje": 30743,
+      "pasos_EXPLORANDO": 145,
+      "recibidos": 125,
+      "msg_PROPOSE": 15,
+      "pasos_RECOLECTANDO": 383,
+      "reportes_filtrados": 508,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 6,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "extracciones": 110,
+      "patrullas": 19,
+      "esquives": 215,
+      "esperas_por_tormenta": 492,
+      "pasos_RETORNANDO": 383,
+      "depositos": 25,
+      "hielo_depositado": 110,
+      "elecciones": 60,
+      "avisos_de_sobrante": 9,
+      "astar": 62,
+      "cfp_sin_puja": 7,
+      "subastas_desiertas": 2,
+      "msg_REQUEST": 26,
+      "rescates_aceptados": 22,
+      "pasos_EN_RESCATE": 44,
+      "recargas": 22,
+      "msg_AGREE": 4,
+      "rescates_reenviados": 3,
+      "msg_FAILURE": 1,
+      "pasos_OCIOSO": 41
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2150,
+       "AHORRO"
+      ],
+      [
+       2200,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2300,
+       "EXPANSION"
+      ],
+      [
+       2500,
+       "AHORRO"
+      ],
+      [
+       2550,
+       "EXPANSION"
+      ],
+      [
+       2750,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       3000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.704,
+      "p95": 2.384,
+      "p99": 5.517,
+      "max": 24.866
+     }
+    }
+   },
+   "B": {
+    "puesto": 3,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 310,
+    "bateria": 19902.0,
+    "ratio": 0.01558,
+    "vivas": 14,
+    "unidades": 50,
+    "mensajes": 2072,
+    "gasto": {
+     "explorador:mensajes": 452,
+     "explorador:paso": 1396,
+     "explorador:paso_tormenta": 30,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 474,
+     "recarga:paso": 4795,
+     "recarga:paso_tormenta": 224,
+     "recarga:pulso_tormenta": 27,
+     "rover:mensajes": 1146,
+     "rover:paso": 6678,
+     "rover:paso_tormenta": 2765,
+     "rover:pulso_tormenta": 1912
+    },
+    "ms_media": 0.649,
+    "ms_p95": 1.995,
+    "ms_p99": 4.948,
+    "ms_max": 15.09
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 117,
+    "bateria": 9768.0,
+    "ratio": 0.01198,
+    "vivas": 3,
+    "unidades": 50,
+    "mensajes": 1701,
+    "gasto": {
+     "explorador:mensajes": 530,
+     "explorador:paso": 3606,
+     "explorador:paso_tormenta": 25,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 264,
+     "recarga:paso": 765,
+     "recarga:paso_tormenta": 96,
+     "recarga:pulso_tormenta": 9,
+     "rover:mensajes": 907,
+     "rover:paso": 2302,
+     "rover:paso_tormenta": 480,
+     "rover:pulso_tormenta": 780
+    },
+    "ms_media": 0.123,
+    "ms_p95": 0.477,
+    "ms_p99": 1.772,
+    "ms_max": 10.235
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "equipoA.py",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 3,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 744,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 141,
+    "bateria": 3512.0,
+    "ratio": 0.04015,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 189,
+    "gasto": {
+     "explorador:mensajes": 76,
+     "explorador:paso": 864,
+     "explorador:paso_tormenta": 90,
+     "explorador:pulso_tormenta": 336,
+     "recarga:mensajes": 14,
+     "recarga:paso": 7,
+     "recarga:pulso_tormenta": 108,
+     "rover:mensajes": 100,
+     "rover:paso": 1154,
+     "rover:paso_tormenta": 5,
+     "rover:pulso_tormenta": 759
+    },
+    "ms_media": 1.392,
+    "ms_p95": 5.128,
+    "ms_p99": 13.698,
+    "ms_max": 44.379,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 460,
+      "msg_INFORM": 47,
+      "pasos_RETORNANDO_BASE": 237,
+      "recibidos": 189,
+      "cedidas_sin_mensaje": 27641,
+      "pasos_RECOLECTANDO": 489,
+      "pasos_EXPLORANDO": 98,
+      "msg_CFP": 62,
+      "subastas_abiertas": 25,
+      "msg_PROPOSE": 27,
+      "reportes_filtrados": 623,
+      "extracciones": 141,
+      "pasos_RETORNANDO": 482,
+      "msg_ACCEPT_PROPOSAL": 19,
+      "msg_REJECT_PROPOSAL": 8,
+      "subastas_adjudicadas": 19,
+      "contratos_ganados": 19,
+      "cfp_sin_puja": 35,
+      "patrullas": 22,
+      "depositos": 31,
+      "hielo_depositado": 141,
+      "esquives": 244,
+      "subastas_desiertas": 6,
+      "esperas_por_tormenta": 220,
+      "elecciones": 60,
+      "astar": 53,
+      "avisos_de_sobrante": 12,
+      "msg_REQUEST": 26,
+      "rescates_aceptados": 24,
+      "pasos_EN_RESCATE": 7,
+      "recargas": 24,
+      "rescates_reenviados": 2,
+      "pasos_OCIOSO": 27
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1400,
+       "AHORRO"
+      ],
+      [
+       1450,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2200,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 1.335,
+      "p95": 4.951,
+      "p99": 13.385,
+      "max": 44.101
+     }
+    }
+   },
+   "C": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 139,
+    "bateria": 3736.0,
+    "ratio": 0.03721,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 228,
+    "gasto": {
+     "explorador:mensajes": 92,
+     "explorador:paso": 793,
+     "explorador:paso_tormenta": 129,
+     "explorador:pulso_tormenta": 273,
+     "recarga:mensajes": 18,
+     "recarga:paso": 15,
+     "recarga:pulso_tormenta": 96,
+     "rover:mensajes": 118,
+     "rover:paso": 1473,
+     "rover:paso_tormenta": 15,
+     "rover:pulso_tormenta": 714
+    },
+    "ms_media": 1.87,
+    "ms_p95": 6.552,
+    "ms_p99": 21.755,
+    "ms_max": 75.217,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 53,
+      "pasos_PATRULLANDO": 469,
+      "pasos_RETORNANDO_BASE": 249,
+      "msg_CFP": 84,
+      "subastas_abiertas": 32,
+      "pasos_EXPLORANDO": 88,
+      "cedidas_sin_mensaje": 27573,
+      "pasos_RECOLECTANDO": 552,
+      "recibidos": 228,
+      "msg_PROPOSE": 29,
+      "reportes_filtrados": 936,
+      "extracciones": 139,
+      "msg_ACCEPT_PROPOSAL": 22,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 22,
+      "contratos_ganados": 22,
+      "pasos_RETORNANDO": 505,
+      "patrullas": 20,
+      "depositos": 33,
+      "hielo_depositado": 139,
+      "cfp_sin_puja": 55,
+      "avisos_de_sobrante": 12,
+      "elecciones": 60,
+      "subastas_desiertas": 10,
+      "msg_REQUEST": 32,
+      "rescates_aceptados": 28,
+      "pasos_EN_RESCATE": 13,
+      "recargas": 28,
+      "esperas_por_tormenta": 232,
+      "esquives": 280,
+      "astar": 49,
+      "pasos_OCIOSO": 67,
+      "rescates_reenviados": 3,
+      "pasos_CONSUMIENDO_CARRONA": 87,
+      "carronas": 58,
+      "msg_FAILURE": 1
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       200,
+       "AHORRO"
+      ],
+      [
+       300,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       550,
+       "EXPANSION"
+      ],
+      [
+       750,
+       "AHORRO"
+      ],
+      [
+       800,
+       "EXPANSION"
+      ],
+      [
+       1450,
+       "AHORRO"
+      ],
+      [
+       1500,
+       "EXPANSION"
+      ],
+      [
+       1700,
+       "AHORRO"
+      ],
+      [
+       1750,
+       "EXPANSION"
+      ],
+      [
+       1950,
+       "AHORRO"
+      ],
+      [
+       2150,
+       "EXPANSION"
+      ],
+      [
+       2200,
+       "AHORRO"
+      ],
+      [
+       2250,
+       "EXPANSION"
+      ],
+      [
+       2400,
+       "AHORRO"
+      ],
+      [
+       2500,
+       "CARRONA"
+      ],
+      [
+       2550,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 1.805,
+      "p95": 6.328,
+      "p99": 20.594,
+      "max": 74.857
+     }
+    }
+   },
+   "B": {
+    "puesto": 3,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 252,
+    "bateria": 15053.0,
+    "ratio": 0.01674,
+    "vivas": 9,
+    "unidades": 50,
+    "mensajes": 2311,
+    "gasto": {
+     "explorador:mensajes": 574,
+     "explorador:paso": 2422,
+     "explorador:paso_tormenta": 20,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 526,
+     "recarga:paso": 2770,
+     "recarga:paso_tormenta": 160,
+     "recarga:pulso_tormenta": 12,
+     "rover:mensajes": 1212,
+     "rover:paso": 4766,
+     "rover:paso_tormenta": 1465,
+     "rover:pulso_tormenta": 1124
+    },
+    "ms_media": 0.649,
+    "ms_p95": 2.623,
+    "ms_p99": 8.444,
+    "ms_max": 31.947
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 158,
+    "bateria": 21420.0,
+    "ratio": 0.00738,
+    "vivas": 33,
+    "unidades": 50,
+    "mensajes": 1856,
+    "gasto": {
+     "explorador:mensajes": 544,
+     "explorador:paso": 4642,
+     "explorador:paso_tormenta": 80,
+     "explorador:pulso_tormenta": 18,
+     "recarga:mensajes": 274,
+     "recarga:paso": 5336,
+     "recarga:paso_tormenta": 628,
+     "recarga:pulso_tormenta": 57,
+     "rover:mensajes": 1037,
+     "rover:paso": 4427,
+     "rover:paso_tormenta": 2290,
+     "rover:pulso_tormenta": 2085
+    },
+    "ms_media": 1.617,
+    "ms_p95": 6.297,
+    "ms_p99": 20.281,
+    "ms_max": 80.615
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "equipoA.py",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 4,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 746,
+  "equipos": {
+   "C": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 133,
+    "bateria": 2906.0,
+    "ratio": 0.04577,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 209,
+    "gasto": {
+     "explorador:mensajes": 87,
+     "explorador:paso": 798,
+     "explorador:paso_tormenta": 40,
+     "explorador:pulso_tormenta": 189,
+     "recarga:mensajes": 12,
+     "recarga:paso": 21,
+     "recarga:pulso_tormenta": 63,
+     "rover:mensajes": 110,
+     "rover:paso": 1136,
+     "rover:pulso_tormenta": 450
+    },
+    "ms_media": 0.598,
+    "ms_p95": 1.434,
+    "ms_p99": 4.075,
+    "ms_max": 15.631,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 112,
+      "pasos_RETORNANDO_BASE": 208,
+      "msg_CFP": 47,
+      "subastas_abiertas": 20,
+      "pasos_EXPLORANDO": 92,
+      "cedidas_sin_mensaje": 29341,
+      "recibidos": 209,
+      "msg_PROPOSE": 13,
+      "pasos_RECOLECTANDO": 496,
+      "reportes_filtrados": 3079,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 4,
+      "subastas_adjudicadas": 9,
+      "extracciones": 133,
+      "contratos_ganados": 9,
+      "pasos_RETORNANDO": 435,
+      "depositos": 30,
+      "hielo_depositado": 133,
+      "avisos_de_sobrante": 11,
+      "elecciones": 60,
+      "pasos_PATRULLANDO": 515,
+      "cfp_sin_puja": 34,
+      "patrullas": 26,
+      "subastas_desiertas": 11,
+      "msg_REQUEST": 23,
+      "rescates_aceptados": 22,
+      "pasos_EN_RESCATE": 13,
+      "recargas": 22,
+      "esperas_por_tormenta": 125,
+      "esquives": 180,
+      "astar": 23,
+      "pasos_OCIOSO": 24,
+      "rescates_reenviados": 1,
+      "msg_AGREE": 1
+     },
+     "politica_final": "EXPANSION",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       250,
+       "AHORRO"
+      ],
+      [
+       300,
+       "EXPANSION"
+      ],
+      [
+       450,
+       "AHORRO"
+      ],
+      [
+       550,
+       "EXPANSION"
+      ],
+      [
+       700,
+       "AHORRO"
+      ],
+      [
+       800,
+       "EXPANSION"
+      ],
+      [
+       1450,
+       "AHORRO"
+      ],
+      [
+       1500,
+       "EXPANSION"
+      ],
+      [
+       1700,
+       "AHORRO"
+      ],
+      [
+       1750,
+       "EXPANSION"
+      ],
+      [
+       1950,
+       "AHORRO"
+      ],
+      [
+       2000,
+       "EXPANSION"
+      ],
+      [
+       2200,
+       "AHORRO"
+      ],
+      [
+       2250,
+       "EXPANSION"
+      ],
+      [
+       2450,
+       "AHORRO"
+      ],
+      [
+       2500,
+       "EXPANSION"
+      ],
+      [
+       2550,
+       "AHORRO"
+      ],
+      [
+       2600,
+       "EXPANSION"
+      ],
+      [
+       2700,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       2950,
+       "AHORRO"
+      ],
+      [
+       3000,
+       "EXPANSION"
+      ]
+     ],
+     "ms": {
+      "media": 0.576,
+      "p95": 1.392,
+      "p99": 4.048,
+      "max": 15.561
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 148,
+    "bateria": 3309.0,
+    "ratio": 0.04473,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 229,
+    "gasto": {
+     "explorador:mensajes": 92,
+     "explorador:paso": 816,
+     "explorador:paso_tormenta": 130,
+     "explorador:pulso_tormenta": 189,
+     "recarga:mensajes": 15,
+     "recarga:paso": 14,
+     "recarga:pulso_tormenta": 66,
+     "rover:mensajes": 122,
+     "rover:paso": 1313,
+     "rover:pulso_tormenta": 552
+    },
+    "ms_media": 0.709,
+    "ms_p95": 1.955,
+    "ms_p99": 4.783,
+    "ms_max": 11.819,
+    "interno": {
+     "contadores": {
+      "msg_CFP": 51,
+      "subastas_abiertas": 21,
+      "pasos_RETORNANDO_BASE": 187,
+      "msg_INFORM": 108,
+      "pasos_PATRULLANDO": 485,
+      "cedidas_sin_mensaje": 45291,
+      "pasos_EXPLORANDO": 92,
+      "pasos_RECOLECTANDO": 578,
+      "recibidos": 229,
+      "msg_PROPOSE": 21,
+      "reportes_filtrados": 1587,
+      "extracciones": 148,
+      "msg_ACCEPT_PROPOSAL": 12,
+      "msg_REJECT_PROPOSAL": 9,
+      "subastas_adjudicadas": 12,
+      "contratos_ganados": 12,
+      "cfp_sin_puja": 30,
+      "pasos_RETORNANDO": 507,
+      "patrullas": 21,
+      "esquives": 255,
+      "depositos": 34,
+      "hielo_depositado": 148,
+      "esperas_por_tormenta": 266,
+      "subastas_desiertas": 9,
+      "avisos_de_sobrante": 16,
+      "elecciones": 60,
+      "msg_REQUEST": 28,
+      "rescates_aceptados": 26,
+      "rescates_reenviados": 2,
+      "pasos_EN_RESCATE": 11,
+      "recargas": 26,
+      "pasos_OCIOSO": 54,
+      "astar": 32
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "AHORRO"
+      ],
+      [
+       700,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1050,
+       "AHORRO"
+      ],
+      [
+       1100,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1650,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2350,
+       "EXPANSION"
+      ],
+      [
+       2500,
+       "AHORRO"
+      ],
+      [
+       2550,
+       "EXPANSION"
+      ],
+      [
+       2750,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       3000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.688,
+      "p95": 1.925,
+      "p99": 4.682,
+      "max": 11.806
+     }
+    }
+   },
+   "B": {
+    "puesto": 3,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 222,
+    "bateria": 10688.0,
+    "ratio": 0.02077,
+    "vivas": 15,
+    "unidades": 50,
+    "mensajes": 1837,
+    "gasto": {
+     "explorador:mensajes": 510,
+     "explorador:paso": 1528,
+     "explorador:paso_tormenta": 27,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 302,
+     "recarga:paso": 1278,
+     "recarga:paso_tormenta": 98,
+     "recarga:pulso_tormenta": 15,
+     "rover:mensajes": 1026,
+     "rover:paso": 4082,
+     "rover:paso_tormenta": 835,
+     "rover:pulso_tormenta": 985
+    },
+    "ms_media": 0.227,
+    "ms_p95": 0.812,
+    "ms_p99": 1.655,
+    "ms_max": 8.516
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 95,
+    "bateria": 10558.0,
+    "ratio": 0.009,
+    "vivas": 5,
+    "unidades": 50,
+    "mensajes": 1710,
+    "gasto": {
+     "explorador:mensajes": 474,
+     "explorador:paso": 2880,
+     "explorador:paso_tormenta": 50,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 282,
+     "recarga:paso": 1092,
+     "recarga:paso_tormenta": 93,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 954,
+     "rover:paso": 3121,
+     "rover:paso_tormenta": 760,
+     "rover:pulso_tormenta": 843
+    },
+    "ms_media": 0.125,
+    "ms_p95": 0.526,
+    "ms_p99": 1.292,
+    "ms_max": 6.889
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "equipoA.py",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 5,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 736,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 143,
+    "bateria": 3139.0,
+    "ratio": 0.04556,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 150,
+    "gasto": {
+     "explorador:mensajes": 60,
+     "explorador:paso": 927,
+     "explorador:paso_tormenta": 45,
+     "explorador:pulso_tormenta": 183,
+     "recarga:mensajes": 12,
+     "recarga:paso": 12,
+     "recarga:pulso_tormenta": 72,
+     "rover:mensajes": 78,
+     "rover:paso": 1150,
+     "rover:paso_tormenta": 15,
+     "rover:pulso_tormenta": 585
+    },
+    "ms_media": 0.915,
+    "ms_p95": 3.04,
+    "ms_p99": 6.185,
+    "ms_max": 24.024,
+    "interno": {
+     "contadores": {
+      "msg_CFP": 46,
+      "subastas_abiertas": 19,
+      "pasos_RETORNANDO_BASE": 291,
+      "msg_INFORM": 43,
+      "pasos_EXPLORANDO": 98,
+      "recibidos": 150,
+      "pasos_RECOLECTANDO": 488,
+      "cedidas_sin_mensaje": 54823,
+      "msg_PROPOSE": 19,
+      "reportes_filtrados": 911,
+      "msg_ACCEPT_PROPOSAL": 12,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 12,
+      "contratos_ganados": 12,
+      "extracciones": 143,
+      "esperas_por_tormenta": 283,
+      "pasos_RETORNANDO": 426,
+      "esquives": 207,
+      "avisos_de_sobrante": 6,
+      "elecciones": 60,
+      "astar": 47,
+      "depositos": 31,
+      "hielo_depositado": 143,
+      "pasos_PATRULLANDO": 541,
+      "cfp_sin_puja": 27,
+      "patrullas": 26,
+      "msg_REQUEST": 23,
+      "rescates_aceptados": 23,
+      "pasos_EN_RESCATE": 10,
+      "recargas": 23,
+      "subastas_desiertas": 7,
+      "pasos_OCIOSO": 40
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2300,
+       "EXPANSION"
+      ],
+      [
+       2500,
+       "AHORRO"
+      ],
+      [
+       2600,
+       "EXPANSION"
+      ],
+      [
+       2750,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       3000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.885,
+      "p95": 2.937,
+      "p99": 6.027,
+      "max": 23.961
+     }
+    }
+   },
+   "C": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 124,
+    "bateria": 3277.0,
+    "ratio": 0.03784,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 196,
+    "gasto": {
+     "explorador:mensajes": 76,
+     "explorador:paso": 979,
+     "explorador:paso_tormenta": 50,
+     "explorador:pulso_tormenta": 234,
+     "recarga:mensajes": 14,
+     "recarga:paso": 37,
+     "recarga:pulso_tormenta": 84,
+     "rover:mensajes": 106,
+     "rover:paso": 1163,
+     "rover:paso_tormenta": 15,
+     "rover:pulso_tormenta": 519
+    },
+    "ms_media": 0.854,
+    "ms_p95": 2.789,
+    "ms_p99": 5.817,
+    "ms_max": 16.106,
+    "interno": {
+     "contadores": {
+      "pasos_RETORNANDO_BASE": 314,
+      "pasos_PATRULLANDO": 540,
+      "msg_INFORM": 40,
+      "cedidas_sin_mensaje": 32605,
+      "pasos_EXPLORANDO": 87,
+      "recibidos": 196,
+      "pasos_RECOLECTANDO": 512,
+      "reportes_filtrados": 760,
+      "extracciones": 124,
+      "msg_CFP": 67,
+      "subastas_abiertas": 26,
+      "msg_PROPOSE": 31,
+      "pasos_RETORNANDO": 462,
+      "msg_ACCEPT_PROPOSAL": 19,
+      "msg_REJECT_PROPOSAL": 12,
+      "subastas_adjudicadas": 19,
+      "patrullas": 27,
+      "contratos_ganados": 19,
+      "depositos": 30,
+      "hielo_depositado": 124,
+      "cfp_sin_puja": 36,
+      "avisos_de_sobrante": 18,
+      "subastas_desiertas": 7,
+      "elecciones": 60,
+      "msg_REQUEST": 25,
+      "rescates_aceptados": 22,
+      "recargas": 22,
+      "esquives": 232,
+      "esperas_por_tormenta": 188,
+      "astar": 53,
+      "msg_AGREE": 1,
+      "pasos_EN_RESCATE": 20,
+      "pasos_OCIOSO": 25,
+      "rescates_reenviados": 2,
+      "msg_FAILURE": 1
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       250,
+       "AHORRO"
+      ],
+      [
+       300,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       550,
+       "EXPANSION"
+      ],
+      [
+       750,
+       "AHORRO"
+      ],
+      [
+       800,
+       "EXPANSION"
+      ],
+      [
+       1000,
+       "AHORRO"
+      ],
+      [
+       1050,
+       "EXPANSION"
+      ],
+      [
+       1200,
+       "AHORRO"
+      ],
+      [
+       1250,
+       "EXPANSION"
+      ],
+      [
+       1450,
+       "AHORRO"
+      ],
+      [
+       1500,
+       "EXPANSION"
+      ],
+      [
+       1700,
+       "AHORRO"
+      ],
+      [
+       1750,
+       "EXPANSION"
+      ],
+      [
+       1950,
+       "AHORRO"
+      ],
+      [
+       2000,
+       "EXPANSION"
+      ],
+      [
+       2200,
+       "AHORRO"
+      ],
+      [
+       2250,
+       "EXPANSION"
+      ],
+      [
+       2450,
+       "AHORRO"
+      ],
+      [
+       2500,
+       "EXPANSION"
+      ],
+      [
+       2700,
+       "AHORRO"
+      ],
+      [
+       2900,
+       "EXPANSION"
+      ],
+      [
+       2950,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.822,
+      "p95": 2.696,
+      "p99": 5.755,
+      "max": 16.055
+     }
+    }
+   },
+   "D": {
+    "puesto": 3,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 225,
+    "bateria": 14041.0,
+    "ratio": 0.01602,
+    "vivas": 1,
+    "unidades": 50,
+    "mensajes": 1760,
+    "gasto": {
+     "explorador:mensajes": 514,
+     "explorador:paso": 3166,
+     "explorador:paso_tormenta": 90,
+     "explorador:pulso_tormenta": 12,
+     "recarga:mensajes": 279,
+     "recarga:paso": 1882,
+     "recarga:paso_tormenta": 253,
+     "recarga:pulso_tormenta": 12,
+     "rover:mensajes": 967,
+     "rover:paso": 4059,
+     "rover:paso_tormenta": 1580,
+     "rover:pulso_tormenta": 1228
+    },
+    "ms_media": 0.268,
+    "ms_p95": 0.873,
+    "ms_p99": 3.804,
+    "ms_max": 23.248
+   },
+   "B": {
+    "puesto": 4,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 209,
+    "bateria": 15697.5,
+    "ratio": 0.01331,
+    "vivas": 30,
+    "unidades": 50,
+    "mensajes": 1763,
+    "gasto": {
+     "explorador:mensajes": 450,
+     "explorador:paso": 1367,
+     "explorador:paso_tormenta": 35,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 294,
+     "recarga:paso": 4820,
+     "recarga:paso_tormenta": 190,
+     "recarga:pulso_tormenta": 81,
+     "rover:mensajes": 1018,
+     "rover:paso": 4604,
+     "rover:paso_tormenta": 1575,
+     "rover:pulso_tormenta": 1254
+    },
+    "ms_media": 0.889,
+    "ms_p95": 2.688,
+    "ms_p99": 5.801,
+    "ms_max": 20.937
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "equipoA.py",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 6,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 736,
+  "equipos": {
+   "C": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 161,
+    "bateria": 3677.0,
+    "ratio": 0.04379,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 197,
+    "gasto": {
+     "explorador:mensajes": 73,
+     "explorador:paso": 755,
+     "explorador:paso_tormenta": 70,
+     "explorador:pulso_tormenta": 267,
+     "recarga:mensajes": 16,
+     "recarga:paso": 68,
+     "recarga:pulso_tormenta": 102,
+     "rover:mensajes": 108,
+     "rover:paso": 1530,
+     "rover:paso_tormenta": 40,
+     "rover:pulso_tormenta": 648
+    },
+    "ms_media": 0.698,
+    "ms_p95": 1.981,
+    "ms_p99": 3.951,
+    "ms_max": 9.204,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 409,
+      "msg_INFORM": 69,
+      "pasos_RETORNANDO_BASE": 209,
+      "cedidas_sin_mensaje": 53980,
+      "pasos_EXPLORANDO": 82,
+      "pasos_RECOLECTANDO": 687,
+      "recibidos": 197,
+      "reportes_filtrados": 1196,
+      "extracciones": 161,
+      "msg_CFP": 52,
+      "subastas_abiertas": 19,
+      "msg_PROPOSE": 23,
+      "msg_ACCEPT_PROPOSAL": 13,
+      "msg_REJECT_PROPOSAL": 10,
+      "subastas_adjudicadas": 13,
+      "contratos_ganados": 13,
+      "pasos_RETORNANDO": 630,
+      "patrullas": 17,
+      "depositos": 42,
+      "hielo_depositado": 161,
+      "elecciones": 60,
+      "avisos_de_sobrante": 21,
+      "cfp_sin_puja": 29,
+      "subastas_desiertas": 6,
+      "msg_REQUEST": 28,
+      "rescates_aceptados": 27,
+      "recargas": 27,
+      "esperas_por_tormenta": 246,
+      "esquives": 279,
+      "astar": 45,
+      "pasos_OCIOSO": 40,
+      "pasos_EN_RESCATE": 39,
+      "rescates_reenviados": 1,
+      "msg_AGREE": 2
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       250,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       550,
+       "EXPANSION"
+      ],
+      [
+       750,
+       "AHORRO"
+      ],
+      [
+       800,
+       "EXPANSION"
+      ],
+      [
+       1000,
+       "AHORRO"
+      ],
+      [
+       1100,
+       "EXPANSION"
+      ],
+      [
+       1200,
+       "AHORRO"
+      ],
+      [
+       1250,
+       "EXPANSION"
+      ],
+      [
+       1450,
+       "AHORRO"
+      ],
+      [
+       1500,
+       "EXPANSION"
+      ],
+      [
+       1550,
+       "AHORRO"
+      ],
+      [
+       1650,
+       "EXPANSION"
+      ],
+      [
+       1700,
+       "AHORRO"
+      ],
+      [
+       1750,
+       "EXPANSION"
+      ],
+      [
+       1950,
+       "AHORRO"
+      ],
+      [
+       2000,
+       "EXPANSION"
+      ],
+      [
+       2200,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.677,
+      "p95": 1.942,
+      "p99": 3.921,
+      "max": 9.169
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 126,
+    "bateria": 2949.0,
+    "ratio": 0.04273,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 196,
+    "gasto": {
+     "explorador:mensajes": 80,
+     "explorador:paso": 842,
+     "explorador:paso_tormenta": 70,
+     "explorador:pulso_tormenta": 204,
+     "recarga:mensajes": 11,
+     "recarga:paso": 7,
+     "recarga:pulso_tormenta": 75,
+     "rover:mensajes": 105,
+     "rover:paso": 1039,
+     "rover:pulso_tormenta": 516
+    },
+    "ms_media": 0.632,
+    "ms_p95": 1.791,
+    "ms_p99": 3.409,
+    "ms_max": 11.659,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 468,
+      "msg_INFORM": 75,
+      "pasos_RETORNANDO_BASE": 209,
+      "pasos_EXPLORANDO": 80,
+      "cedidas_sin_mensaje": 45222,
+      "recibidos": 196,
+      "pasos_RECOLECTANDO": 442,
+      "reportes_filtrados": 1530,
+      "extracciones": 126,
+      "pasos_RETORNANDO": 420,
+      "msg_CFP": 57,
+      "subastas_abiertas": 21,
+      "msg_PROPOSE": 21,
+      "msg_ACCEPT_PROPOSAL": 15,
+      "msg_REJECT_PROPOSAL": 6,
+      "subastas_adjudicadas": 15,
+      "contratos_ganados": 15,
+      "depositos": 31,
+      "hielo_depositado": 126,
+      "patrullas": 25,
+      "esperas_por_tormenta": 240,
+      "esquives": 263,
+      "elecciones": 60,
+      "avisos_de_sobrante": 14,
+      "cfp_sin_puja": 36,
+      "subastas_desiertas": 6,
+      "msg_REQUEST": 22,
+      "rescates_aceptados": 22,
+      "pasos_EN_RESCATE": 7,
+      "recargas": 22,
+      "pasos_OCIOSO": 13,
+      "astar": 36
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2300,
+       "EXPANSION"
+      ],
+      [
+       2500,
+       "AHORRO"
+      ],
+      [
+       2550,
+       "EXPANSION"
+      ],
+      [
+       2700,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       3000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.613,
+      "p95": 1.761,
+      "p99": 3.38,
+      "max": 11.619
+     }
+    }
+   },
+   "B": {
+    "puesto": 3,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 162,
+    "bateria": 12607.5,
+    "ratio": 0.01285,
+    "vivas": 2,
+    "unidades": 50,
+    "mensajes": 1899,
+    "gasto": {
+     "explorador:mensajes": 712,
+     "explorador:paso": 3039,
+     "explorador:paso_tormenta": 66,
+     "explorador:pulso_tormenta": 18,
+     "recarga:mensajes": 172,
+     "recarga:paso": 1638,
+     "recarga:paso_tormenta": 114,
+     "recarga:pulso_tormenta": 33,
+     "rover:mensajes": 1015,
+     "rover:paso": 2820,
+     "rover:paso_tormenta": 1570,
+     "rover:pulso_tormenta": 1411
+    },
+    "ms_media": 0.243,
+    "ms_p95": 1.145,
+    "ms_p99": 1.715,
+    "ms_max": 7.317
+   },
+   "D": {
+    "puesto": 4,
+    "nombre": "Equipo D (Fallback)",
+    "recursos": 85,
+    "bateria": 9978.0,
+    "ratio": 0.00852,
+    "vivas": 4,
+    "unidades": 50,
+    "mensajes": 1534,
+    "gasto": {
+     "explorador:mensajes": 522,
+     "explorador:paso": 4134,
+     "explorador:paso_tormenta": 135,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 172,
+     "recarga:paso": 802,
+     "recarga:paso_tormenta": 103,
+     "recarga:pulso_tormenta": 12,
+     "rover:mensajes": 840,
+     "rover:paso": 2179,
+     "rover:paso_tormenta": 355,
+     "rover:pulso_tormenta": 715
+    },
+    "ms_media": 0.12,
+    "ms_p95": 0.39,
+    "ms_p99": 1.431,
+    "ms_max": 12.724
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "equipoA.py",
+   "D": "base"
+  }
+ },
+ {
+  "semilla": 1,
+  "sim_s": 112.7,
+  "ticks": 939,
+  "terminada": true,
+  "hielo_inicial": 729,
+  "equipos": {
+   "D": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 160,
+    "bateria": 2727.0,
+    "ratio": 0.05867,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 186,
+    "gasto": {
+     "explorador:mensajes": 70,
+     "explorador:paso": 359,
+     "explorador:pulso_tormenta": 45,
+     "recarga:mensajes": 23,
+     "recarga:paso": 11,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 92,
+     "rover:paso": 1854,
+     "rover:paso_tormenta": 5,
+     "rover:pulso_tormenta": 246
+    },
+    "ms_media": 1.484,
+    "ms_p95": 4.698,
+    "ms_p99": 8.361,
+    "ms_max": 16.416,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 222,
+      "msg_INFORM": 51,
+      "pasos_RETORNANDO_BASE": 84,
+      "cedidas_sin_mensaje": 50687,
+      "pasos_RECOLECTANDO": 1062,
+      "pasos_EXPLORANDO": 103,
+      "recibidos": 186,
+      "extracciones": 160,
+      "reportes_filtrados": 803,
+      "msg_CFP": 43,
+      "subastas_abiertas": 18,
+      "msg_PROPOSE": 26,
+      "msg_ACCEPT_PROPOSAL": 13,
+      "msg_REJECT_PROPOSAL": 13,
+      "subastas_adjudicadas": 13,
+      "contratos_ganados": 13,
+      "patrullas": 11,
+      "avisos_de_sobrante": 5,
+      "pasos_RETORNANDO": 606,
+      "depositos": 35,
+      "hielo_depositado": 160,
+      "cfp_sin_puja": 17,
+      "subastas_desiertas": 5,
+      "elecciones": 18,
+      "msg_REQUEST": 37,
+      "rescates_aceptados": 29,
+      "pasos_EN_RESCATE": 11,
+      "recargas": 28,
+      "rescates_reenviados": 6,
+      "msg_FAILURE": 2,
+      "esquives": 127,
+      "esperas_por_tormenta": 131,
+      "astar": 6,
+      "carronas": 9,
+      "pasos_CONSUMIENDO_CARRONA": 10,
+      "msg_AGREE": 1
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 18,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "AHORRO"
+      ],
+      [
+       700,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 1.458,
+      "p95": 4.63,
+      "p99": 8.326,
+      "max": 16.354
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 95,
+    "bateria": 1670.0,
+    "ratio": 0.05689,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 130,
+    "gasto": {
+     "explorador:mensajes": 52,
+     "explorador:paso": 379,
+     "explorador:paso_tormenta": 35,
+     "explorador:pulso_tormenta": 57,
+     "recarga:mensajes": 9,
+     "recarga:paso": 3,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 70,
+     "rover:paso": 868,
+     "rover:pulso_tormenta": 177
+    },
+    "ms_media": 0.938,
+    "ms_p95": 2.674,
+    "ms_p99": 5.745,
+    "ms_max": 16.133,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 221,
+      "pasos_RETORNANDO_BASE": 109,
+      "msg_INFORM": 45,
+      "msg_CFP": 35,
+      "subastas_abiertas": 15,
+      "cedidas_sin_mensaje": 16394,
+      "pasos_EXPLORANDO": 99,
+      "recibidos": 130,
+      "pasos_RECOLECTANDO": 336,
+      "msg_PROPOSE": 17,
+      "reportes_filtrados": 740,
+      "extracciones": 95,
+      "msg_ACCEPT_PROPOSAL": 12,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 12,
+      "contratos_ganados": 12,
+      "cfp_sin_puja": 18,
+      "patrullas": 9,
+      "esquives": 122,
+      "esperas_por_tormenta": 99,
+      "pasos_RETORNANDO": 342,
+      "avisos_de_sobrante": 11,
+      "depositos": 23,
+      "hielo_depositado": 95,
+      "elecciones": 18,
+      "subastas_desiertas": 3,
+      "carronas": 1,
+      "msg_REQUEST": 16,
+      "rescates_aceptados": 14,
+      "pasos_EN_RESCATE": 3,
+      "recargas": 14,
+      "rescates_reenviados": 2,
+      "astar": 26,
+      "pasos_OCIOSO": 25
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 18,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       700,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.912,
+      "p95": 2.608,
+      "p99": 5.716,
+      "max": 15.904
+     }
+    }
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 250,
+    "bateria": 12459.5,
+    "ratio": 0.02007,
+    "vivas": 25,
+    "unidades": 50,
+    "mensajes": 1427,
+    "gasto": {
+     "explorador:mensajes": 374,
+     "explorador:paso": 1139,
+     "explorador:paso_tormenta": 75,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 277,
+     "recarga:paso": 2578,
+     "recarga:paso_tormenta": 297,
+     "recarga:pulso_tormenta": 33,
+     "rover:mensajes": 776,
+     "rover:paso": 4387,
+     "rover:paso_tormenta": 1610,
+     "rover:pulso_tormenta": 904
+    },
+    "ms_media": 0.645,
+    "ms_p95": 1.716,
+    "ms_p99": 3.951,
+    "ms_max": 6.734
+   },
+   "B": {
+    "puesto": 4,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 198,
+    "bateria": 13099.0,
+    "ratio": 0.01512,
+    "vivas": 26,
+    "unidades": 50,
+    "mensajes": 1796,
+    "gasto": {
+     "explorador:mensajes": 534,
+     "explorador:paso": 2214,
+     "explorador:paso_tormenta": 40,
+     "explorador:pulso_tormenta": 6,
+     "recarga:mensajes": 284,
+     "recarga:paso": 2622,
+     "recarga:paso_tormenta": 217,
+     "recarga:pulso_tormenta": 27,
+     "rover:mensajes": 978,
+     "rover:paso": 4200,
+     "rover:paso_tormenta": 1200,
+     "rover:pulso_tormenta": 778
+    },
+    "ms_media": 0.752,
+    "ms_p95": 1.885,
+    "ms_p99": 5.246,
+    "ms_max": 16.076
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "base",
+   "D": "equipoA.py"
+  }
+ },
+ {
+  "semilla": 2,
+  "sim_s": 127.3,
+  "ticks": 1061,
+  "terminada": true,
+  "hielo_inicial": 737,
+  "equipos": {
+   "D": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 123,
+    "bateria": 2264.0,
+    "ratio": 0.05433,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 155,
+    "gasto": {
+     "explorador:mensajes": 62,
+     "explorador:paso": 426,
+     "explorador:paso_tormenta": 15,
+     "explorador:pulso_tormenta": 81,
+     "recarga:mensajes": 12,
+     "recarga:paso": 61,
+     "recarga:paso_tormenta": 35,
+     "recarga:pulso_tormenta": 39,
+     "rover:mensajes": 81,
+     "rover:paso": 1078,
+     "rover:paso_tormenta": 20,
+     "rover:pulso_tormenta": 354
+    },
+    "ms_media": 0.955,
+    "ms_p95": 3.624,
+    "ms_p99": 7.083,
+    "ms_max": 15.532,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 47,
+      "pasos_PATRULLANDO": 244,
+      "pasos_RETORNANDO_BASE": 152,
+      "pasos_EXPLORANDO": 115,
+      "cedidas_sin_mensaje": 11272,
+      "recibidos": 155,
+      "pasos_RECOLECTANDO": 452,
+      "reportes_filtrados": 468,
+      "msg_CFP": 38,
+      "subastas_abiertas": 17,
+      "msg_PROPOSE": 24,
+      "extracciones": 123,
+      "msg_ACCEPT_PROPOSAL": 13,
+      "msg_REJECT_PROPOSAL": 11,
+      "subastas_adjudicadas": 13,
+      "contratos_ganados": 13,
+      "cfp_sin_puja": 14,
+      "pasos_RETORNANDO": 427,
+      "patrullas": 12,
+      "depositos": 27,
+      "hielo_depositado": 123,
+      "subastas_desiertas": 4,
+      "avisos_de_sobrante": 8,
+      "elecciones": 21,
+      "msg_REQUEST": 20,
+      "rescates_aceptados": 19,
+      "pasos_EN_RESCATE": 36,
+      "recargas": 19,
+      "rescates_reenviados": 1,
+      "esquives": 139,
+      "esperas_por_tormenta": 170,
+      "astar": 26,
+      "pasos_CONSUMIENDO_CARRONA": 4,
+      "carronas": 5,
+      "pasos_OCIOSO": 10,
+      "msg_AGREE": 2
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 21,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "AHORRO"
+      ],
+      [
+       850,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.916,
+      "p95": 3.498,
+      "p99": 7.044,
+      "max": 15.503
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 89,
+    "bateria": 2064.0,
+    "ratio": 0.04312,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 114,
+    "gasto": {
+     "explorador:mensajes": 42,
+     "explorador:paso": 312,
+     "explorador:paso_tormenta": 5,
+     "explorador:pulso_tormenta": 93,
+     "recarga:mensajes": 12,
+     "recarga:paso": 83,
+     "recarga:paso_tormenta": 10,
+     "recarga:pulso_tormenta": 48,
+     "rover:mensajes": 60,
+     "rover:paso": 839,
+     "rover:paso_tormenta": 80,
+     "rover:pulso_tormenta": 480
+    },
+    "ms_media": 1.266,
+    "ms_p95": 4.799,
+    "ms_p99": 9.403,
+    "ms_max": 16.717,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 47,
+      "pasos_PATRULLANDO": 191,
+      "msg_CFP": 21,
+      "subastas_abiertas": 10,
+      "pasos_RETORNANDO_BASE": 80,
+      "cedidas_sin_mensaje": 18839,
+      "pasos_EXPLORANDO": 129,
+      "recibidos": 114,
+      "msg_PROPOSE": 11,
+      "pasos_RECOLECTANDO": 303,
+      "reportes_filtrados": 703,
+      "msg_ACCEPT_PROPOSAL": 6,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 6,
+      "contratos_ganados": 6,
+      "extracciones": 89,
+      "patrullas": 9,
+      "esquives": 174,
+      "esperas_por_tormenta": 441,
+      "pasos_RETORNANDO": 316,
+      "depositos": 21,
+      "hielo_depositado": 89,
+      "elecciones": 21,
+      "avisos_de_sobrante": 7,
+      "astar": 43,
+      "cfp_sin_puja": 10,
+      "subastas_desiertas": 4,
+      "msg_REQUEST": 20,
+      "rescates_aceptados": 18,
+      "pasos_EN_RESCATE": 48,
+      "recargas": 18,
+      "msg_AGREE": 3,
+      "rescates_reenviados": 1,
+      "msg_FAILURE": 1,
+      "pasos_OCIOSO": 12
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 21,
+     "cambios_de_politica": [
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 1.225,
+      "p95": 4.759,
+      "p99": 9.04,
+      "max": 16.682
+     }
+    }
+   },
+   "B": {
+    "puesto": 3,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 312,
+    "bateria": 15416.5,
+    "ratio": 0.02024,
+    "vivas": 24,
+    "unidades": 50,
+    "mensajes": 1929,
+    "gasto": {
+     "explorador:mensajes": 454,
+     "explorador:paso": 1394,
+     "explorador:paso_tormenta": 30,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 438,
+     "recarga:paso": 3592,
+     "recarga:paso_tormenta": 410,
+     "recarga:pulso_tormenta": 39,
+     "rover:mensajes": 1037,
+     "rover:paso": 5898,
+     "rover:paso_tormenta": 1270,
+     "rover:pulso_tormenta": 852
+    },
+    "ms_media": 0.662,
+    "ms_p95": 2.022,
+    "ms_p99": 5.38,
+    "ms_max": 9.116
+   },
+   "C": {
+    "puesto": 4,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 151,
+    "bateria": 10441.5,
+    "ratio": 0.01446,
+    "vivas": 23,
+    "unidades": 50,
+    "mensajes": 1972,
+    "gasto": {
+     "explorador:mensajes": 644,
+     "explorador:paso": 2130,
+     "explorador:paso_tormenta": 60,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 285,
+     "recarga:paso": 1448,
+     "recarga:paso_tormenta": 171,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 1044,
+     "rover:paso": 3389,
+     "rover:paso_tormenta": 685,
+     "rover:pulso_tormenta": 578
+    },
+    "ms_media": 0.475,
+    "ms_p95": 1.459,
+    "ms_p99": 3.65,
+    "ms_max": 11.55
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "base",
+   "D": "equipoA.py"
+  }
+ },
+ {
+  "semilla": 3,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 744,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 113,
+    "bateria": 2781.0,
+    "ratio": 0.04063,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 140,
+    "gasto": {
+     "explorador:mensajes": 57,
+     "explorador:paso": 610,
+     "explorador:paso_tormenta": 49,
+     "explorador:pulso_tormenta": 252,
+     "recarga:mensajes": 10,
+     "recarga:paso": 6,
+     "recarga:pulso_tormenta": 93,
+     "rover:mensajes": 74,
+     "rover:paso": 966,
+     "rover:paso_tormenta": 5,
+     "rover:pulso_tormenta": 660
+    },
+    "ms_media": 0.714,
+    "ms_p95": 2.328,
+    "ms_p99": 5.394,
+    "ms_max": 17.336,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 357,
+      "msg_INFORM": 35,
+      "pasos_RETORNANDO_BASE": 115,
+      "recibidos": 140,
+      "cedidas_sin_mensaje": 19754,
+      "pasos_RECOLECTANDO": 362,
+      "pasos_EXPLORANDO": 96,
+      "msg_CFP": 41,
+      "subastas_abiertas": 18,
+      "msg_PROPOSE": 23,
+      "reportes_filtrados": 652,
+      "extracciones": 113,
+      "pasos_RETORNANDO": 364,
+      "msg_ACCEPT_PROPOSAL": 14,
+      "msg_REJECT_PROPOSAL": 9,
+      "subastas_adjudicadas": 14,
+      "contratos_ganados": 14,
+      "cfp_sin_puja": 18,
+      "patrullas": 18,
+      "depositos": 25,
+      "hielo_depositado": 113,
+      "esquives": 245,
+      "subastas_desiertas": 4,
+      "esperas_por_tormenta": 201,
+      "elecciones": 60,
+      "astar": 39,
+      "avisos_de_sobrante": 8,
+      "carronas": 17,
+      "msg_REQUEST": 18,
+      "rescates_aceptados": 17,
+      "pasos_EN_RESCATE": 6,
+      "recargas": 17,
+      "pasos_OCIOSO": 42,
+      "rescates_reenviados": 1,
+      "pasos_CONSUMIENDO_CARRONA": 6
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       650,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       950,
+       "AHORRO"
+      ],
+      [
+       1000,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1650,
+       "AHORRO"
+      ],
+      [
+       1700,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2100,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.685,
+      "p95": 2.25,
+      "p99": 5.366,
+      "max": 17.3
+     }
+    }
+   },
+   "D": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 124,
+    "bateria": 3592.0,
+    "ratio": 0.03452,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 256,
+    "gasto": {
+     "explorador:mensajes": 108,
+     "explorador:paso": 865,
+     "explorador:paso_tormenta": 30,
+     "explorador:pulso_tormenta": 270,
+     "recarga:mensajes": 14,
+     "recarga:paso": 52,
+     "recarga:pulso_tormenta": 102,
+     "rover:mensajes": 134,
+     "rover:paso": 1310,
+     "rover:paso_tormenta": 20,
+     "rover:pulso_tormenta": 687
+    },
+    "ms_media": 0.748,
+    "ms_p95": 2.408,
+    "ms_p99": 6.037,
+    "ms_max": 11.322,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 461,
+      "msg_INFORM": 65,
+      "msg_CFP": 98,
+      "subastas_abiertas": 37,
+      "pasos_RETORNANDO_BASE": 277,
+      "cedidas_sin_mensaje": 37371,
+      "pasos_EXPLORANDO": 105,
+      "recibidos": 256,
+      "msg_PROPOSE": 33,
+      "pasos_RECOLECTANDO": 546,
+      "reportes_filtrados": 914,
+      "msg_ACCEPT_PROPOSAL": 21,
+      "msg_REJECT_PROPOSAL": 12,
+      "subastas_adjudicadas": 21,
+      "contratos_ganados": 21,
+      "extracciones": 124,
+      "cfp_sin_puja": 65,
+      "patrullas": 22,
+      "pasos_RETORNANDO": 422,
+      "esperas_por_tormenta": 215,
+      "depositos": 29,
+      "hielo_depositado": 124,
+      "astar": 23,
+      "avisos_de_sobrante": 13,
+      "subastas_desiertas": 16,
+      "elecciones": 60,
+      "esquives": 322,
+      "msg_REQUEST": 26,
+      "rescates_aceptados": 24,
+      "recargas": 24,
+      "rescates_reenviados": 2,
+      "pasos_EN_RESCATE": 30,
+      "carronas": 17,
+      "pasos_OCIOSO": 74,
+      "msg_AGREE": 1
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "AHORRO"
+      ],
+      [
+       700,
+       "EXPANSION"
+      ],
+      [
+       900,
+       "AHORRO"
+      ],
+      [
+       950,
+       "EXPANSION"
+      ],
+      [
+       1150,
+       "AHORRO"
+      ],
+      [
+       1200,
+       "EXPANSION"
+      ],
+      [
+       1350,
+       "AHORRO"
+      ],
+      [
+       1450,
+       "EXPANSION"
+      ],
+      [
+       1650,
+       "AHORRO"
+      ],
+      [
+       1700,
+       "EXPANSION"
+      ],
+      [
+       1900,
+       "AHORRO"
+      ],
+      [
+       1950,
+       "EXPANSION"
+      ],
+      [
+       2600,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.714,
+      "p95": 2.171,
+      "p99": 5.811,
+      "max": 11.282
+     }
+    }
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 190,
+    "bateria": 10852.5,
+    "ratio": 0.01751,
+    "vivas": 1,
+    "unidades": 50,
+    "mensajes": 1868,
+    "gasto": {
+     "explorador:mensajes": 464,
+     "explorador:paso": 1375,
+     "explorador:paso_tormenta": 35,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 433,
+     "recarga:paso": 1504,
+     "recarga:paso_tormenta": 150,
+     "recarga:pulso_tormenta": 12,
+     "rover:mensajes": 972,
+     "rover:paso": 3489,
+     "rover:paso_tormenta": 1365,
+     "rover:pulso_tormenta": 1052
+    },
+    "ms_media": 0.152,
+    "ms_p95": 0.594,
+    "ms_p99": 2.175,
+    "ms_max": 8.088
+   },
+   "B": {
+    "puesto": 4,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 258,
+    "bateria": 17359.0,
+    "ratio": 0.01486,
+    "vivas": 18,
+    "unidades": 50,
+    "mensajes": 2220,
+    "gasto": {
+     "explorador:mensajes": 588,
+     "explorador:paso": 1937,
+     "explorador:paso_tormenta": 16,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 436,
+     "recarga:paso": 3624,
+     "recarga:paso_tormenta": 302,
+     "recarga:pulso_tormenta": 27,
+     "rover:mensajes": 1196,
+     "rover:paso": 5253,
+     "rover:paso_tormenta": 2560,
+     "rover:pulso_tormenta": 1411
+    },
+    "ms_media": 0.642,
+    "ms_p95": 2.103,
+    "ms_p99": 4.807,
+    "ms_max": 12.635
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "base",
+   "D": "equipoA.py"
+  }
+ },
+ {
+  "semilla": 4,
+  "sim_s": 101.6,
+  "ticks": 847,
+  "terminada": true,
+  "hielo_inicial": 746,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 109,
+    "bateria": 1854.0,
+    "ratio": 0.05879,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 144,
+    "gasto": {
+     "explorador:mensajes": 56,
+     "explorador:paso": 310,
+     "explorador:paso_tormenta": 10,
+     "explorador:pulso_tormenta": 45,
+     "recarga:mensajes": 13,
+     "recarga:paso": 12,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 74,
+     "rover:paso": 1009,
+     "rover:pulso_tormenta": 303
+    },
+    "ms_media": 0.987,
+    "ms_p95": 3.634,
+    "ms_p99": 8.138,
+    "ms_max": 14.394,
+    "interno": {
+     "contadores": {
+      "msg_CFP": 44,
+      "subastas_abiertas": 18,
+      "pasos_RETORNANDO_BASE": 70,
+      "msg_INFORM": 42,
+      "pasos_PATRULLANDO": 200,
+      "cedidas_sin_mensaje": 19742,
+      "pasos_EXPLORANDO": 91,
+      "pasos_RECOLECTANDO": 415,
+      "recibidos": 144,
+      "msg_PROPOSE": 18,
+      "reportes_filtrados": 526,
+      "extracciones": 109,
+      "msg_ACCEPT_PROPOSAL": 11,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 11,
+      "contratos_ganados": 11,
+      "cfp_sin_puja": 26,
+      "pasos_RETORNANDO": 345,
+      "patrullas": 8,
+      "esquives": 132,
+      "depositos": 26,
+      "hielo_depositado": 109,
+      "esperas_por_tormenta": 169,
+      "subastas_desiertas": 7,
+      "avisos_de_sobrante": 9,
+      "elecciones": 16,
+      "pasos_CONSUMIENDO_CARRONA": 12,
+      "carronas": 12,
+      "msg_REQUEST": 21,
+      "rescates_aceptados": 16,
+      "rescates_reenviados": 4,
+      "pasos_EN_RESCATE": 9,
+      "recargas": 16,
+      "pasos_OCIOSO": 59,
+      "msg_FAILURE": 1,
+      "astar": 3
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 16,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.951,
+      "p95": 3.287,
+      "p99": 7.799,
+      "max": 14.347
+     }
+    }
+   },
+   "D": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 89,
+    "bateria": 1667.0,
+    "ratio": 0.05339,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 102,
+    "gasto": {
+     "explorador:mensajes": 41,
+     "explorador:paso": 299,
+     "explorador:paso_tormenta": 35,
+     "explorador:pulso_tormenta": 87,
+     "recarga:mensajes": 6,
+     "recarga:paso": 5,
+     "recarga:pulso_tormenta": 30,
+     "rover:mensajes": 55,
+     "rover:paso": 806,
+     "rover:paso_tormenta": 15,
+     "rover:pulso_tormenta": 288
+    },
+    "ms_media": 0.737,
+    "ms_p95": 1.93,
+    "ms_p99": 6.095,
+    "ms_max": 11.064,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 27,
+      "pasos_RETORNANDO_BASE": 113,
+      "pasos_PATRULLANDO": 141,
+      "cedidas_sin_mensaje": 11390,
+      "pasos_EXPLORANDO": 118,
+      "pasos_RECOLECTANDO": 280,
+      "recibidos": 102,
+      "reportes_filtrados": 528,
+      "msg_CFP": 35,
+      "subastas_abiertas": 14,
+      "msg_PROPOSE": 14,
+      "extracciones": 89,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "cfp_sin_puja": 21,
+      "patrullas": 6,
+      "pasos_RETORNANDO": 311,
+      "depositos": 20,
+      "hielo_depositado": 89,
+      "elecciones": 16,
+      "avisos_de_sobrante": 8,
+      "esquives": 118,
+      "subastas_desiertas": 5,
+      "esperas_por_tormenta": 158,
+      "astar": 19,
+      "msg_REQUEST": 12,
+      "rescates_aceptados": 12,
+      "recargas": 12,
+      "pasos_OCIOSO": 36,
+      "carronas": 2,
+      "pasos_EN_RESCATE": 3
+     },
+     "politica_final": "REPLIEGUE",
+     "elecciones": 16,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       150,
+       "AHORRO"
+      ],
+      [
+       200,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "REPLIEGUE"
+      ]
+     ],
+     "ms": {
+      "media": 0.703,
+      "p95": 1.794,
+      "p99": 5.559,
+      "max": 11.032
+     }
+    }
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 302,
+    "bateria": 12490.0,
+    "ratio": 0.02418,
+    "vivas": 19,
+    "unidades": 50,
+    "mensajes": 1729,
+    "gasto": {
+     "explorador:mensajes": 498,
+     "explorador:paso": 1710,
+     "explorador:paso_tormenta": 64,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 309,
+     "recarga:paso": 1882,
+     "recarga:paso_tormenta": 175,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 922,
+     "rover:paso": 5161,
+     "rover:paso_tormenta": 985,
+     "rover:pulso_tormenta": 776
+    },
+    "ms_media": 0.49,
+    "ms_p95": 1.42,
+    "ms_p99": 4.143,
+    "ms_max": 5.475
+   },
+   "B": {
+    "puesto": 4,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 236,
+    "bateria": 11848.0,
+    "ratio": 0.01992,
+    "vivas": 33,
+    "unidades": 50,
+    "mensajes": 1690,
+    "gasto": {
+     "explorador:mensajes": 502,
+     "explorador:paso": 1528,
+     "explorador:paso_tormenta": 32,
+     "explorador:pulso_tormenta": 3,
+     "recarga:mensajes": 264,
+     "recarga:paso": 2316,
+     "recarga:paso_tormenta": 130,
+     "recarga:pulso_tormenta": 21,
+     "rover:mensajes": 923,
+     "rover:paso": 4478,
+     "rover:paso_tormenta": 1145,
+     "rover:pulso_tormenta": 504
+    },
+    "ms_media": 0.84,
+    "ms_p95": 2.356,
+    "ms_p99": 5.851,
+    "ms_max": 7.37
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "base",
+   "D": "equipoA.py"
+  }
+ },
+ {
+  "semilla": 5,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 736,
+  "equipos": {
+   "A": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 105,
+    "bateria": 2808.0,
+    "ratio": 0.03739,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 114,
+    "gasto": {
+     "explorador:mensajes": 46,
+     "explorador:paso": 901,
+     "explorador:paso_tormenta": 75,
+     "explorador:pulso_tormenta": 195,
+     "recarga:mensajes": 10,
+     "recarga:paso": 6,
+     "recarga:pulso_tormenta": 66,
+     "rover:mensajes": 58,
+     "rover:paso": 947,
+     "rover:paso_tormenta": 15,
+     "rover:pulso_tormenta": 489
+    },
+    "ms_media": 0.79,
+    "ms_p95": 2.729,
+    "ms_p99": 6.81,
+    "ms_max": 17.273,
+    "interno": {
+     "contadores": {
+      "msg_CFP": 30,
+      "subastas_abiertas": 13,
+      "pasos_RETORNANDO_BASE": 286,
+      "msg_INFORM": 35,
+      "pasos_EXPLORANDO": 84,
+      "recibidos": 114,
+      "pasos_RECOLECTANDO": 397,
+      "cedidas_sin_mensaje": 29324,
+      "msg_PROPOSE": 15,
+      "reportes_filtrados": 1079,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 6,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "extracciones": 105,
+      "esperas_por_tormenta": 258,
+      "pasos_RETORNANDO": 336,
+      "esquives": 215,
+      "avisos_de_sobrante": 3,
+      "elecciones": 60,
+      "astar": 51,
+      "depositos": 23,
+      "hielo_depositado": 105,
+      "carronas": 4,
+      "pasos_PATRULLANDO": 516,
+      "cfp_sin_puja": 15,
+      "patrullas": 25,
+      "msg_REQUEST": 19,
+      "rescates_aceptados": 17,
+      "pasos_EN_RESCATE": 6,
+      "recargas": 17,
+      "subastas_desiertas": 4,
+      "rescates_reenviados": 2,
+      "pasos_CONSUMIENDO_CARRONA": 6,
+      "pasos_OCIOSO": 26
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       550,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2300,
+       "EXPANSION"
+      ],
+      [
+       2500,
+       "AHORRO"
+      ],
+      [
+       2600,
+       "EXPANSION"
+      ],
+      [
+       2750,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       3000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.751,
+      "p95": 2.494,
+      "p99": 6.731,
+      "max": 17.242
+     }
+    }
+   },
+   "D": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 89,
+    "bateria": 3010.5,
+    "ratio": 0.02956,
+    "vivas": 49,
+    "unidades": 50,
+    "mensajes": 116,
+    "gasto": {
+     "explorador:mensajes": 46,
+     "explorador:paso": 572,
+     "explorador:paso_tormenta": 90,
+     "explorador:pulso_tormenta": 297,
+     "recarga:mensajes": 10,
+     "recarga:paso": 51,
+     "recarga:pulso_tormenta": 111,
+     "rover:mensajes": 60,
+     "rover:paso": 937,
+     "rover:paso_tormenta": 20,
+     "rover:pulso_tormenta": 816
+    },
+    "ms_media": 0.769,
+    "ms_p95": 2.5,
+    "ms_p99": 6.809,
+    "ms_max": 18.006,
+    "interno": {
+     "contadores": {
+      "msg_INFORM": 33,
+      "pasos_PATRULLANDO": 309,
+      "pasos_RETORNANDO_BASE": 203,
+      "pasos_EXPLORANDO": 124,
+      "recibidos": 116,
+      "pasos_RECOLECTANDO": 314,
+      "cedidas_sin_mensaje": 22368,
+      "reportes_filtrados": 441,
+      "msg_CFP": 34,
+      "subastas_abiertas": 14,
+      "msg_PROPOSE": 15,
+      "msg_ACCEPT_PROPOSAL": 9,
+      "msg_REJECT_PROPOSAL": 6,
+      "subastas_adjudicadas": 9,
+      "contratos_ganados": 9,
+      "cfp_sin_puja": 19,
+      "extracciones": 89,
+      "patrullas": 14,
+      "pasos_RETORNANDO": 289,
+      "depositos": 22,
+      "hielo_depositado": 89,
+      "elecciones": 60,
+      "avisos_de_sobrante": 4,
+      "esperas_por_tormenta": 214,
+      "subastas_desiertas": 5,
+      "msg_REQUEST": 17,
+      "rescates_aceptados": 17,
+      "recargas": 17,
+      "esquives": 253,
+      "pasos_OCIOSO": 63,
+      "astar": 65,
+      "msg_AGREE": 2,
+      "pasos_EN_RESCATE": 28,
+      "carronas": 1
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       250,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "AHORRO"
+      ],
+      [
+       700,
+       "EXPANSION"
+      ],
+      [
+       750,
+       "AHORRO"
+      ],
+      [
+       800,
+       "EXPANSION"
+      ],
+      [
+       900,
+       "AHORRO"
+      ],
+      [
+       950,
+       "EXPANSION"
+      ],
+      [
+       1100,
+       "AHORRO"
+      ],
+      [
+       1200,
+       "EXPANSION"
+      ],
+      [
+       1400,
+       "AHORRO"
+      ],
+      [
+       1450,
+       "EXPANSION"
+      ],
+      [
+       1550,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.736,
+      "p95": 2.322,
+      "p99": 6.597,
+      "max": 17.952
+     }
+    }
+   },
+   "B": {
+    "puesto": 3,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 191,
+    "bateria": 9254.5,
+    "ratio": 0.02064,
+    "vivas": 3,
+    "unidades": 50,
+    "mensajes": 1835,
+    "gasto": {
+     "explorador:mensajes": 454,
+     "explorador:paso": 1366,
+     "explorador:paso_tormenta": 35,
+     "explorador:pulso_tormenta": 6,
+     "recarga:mensajes": 373,
+     "recarga:paso": 1120,
+     "recarga:paso_tormenta": 26,
+     "recarga:pulso_tormenta": 3,
+     "rover:mensajes": 1008,
+     "rover:paso": 3548,
+     "rover:paso_tormenta": 435,
+     "rover:pulso_tormenta": 880
+    },
+    "ms_media": 0.182,
+    "ms_p95": 0.626,
+    "ms_p99": 3.27,
+    "ms_max": 7.359
+   },
+   "C": {
+    "puesto": 4,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 274,
+    "bateria": 15693.5,
+    "ratio": 0.01746,
+    "vivas": 8,
+    "unidades": 50,
+    "mensajes": 2138,
+    "gasto": {
+     "explorador:mensajes": 686,
+     "explorador:paso": 2849,
+     "explorador:paso_tormenta": 146,
+     "explorador:pulso_tormenta": 18,
+     "recarga:mensajes": 334,
+     "recarga:paso": 2676,
+     "recarga:paso_tormenta": 105,
+     "recarga:pulso_tormenta": 4,
+     "rover:mensajes": 1118,
+     "rover:paso": 4846,
+     "rover:paso_tormenta": 1555,
+     "rover:pulso_tormenta": 1357
+    },
+    "ms_media": 0.456,
+    "ms_p95": 1.511,
+    "ms_p99": 5.016,
+    "ms_max": 18.693
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "base",
+   "D": "equipoA.py"
+  }
+ },
+ {
+  "semilla": 6,
+  "sim_s": 360.0,
+  "ticks": 3000,
+  "terminada": false,
+  "hielo_inicial": 736,
+  "equipos": {
+   "D": {
+    "puesto": 1,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 143,
+    "bateria": 3097.0,
+    "ratio": 0.04617,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 188,
+    "gasto": {
+     "explorador:mensajes": 74,
+     "explorador:paso": 865,
+     "explorador:paso_tormenta": 20,
+     "explorador:pulso_tormenta": 168,
+     "recarga:mensajes": 14,
+     "recarga:paso": 5,
+     "recarga:pulso_tormenta": 69,
+     "rover:mensajes": 100,
+     "rover:paso": 1306,
+     "rover:paso_tormenta": 20,
+     "rover:pulso_tormenta": 456
+    },
+    "ms_media": 0.483,
+    "ms_p95": 1.612,
+    "ms_p99": 2.796,
+    "ms_max": 7.734,
+    "interno": {
+     "contadores": {
+      "pasos_RETORNANDO_BASE": 260,
+      "msg_INFORM": 53,
+      "cedidas_sin_mensaje": 30398,
+      "pasos_EXPLORANDO": 159,
+      "pasos_RECOLECTANDO": 497,
+      "recibidos": 188,
+      "pasos_PATRULLANDO": 455,
+      "reportes_filtrados": 872,
+      "msg_CFP": 64,
+      "subastas_abiertas": 24,
+      "msg_PROPOSE": 22,
+      "extracciones": 143,
+      "pasos_RETORNANDO": 524,
+      "msg_ACCEPT_PROPOSAL": 17,
+      "msg_REJECT_PROPOSAL": 5,
+      "subastas_adjudicadas": 17,
+      "contratos_ganados": 17,
+      "cfp_sin_puja": 42,
+      "depositos": 33,
+      "hielo_depositado": 143,
+      "patrullas": 24,
+      "esperas_por_tormenta": 186,
+      "esquives": 239,
+      "avisos_de_sobrante": 14,
+      "elecciones": 60,
+      "subastas_desiertas": 7,
+      "msg_REQUEST": 27,
+      "rescates_aceptados": 26,
+      "recargas": 26,
+      "astar": 11,
+      "pasos_OCIOSO": 45,
+      "rescates_reenviados": 1,
+      "pasos_EN_RESCATE": 5,
+      "carronas": 29
+     },
+     "politica_final": "EXPANSION",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       50,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       650,
+       "AHORRO"
+      ],
+      [
+       700,
+       "EXPANSION"
+      ],
+      [
+       900,
+       "AHORRO"
+      ],
+      [
+       950,
+       "EXPANSION"
+      ],
+      [
+       1150,
+       "AHORRO"
+      ],
+      [
+       1200,
+       "EXPANSION"
+      ],
+      [
+       1400,
+       "AHORRO"
+      ],
+      [
+       1450,
+       "EXPANSION"
+      ],
+      [
+       1650,
+       "AHORRO"
+      ],
+      [
+       1700,
+       "EXPANSION"
+      ],
+      [
+       1900,
+       "AHORRO"
+      ],
+      [
+       2000,
+       "EXPANSION"
+      ],
+      [
+       2150,
+       "AHORRO"
+      ],
+      [
+       2200,
+       "EXPANSION"
+      ],
+      [
+       2600,
+       "AHORRO"
+      ],
+      [
+       2650,
+       "EXPANSION"
+      ],
+      [
+       2850,
+       "AHORRO"
+      ],
+      [
+       2900,
+       "EXPANSION"
+      ]
+     ],
+     "ms": {
+      "media": 0.465,
+      "p95": 1.567,
+      "p99": 2.75,
+      "max": 7.689
+     }
+    }
+   },
+   "A": {
+    "puesto": 2,
+    "nombre": "Equipo A - Permafrost",
+    "recursos": 105,
+    "bateria": 3163.0,
+    "ratio": 0.0332,
+    "vivas": 50,
+    "unidades": 50,
+    "mensajes": 147,
+    "gasto": {
+     "explorador:mensajes": 54,
+     "explorador:paso": 830,
+     "explorador:paso_tormenta": 70,
+     "explorador:pulso_tormenta": 249,
+     "recarga:mensajes": 16,
+     "recarga:paso": 23,
+     "recarga:pulso_tormenta": 90,
+     "rover:mensajes": 78,
+     "rover:paso": 1013,
+     "rover:pulso_tormenta": 741
+    },
+    "ms_media": 0.524,
+    "ms_p95": 1.745,
+    "ms_p99": 3.312,
+    "ms_max": 12.335,
+    "interno": {
+     "contadores": {
+      "pasos_PATRULLANDO": 479,
+      "msg_INFORM": 42,
+      "pasos_RETORNANDO_BASE": 227,
+      "pasos_EXPLORANDO": 80,
+      "cedidas_sin_mensaje": 22715,
+      "recibidos": 147,
+      "pasos_RECOLECTANDO": 390,
+      "reportes_filtrados": 749,
+      "extracciones": 105,
+      "pasos_RETORNANDO": 381,
+      "msg_CFP": 41,
+      "subastas_abiertas": 15,
+      "msg_PROPOSE": 18,
+      "msg_ACCEPT_PROPOSAL": 11,
+      "msg_REJECT_PROPOSAL": 7,
+      "subastas_adjudicadas": 11,
+      "contratos_ganados": 11,
+      "depositos": 27,
+      "hielo_depositado": 105,
+      "patrullas": 24,
+      "esperas_por_tormenta": 300,
+      "esquives": 268,
+      "elecciones": 60,
+      "avisos_de_sobrante": 11,
+      "carronas": 18,
+      "cfp_sin_puja": 23,
+      "subastas_desiertas": 4,
+      "msg_REQUEST": 26,
+      "rescates_aceptados": 22,
+      "pasos_EN_RESCATE": 16,
+      "recargas": 22,
+      "astar": 50,
+      "pasos_CONSUMIENDO_CARRONA": 13,
+      "pasos_OCIOSO": 26,
+      "msg_AGREE": 1,
+      "rescates_reenviados": 3,
+      "msg_FAILURE": 1
+     },
+     "politica_final": "AHORRO",
+     "elecciones": 60,
+     "cambios_de_politica": [
+      [
+       100,
+       "EXPANSION"
+      ],
+      [
+       300,
+       "AHORRO"
+      ],
+      [
+       350,
+       "EXPANSION"
+      ],
+      [
+       400,
+       "AHORRO"
+      ],
+      [
+       450,
+       "EXPANSION"
+      ],
+      [
+       500,
+       "AHORRO"
+      ],
+      [
+       600,
+       "EXPANSION"
+      ],
+      [
+       800,
+       "AHORRO"
+      ],
+      [
+       850,
+       "EXPANSION"
+      ],
+      [
+       950,
+       "AHORRO"
+      ],
+      [
+       1000,
+       "EXPANSION"
+      ],
+      [
+       1500,
+       "AHORRO"
+      ],
+      [
+       1550,
+       "EXPANSION"
+      ],
+      [
+       1750,
+       "AHORRO"
+      ],
+      [
+       1800,
+       "EXPANSION"
+      ],
+      [
+       2000,
+       "AHORRO"
+      ],
+      [
+       2050,
+       "EXPANSION"
+      ],
+      [
+       2250,
+       "AHORRO"
+      ],
+      [
+       2300,
+       "EXPANSION"
+      ],
+      [
+       2500,
+       "AHORRO"
+      ],
+      [
+       2550,
+       "EXPANSION"
+      ],
+      [
+       2750,
+       "AHORRO"
+      ],
+      [
+       2800,
+       "EXPANSION"
+      ],
+      [
+       3000,
+       "AHORRO"
+      ]
+     ],
+     "ms": {
+      "media": 0.506,
+      "p95": 1.708,
+      "p99": 3.281,
+      "max": 12.3
+     }
+    }
+   },
+   "C": {
+    "puesto": 3,
+    "nombre": "Equipo C (Fallback)",
+    "recursos": 247,
+    "bateria": 13101.0,
+    "ratio": 0.01885,
+    "vivas": 10,
+    "unidades": 50,
+    "mensajes": 1985,
+    "gasto": {
+     "explorador:mensajes": 540,
+     "explorador:paso": 1642,
+     "explorador:paso_tormenta": 70,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 392,
+     "recarga:paso": 2182,
+     "recarga:paso_tormenta": 223,
+     "recarga:pulso_tormenta": 6,
+     "rover:mensajes": 1052,
+     "rover:paso": 4741,
+     "rover:paso_tormenta": 1195,
+     "rover:pulso_tormenta": 1048
+    },
+    "ms_media": 0.262,
+    "ms_p95": 1.062,
+    "ms_p99": 1.977,
+    "ms_max": 13.334
+   },
+   "B": {
+    "puesto": 4,
+    "nombre": "Equipo B (Fallback)",
+    "recursos": 200,
+    "bateria": 21322.5,
+    "ratio": 0.00938,
+    "vivas": 23,
+    "unidades": 50,
+    "mensajes": 2870,
+    "gasto": {
+     "explorador:mensajes": 747,
+     "explorador:paso": 2790,
+     "explorador:paso_tormenta": 57,
+     "explorador:pulso_tormenta": 9,
+     "recarga:mensajes": 534,
+     "recarga:paso": 4868,
+     "recarga:paso_tormenta": 210,
+     "recarga:pulso_tormenta": 66,
+     "rover:mensajes": 1588,
+     "rover:paso": 3792,
+     "rover:paso_tormenta": 4315,
+     "rover:pulso_tormenta": 2345
+    },
+    "ms_media": 0.534,
+    "ms_p95": 1.783,
+    "ms_p99": 3.636,
+    "ms_max": 11.306
+   }
+  },
+  "asignacion": {
+   "A": "base",
+   "B": "base",
+   "C": "base",
+   "D": "equipoA.py"
+  }
+ }
+]
