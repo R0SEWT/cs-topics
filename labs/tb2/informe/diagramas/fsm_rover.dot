@@ -1,0 +1,19 @@
+// FSM del rover (_rover, _retornar, _explorar_o_esperar). Los números remiten a la tabla de transiciones del informe.
+digraph fsm_rover {
+  rankdir=TB; nodesep=0.3; ranksep=0.38; graph [fontname="DejaVu Sans"]; node [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fillcolor="#f4f6f8", color="#444444", margin="0.08,0.05"]; edge [fontname="DejaVu Sans Bold", fontsize=11, color="#555555", arrowsize=0.6];
+  r0 [shape=point, width=0.08];
+  ESPERANDO_RECARGA [fillcolor="#fde2e2"];
+  r0 -> OCIOSO;
+  OCIOSO -> EXPLORANDO [label="R1"];
+  EXPLORANDO -> OCIOSO [label="R2"];
+  OCIOSO -> RECOLECTANDO [label="R3"];
+  EXPLORANDO -> RECOLECTANDO [label="R3"];
+  RECOLECTANDO -> RETORNANDO [label="R4"];
+  RECOLECTANDO -> OCIOSO [label="R5"];
+  RETORNANDO -> OCIOSO [label="R6"];
+  OCIOSO -> CONSUMIENDO_CARRONA [label="R7"];
+  CONSUMIENDO_CARRONA -> OCIOSO [label="R8"];
+  OCIOSO -> ESPERANDO_RECARGA [label="R9"];
+  RECOLECTANDO -> ESPERANDO_RECARGA [label="R10 (desde\ncualquier estado)", color="#c0392b", fontcolor="#c0392b"];
+  ESPERANDO_RECARGA -> OCIOSO [label="R11"];
+}

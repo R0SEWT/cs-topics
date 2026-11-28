@@ -870,9 +870,9 @@ class EquipoPermafrost(EquipoBase):
                        urgente: bool) -> bool:
         """REQUEST de recarga al recargador disponible mas cercano.
 
-        Insistir cuesta 1 % por intento entre emisor y receptor, asi que cada pedido sin
-        respuesta duplica la espera (20, 40, 80... hasta 320 ticks). Un AGREE la fija en 60 y un
-        FAILURE la acorta, para reintentar con otro dron.
+        El primer pedido sale de inmediato. Insistir cuesta 1 % por intento entre emisor y
+        receptor, asi que tras n pedidos sin respuesta la espera es min(320, 20 * 2^n) ticks:
+        40, 80, 160... Un AGREE la fija en 60 y un FAILURE la devuelve a 40.
         """
         tick = p.tick
         espera = 60 if tick - m["agree"] < 60 else min(320, 20 * (2 ** m["pings"]))
@@ -1068,7 +1068,8 @@ class EquipoPermafrost(EquipoBase):
         if u.tipo != "rover":
             return
         if m["contrato"] is not None:
-            # Ya comprometido con otra adjudicacion: se declina para que el iniciador reasigne.
+            # Ya comprometido con otra adjudicacion: se declina con FAILURE. El iniciador lo
+            # registra; la veta se volvera a anunciar cuando pase su enfriamiento.
             fallo = self._acl(FAILURE, u.id, conv, ontologia, {"motivo": "ocupado"})
             self._enviar(api, emisor, fallo)
             return
@@ -1186,6 +1187,9 @@ class EquipoPermafrost(EquipoBase):
     # =========================================================================================
     def _de_turno(self, m: Memoria, tick: int, pol: Dict[str, Any]) -> bool:
         """Relevo de patrulla: de cada 15 exploradores, `exploradores` estan de turno.
+
+        El 15 es el tamano del grupo de relevo, no el de la flota: con 30 exploradores habria
+        dos por turno de cada grupo, es decir, la misma proporcion.
 
         El turno rota cada TURNO_PATRULLA ticks, de modo que todos los drones patrullan a lo
         largo de la partida y siempre hay cobertura en el aire. Los demas esperan en la base,

@@ -1,0 +1,13 @@
+// FSM del dron recargador (_recargador, _atender_request).
+digraph fsm_recargador {
+  rankdir=TB; nodesep=0.3; ranksep=0.38; graph [fontname="DejaVu Sans"]; node [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fillcolor="#f4f6f8", color="#444444", margin="0.08,0.05"]; edge [fontname="DejaVu Sans Bold", fontsize=11, color="#555555", arrowsize=0.6];
+  c0 [shape=point, width=0.08];
+  c0 -> EN_ESPERA;
+  EN_ESPERA -> EN_ESPERA [label="C1"];
+  EN_ESPERA -> EN_RESCATE [label="C2"];
+  RETORNANDO_BASE -> EN_RESCATE [label="C2"];
+  EN_RESCATE -> RETORNANDO_BASE [label="C3"];
+  EN_RESCATE -> RETORNANDO_BASE [label="C4", color="#c0392b", fontcolor="#c0392b"];
+  RETORNANDO_BASE -> EN_ESPERA [label="C5"];
+  EN_ESPERA -> RETORNANDO_BASE [label="C6"];
+}

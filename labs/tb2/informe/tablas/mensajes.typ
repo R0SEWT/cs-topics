@@ -1,0 +1,18 @@
+#table(
+  columns: (auto, auto, 1fr, auto, auto),
+  align: (left, left, left, left, right),
+  stroke: none, inset: (x: 3pt, y: 2.6pt),
+  table.hline(stroke: 0.6pt),
+  table.header([*Performativa*], [*Ontología*], [*Campos de `content`*], [*Uso*], [*Por partida*]),
+  table.hline(stroke: 0.4pt),
+  [`INFORM`], [hielo, restos], [`pos`, `cantidad`, `total` · `agotado` · `id`, `combustible`], [hallazgo, sobrante o veta agotada], [72,0],
+  [`CFP`], [hielo, restos, recarga], [tarea + `vence`], [abre subasta a $<= k$ candidatos], [104,7],
+  [`PROPOSE`], [las tres], [`puja`], [oferta de un candidato], [47,7],
+  [`ACCEPT_PROPOSAL`], [las tres], [tarea adjudicada], [adjudicación a la menor puja], [19,5],
+  [`REJECT_PROPOSAL`], [las tres], [—], [descarte de los demás], [28,2],
+  [`REQUEST`], [recarga], [`rover`, `pos`, `bateria`, `urgente`], [pedido de recarga], [51,8],
+  [`AGREE`], [recarga], [`eta`], [el dron confirma el rescate], [14,7],
+  [`FAILURE`], [las tres], [`motivo`], [sin disponibilidad, aborto u ocupado], [7,5],
+  [*Total*], [], [], [cada mensaje cuesta 0,5 % + 0,5 %], [*346,0*],
+  table.hline(stroke: 0.6pt),
+)

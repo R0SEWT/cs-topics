@@ -1,0 +1,11 @@
+// FSM del dron explorador (_explorador).
+digraph fsm_explorador {
+  rankdir=TB; nodesep=0.3; ranksep=0.38; graph [fontname="DejaVu Sans"]; node [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fillcolor="#f4f6f8", color="#444444", margin="0.08,0.05"]; edge [fontname="DejaVu Sans Bold", fontsize=11, color="#555555", arrowsize=0.6];
+  e0 [shape=point, width=0.08];
+  e0 -> RETORNANDO_BASE;
+  RETORNANDO_BASE -> RETORNANDO_BASE [label="E1"];
+  RETORNANDO_BASE -> PATRULLANDO [label="E2"];
+  PATRULLANDO -> PATRULLANDO [label="E3"];
+  PATRULLANDO -> RETORNANDO_BASE [label="E4", color="#c0392b", fontcolor="#c0392b"];
+  PATRULLANDO -> RETORNANDO_BASE [label="E5"];
+}
