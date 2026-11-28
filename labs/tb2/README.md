@@ -11,6 +11,8 @@ dinámicamente. Gana el mejor **Ratio = hielo depositado en base / batería tota
 | `desglose.py` | En qué se va la batería de nuestro equipo, promediado por semillas. |
 | `experimentos.py` | Los experimentos "con y sin" del informe: apaga una pieza por variante. |
 | `latencia.py` | Tiempo de decisión por turno contra el umbral de 40 ms. |
+| `empaquetar.sh` | Arma `Proyecto_Equipo<LETRA>.zip` con los nombres del enunciado. |
+| `PENDIENTES.md` | **Empezar por aquí**: qué falta para entregar y dónde se pierden puntos. |
 | `informe/` | Fuente del informe técnico (Quarto + Typst). |
 | `reports/` | Resultados de las corridas que cita el informe. |
 
